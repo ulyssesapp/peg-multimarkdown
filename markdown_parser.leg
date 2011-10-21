@@ -1208,7 +1208,7 @@ OPMLSectionBlock =
         !OPMLHeading
         OPMLPlain
 
-OPMLPlain = a:StartList (!BlankLine Line { a = cons($$,a); })+
+OPMLPlain = a:StartList (!BlankLine !Heading Line { a = cons($$,a); })+
     { $$ = mk_list(PLAIN, a); }
 
 
