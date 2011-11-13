@@ -21,10 +21,15 @@ endif
 CFLAGS ?= -Wall -O3 -ansi -include GLibFacade.h -I ./ -D MD_USE_GET_OPT=1
 
 OBJS=markdown_parser.o markdown_output.o markdown_lib.o GLibFacade.o
-PEGDIR=peg-0.1.4
+PEGDIR_ORIG=peg-0.1.4
+PEGDIR=peg
 LEG=$(PEGDIR)/leg
 
-$(LEG):
+$(PEGDIR):
+	cp -r $(PEGDIR_ORIG) $(PEGDIR) ; \
+	patch -p1 < peg-memory-fix.patch
+
+$(LEG): $(PEGDIR)
 	CC=gcc make -C $(PEGDIR)
 
 %.o : %.c markdown_peg.h
@@ -52,7 +57,7 @@ clean:
 	rm -rf mac_installer/*.pkg
 
 distclean: clean
-	make -C $(PEGDIR) spotless
+	rm -rf $(PEGDIR)
 
 test: $(PROGRAM)
 	cd MarkdownTest; \
