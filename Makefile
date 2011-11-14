@@ -1,6 +1,6 @@
 ALL : multimarkdown
 
-VERSION=3.3a
+VERSION=3.5a
 PROGRAM=multimarkdown
 
 UNAME=$(shell uname)
