@@ -806,8 +806,8 @@ Line =  RawLine
         { $$ = mk_str(yytext); }
 RawLine = ( < (!'\r' !'\n' .)* Newline > | < .+ > Eof )
 
-SkipBlock = ( !BlankLine RawLine )+ BlankLine*
-          | BlankLine+ | RawHtml
+SkipBlock = RawHtml | ( !BlankLine RawLine )+ BlankLine*
+          | BlankLine+ 
 
 # Syntax extensions
 
