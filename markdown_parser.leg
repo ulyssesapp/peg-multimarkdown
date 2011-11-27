@@ -807,7 +807,7 @@ Line =  RawLine
 RawLine = ( < (!'\r' !'\n' .)* Newline > | < .+ > Eof )
 
 SkipBlock = ( !BlankLine RawLine )+ BlankLine*
-          | BlankLine+
+          | BlankLine+ | RawHtml
 
 # Syntax extensions
 
