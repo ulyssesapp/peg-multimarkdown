@@ -83,10 +83,16 @@ You can either download the source from
 
 	git clone git://github.com/fletcher/peg-multimarkdown.git
 
-Then, simply run `make` to compile the source. You can also run some test
-commands to verify that everything is working properly. Of note, it is normal
-to fail one test in the Markdown tests, but the others should pass. You can
-then install the binary wherever you like.
+You can run the `update_submodules.sh` script to update the submodules if
+you want to run the test commands, download the sample files and the Support
+directory, or compile the documentation.
+
+Then, simply run `make` to compile the source.
+
+You can also run some test commands to verify that everything is working 
+properly. Of note, it is normal to fail one test in the Markdown tests, 
+but the others should pass. You can then install the binary wherever you 
+like.
 
 	make
 	make test
