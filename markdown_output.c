@@ -846,6 +846,8 @@ static void print_latex_element(GString *out, element *elt) {
     char *label;
     char *height;
     char *width;
+	char *upper;
+	int i;
     double floatnum;
     switch (elt->key) {
     case SPACE:
@@ -1316,7 +1318,13 @@ static void print_latex_element(GString *out, element *elt) {
         padded = 0;
         break;
     case TABLESEPARATOR:
-        g_string_append_printf(out, "\\begin{tabulary}{\\textwidth}{@{}%s@{}} \\toprule\n", elt->contents.str);
+        upper = strdup(elt->contents.str);
+
+        for(i = 0; upper[ i ]; i++)
+            upper[i] = toupper(upper[ i ]);
+    
+        g_string_append_printf(out, "\\begin{tabulary}{\\textwidth}{@{}%s@{}} \\toprule\n", upper);
+        free(upper);
         break;
     case TABLECAPTION:
         if (elt->children->key == TABLELABEL) {
