@@ -1,5 +1,5 @@
-Title:				peg-multimarkdown User's Guide  
-Author:				Fletcher T. Penney  
+Title:	peg-multimarkdown User's Guide  
+Author:	Fletcher T. Penney  
 Base Header Level:	2  
 
 # Introduction #
@@ -102,6 +102,17 @@ like.
 
 **NOTE** As of version 3.2, the tests including obfuscated email addresses
 will also fail due to a change in how random numbers are generated.
+
+## FreeBSD ##
+
+If you want to compile manually, you should be able to follow the directions
+for Linux above.  However, apparently MultiMarkdown has been put in the
+ports tree, so you can also use:
+
+	cd /usr/ports/textproc/multimarkdown
+	make install
+
+(I have not tested this myself, and cannot guarantee that it works properly.)
 
 
 # Usage #
