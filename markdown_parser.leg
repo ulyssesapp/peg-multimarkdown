@@ -1007,7 +1007,9 @@ AutoLabels = ( &{ !extension(EXT_COMPATIBILITY) && !extension(EXT_NO_LABELS)}
                 a = cons(mk_str(lab), a);
                 free(lab);
                 g_string_free(label,true);
-                free_element_list(b);
+                /* TODO: this causes segfault when trying to use a footnote in the header */
+                /* I would like to fix it at some point */
+                /* free_element_list(b); */
             } | c:TableCaption {
                 GString *label = g_string_new("");
                 char *lab;
@@ -1160,7 +1162,7 @@ TableCaption = b:StartList a:Label
     }
 }
 
-AutoLabel = '[' < ( !Newline !']' . )+ > ']' &(!(Sp? ('(' | '[')))
+AutoLabel = '[' < (!Newline !'^' !'#' . )( !Newline !']' . )+ > ']' &(!(Sp? ('(' | '[')))
 { 
     char *label = label_from_string(yytext,0);
     $$ = mk_str(label);
