@@ -806,10 +806,10 @@ Line =  RawLine
         { $$ = mk_str(yytext); }
 RawLine = ( < (!'\r' !'\n' .)* Newline > | < .+ > Eof )
 
-SkipBlock = RawHtml | (RawLine (SetextBottom1 | SetextBottom2))
-          | ( !BlankLine !'#' RawLine ) (!BlankLine !SetextBottom1 !SetextBottom2 RawLine)* BlankLine*
-          | BlankLine+ 
-          | '#' RawLine
+SkipBlock = RawHtml | (!BlankLine !'#' !SetextBottom1 !SetextBottom2 RawLine)+ BlankLine*
+         | BlankLine+
+         | RawLine
+
 
 # Syntax extensions
 
