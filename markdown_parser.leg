@@ -806,7 +806,8 @@ Line =  RawLine
         { $$ = mk_str(yytext); }
 RawLine = ( < (!'\r' !'\n' .)* Newline > | < .+ > Eof )
 
-SkipBlock = RawHtml | (!BlankLine !'#' !SetextBottom1 !SetextBottom2 RawLine)+ BlankLine*
+SkipBlock = HtmlComment | HtmlBlock
+         | ( !'#' !SetextBottom1 !SetextBottom2 !BlankLine RawLine )+ BlankLine*
          | BlankLine+
          | RawLine
 
