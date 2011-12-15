@@ -526,41 +526,41 @@ UlLine   =      < "____" '_'* > | < Spacechar '_'+ &Spacechar >
 Emph =      EmphStar | EmphUl
 
 OneStarOpen  =  !StarLine '*' !Spacechar !Newline
-OneStarClose =  !Spacechar !Newline a:Inline !StrongStar '*' { $$ = a; }
+OneStarClose =  !StrongStar '*' !Alphanumeric
 
 EmphStar =  OneStarOpen
             a:StartList
-            ( !OneStarClose Inline { a = cons($$, a); } )*
-            OneStarClose { a = cons($$, a); }
+            ( !OneStarClose Inline { a = cons($$, a); } )+
+            OneStarClose
             { $$ = mk_list(EMPH, a); }
 
 OneUlOpen  =  !UlLine '_' !Spacechar !Newline
-OneUlClose =  !Spacechar !Newline a:Inline !StrongUl '_' !Alphanumeric { $$ = a; }
+OneUlClose =  !StrongUl '_' !Alphanumeric
 
 EmphUl =    OneUlOpen
             a:StartList
-            ( !OneUlClose Inline { a = cons($$, a); } )*
-            OneUlClose { a = cons($$, a); }
+            ( !OneUlClose Inline { a = cons($$, a); } )+
+            OneUlClose
             { $$ = mk_list(EMPH, a); }
 
 Strong = StrongStar | StrongUl
 
 TwoStarOpen =   !StarLine "**" !Spacechar !Newline
-TwoStarClose =  !Spacechar !Newline a:Inline "**" { $$ = a; }
+TwoStarClose =  "**" !Alphanumeric
 
 StrongStar =    TwoStarOpen
                 a:StartList
-                ( !TwoStarClose Inline { a = cons($$, a); } )*
-                TwoStarClose { a = cons($$, a); }
+                ( !TwoStarClose Inline { a = cons($$, a); } )+
+                TwoStarClose
                 { $$ = mk_list(STRONG, a); }
 
 TwoUlOpen =     !UlLine "__" !Spacechar !Newline
-TwoUlClose =    !Spacechar !Newline a:Inline "__" !Alphanumeric { $$ = a; }
+TwoUlClose =    "__" !Alphanumeric
 
 StrongUl =  TwoUlOpen
             a:StartList
-            ( !TwoUlClose Inline { a = cons($$, a); } )*
-            TwoUlClose { a = cons($$, a); }
+            ( !TwoUlClose Inline { a = cons($$, a); } )+
+            TwoUlClose
             { $$ = mk_list(STRONG, a); }
 
 ImageBlock = Image Sp Newline BlankLine+
