@@ -261,9 +261,21 @@ HtmlBlockOpenAddress = '<' Spnl ("address" | "ADDRESS") Spnl HtmlAttribute* '>'
 HtmlBlockCloseAddress = '<' Spnl '/' ("address" | "ADDRESS") Spnl '>'
 HtmlBlockAddress = HtmlBlockOpenAddress (HtmlBlockAddress | !HtmlBlockCloseAddress .)* HtmlBlockCloseAddress
 
+HtmlBlockOpenArticle = '<' Spnl ("article" | "ARTICLE") Spnl HtmlAttribute* '>'
+HtmlBlockCloseArticle = '<' Spnl '/' ("article" | "ARTICLE") Spnl '>'
+HtmlBlockArticle = HtmlBlockOpenArticle (HtmlBlockArticle | !HtmlBlockCloseArticle .)* HtmlBlockCloseArticle
+
+HtmlBlockOpenAside = '<' Spnl ("aside" | "ASIDE") Spnl HtmlAttribute* '>'
+HtmlBlockCloseAside = '<' Spnl '/' ("aside" | "ASIDE") Spnl '>'
+HtmlBlockAside = HtmlBlockOpenAside (HtmlBlockAside | !HtmlBlockCloseAside .)* HtmlBlockCloseAside
+
 HtmlBlockOpenBlockquote = '<' Spnl ("blockquote" | "BLOCKQUOTE") Spnl HtmlAttribute* '>'
 HtmlBlockCloseBlockquote = '<' Spnl '/' ("blockquote" | "BLOCKQUOTE") Spnl '>'
 HtmlBlockBlockquote = HtmlBlockOpenBlockquote (HtmlBlockBlockquote | !HtmlBlockCloseBlockquote .)* HtmlBlockCloseBlockquote
+
+HtmlBlockOpenCanvas = '<' Spnl ("canvas" | "CANVAS") Spnl HtmlAttribute* '>'
+HtmlBlockCloseCanvas = '<' Spnl '/' ("canvas" | "CANVAS") Spnl '>'
+HtmlBlockCanvas = HtmlBlockOpenCanvas (HtmlBlockCanvas | !HtmlBlockCloseCanvas .)* HtmlBlockCloseCanvas
 
 HtmlBlockOpenCenter = '<' Spnl ("center" | "CENTER") Spnl HtmlAttribute* '>'
 HtmlBlockCloseCenter = '<' Spnl '/' ("center" | "CENTER") Spnl '>'
@@ -285,9 +297,25 @@ HtmlBlockOpenFieldset = '<' Spnl ("fieldset" | "FIELDSET") Spnl HtmlAttribute* '
 HtmlBlockCloseFieldset = '<' Spnl '/' ("fieldset" | "FIELDSET") Spnl '>'
 HtmlBlockFieldset = HtmlBlockOpenFieldset (HtmlBlockFieldset | !HtmlBlockCloseFieldset .)* HtmlBlockCloseFieldset
 
+HtmlBlockOpenFigure = '<' Spnl ("figure" | "FIGURE") Spnl HtmlAttribute* '>'
+HtmlBlockCloseFigure = '<' Spnl '/' ("figure" | "FIGURE") Spnl '>'
+HtmlBlockFigure = HtmlBlockOpenFigure (HtmlBlockFigure | !HtmlBlockCloseFigure .)* HtmlBlockCloseFigure
+
+HtmlBlockOpenFooter = '<' Spnl ("footer" | "FOOTER") Spnl HtmlAttribute* '>'
+HtmlBlockCloseFooter = '<' Spnl '/' ("footer" | "FOOTER") Spnl '>'
+HtmlBlockFooter = HtmlBlockOpenFooter (HtmlBlockFooter | !HtmlBlockCloseFooter .)* HtmlBlockCloseFooter
+
 HtmlBlockOpenForm = '<' Spnl ("form" | "FORM") Spnl HtmlAttribute* '>'
 HtmlBlockCloseForm = '<' Spnl '/' ("form" | "FORM") Spnl '>'
 HtmlBlockForm = HtmlBlockOpenForm (HtmlBlockForm | !HtmlBlockCloseForm .)* HtmlBlockCloseForm
+
+HtmlBlockOpenHeader = '<' Spnl ("header" | "HEADER") Spnl HtmlAttribute* '>'
+HtmlBlockCloseHeader = '<' Spnl '/' ("header" | "HEADER") Spnl '>'
+HtmlBlockHeader = HtmlBlockOpenHeader (HtmlBlockHeader | !HtmlBlockCloseHeader .)* HtmlBlockCloseHeader
+
+HtmlBlockOpenHgroup = '<' Spnl ("hgroup" | "HGROUP") Spnl HtmlAttribute* '>'
+HtmlBlockCloseHgroup = '<' Spnl '/' ("hgroup" | "HGROUP") Spnl '>'
+HtmlBlockHgroup = HtmlBlockOpenHgroup (HtmlBlockHgroup | !HtmlBlockCloseHgroup .)* HtmlBlockCloseHgroup
 
 HtmlBlockOpenH1 = '<' Spnl ("h1" | "H1") Spnl HtmlAttribute* '>'
 HtmlBlockCloseH1 = '<' Spnl '/' ("h1" | "H1") Spnl '>'
@@ -337,6 +365,14 @@ HtmlBlockOpenPre = '<' Spnl ("pre" | "PRE") Spnl HtmlAttribute* '>'
 HtmlBlockClosePre = '<' Spnl '/' ("pre" | "PRE") Spnl '>'
 HtmlBlockPre = HtmlBlockOpenPre (HtmlBlockPre | !HtmlBlockClosePre .)* HtmlBlockClosePre
 
+HtmlBlockOpenProgress = '<' Spnl ("progress" | "PROGRESS") Spnl HtmlAttribute* '>'
+HtmlBlockCloseProgress = '<' Spnl '/' ("progress" | "PROGRESS") Spnl '>'
+HtmlBlockProgress = HtmlBlockOpenProgress (HtmlBlockProgress | !HtmlBlockCloseProgress .)* HtmlBlockCloseProgress
+
+HtmlBlockOpenSection = '<' Spnl ("section" | "SECTION") Spnl HtmlAttribute* '>'
+HtmlBlockCloseSection = '<' Spnl '/' ("section" | "SECTION") Spnl '>'
+HtmlBlockSection = HtmlBlockOpenSection (HtmlBlockSection | !HtmlBlockCloseSection .)* HtmlBlockCloseSection
+
 HtmlBlockOpenTable = '<' Spnl ("table" | "TABLE") Spnl HtmlAttribute* '>'
 HtmlBlockCloseTable = '<' Spnl '/' ("table" | "TABLE") Spnl '>'
 HtmlBlockTable = HtmlBlockOpenTable (HtmlBlockTable | !HtmlBlockCloseTable .)* HtmlBlockCloseTable
@@ -344,6 +380,10 @@ HtmlBlockTable = HtmlBlockOpenTable (HtmlBlockTable | !HtmlBlockCloseTable .)* H
 HtmlBlockOpenUl = '<' Spnl ("ul" | "UL") Spnl HtmlAttribute* '>'
 HtmlBlockCloseUl = '<' Spnl '/' ("ul" | "UL") Spnl '>'
 HtmlBlockUl = HtmlBlockOpenUl (HtmlBlockUl | !HtmlBlockCloseUl .)* HtmlBlockCloseUl
+
+HtmlBlockOpenVideo = '<' Spnl ("video" | "VIDEO") Spnl HtmlAttribute* '>'
+HtmlBlockCloseVideo = '<' Spnl '/' ("video" | "VIDEO") Spnl '>'
+HtmlBlockVideo = HtmlBlockOpenVideo (HtmlBlockVideo | !HtmlBlockCloseVideo .)* HtmlBlockCloseVideo
 
 HtmlBlockOpenDd = '<' Spnl ("dd" | "DD") Spnl HtmlAttribute* '>'
 HtmlBlockCloseDd = '<' Spnl '/' ("dd" | "DD") Spnl '>'
@@ -391,13 +431,20 @@ HtmlBlockScript = HtmlBlockOpenScript (!HtmlBlockCloseScript .)* HtmlBlockCloseS
 
 
 HtmlBlockInTags = HtmlBlockAddress
+                | HtmlBlockArticle
+                | HtmlBlockAside
+                | HtmlBlockCanvas
                 | HtmlBlockBlockquote
                 | HtmlBlockCenter
                 | HtmlBlockDir
                 | HtmlBlockDiv
                 | HtmlBlockDl
                 | HtmlBlockFieldset
+                | HtmlBlockFigure
+                | HtmlBlockFooter
                 | HtmlBlockForm
+                | HtmlBlockHeader
+                | HtmlBlockHgroup
                 | HtmlBlockH1
                 | HtmlBlockH2
                 | HtmlBlockH3
@@ -410,8 +457,11 @@ HtmlBlockInTags = HtmlBlockAddress
                 | HtmlBlockOl
                 | HtmlBlockP
                 | HtmlBlockPre
+                | HtmlBlockProgress
+                | HtmlBlockSection
                 | HtmlBlockTable
                 | HtmlBlockUl
+                | HtmlBlockVideo
                 | HtmlBlockDd
                 | HtmlBlockDt
                 | HtmlBlockFrameset
