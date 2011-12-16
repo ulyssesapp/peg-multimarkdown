@@ -808,9 +808,10 @@ Line =  RawLine
 RawLine = ( < (!'\r' !'\n' .)* Newline > | < .+ > Eof )
 
 SkipBlock = HtmlBlock
-          | ( !'#' !SetextBottom1 !SetextBottom2 !BlankLine RawLine )+ BlankLine*
           | BlankLine+
+          | Code
           | RawLine
+
 
 # Syntax extensions
 
