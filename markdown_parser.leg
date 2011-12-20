@@ -51,7 +51,8 @@ MetaData =  a:StartList !([A-Za-z]+ "://")
             }
 
 MetaDataOnly = a:StartList
-             ( b:MetaData { a = cons(b, a); } | SkipBlock )*
+             ( b:MetaData { a = cons(b, a); } )?
+             SkipBlock*
              { parse_result = mk_list(LIST,a); }
 
 MetaDataKeyValue = a:MetaDataKey
