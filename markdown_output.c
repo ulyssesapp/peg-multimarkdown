@@ -323,7 +323,7 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         if (lev > 6)
             lev = 6;
         pad(out, 2);
-        if ( extension(EXT_COMPATIBILITY) ) {
+        if ( extension(EXT_COMPATIBILITY) || extension(EXT_NO_LABELS)) {
             /* Use regular Markdown header format */
             g_string_append_printf(out, "<h%1d>", lev);
             print_html_element_list(out, elt->children, obfuscate);

@@ -79,6 +79,7 @@ Syntax extensions\n\
   --smart --nosmart       toggle smart typography extension\n\
   --notes --nonotes       toggle notes extension\n\
   --process-html          process MultiMarkdown inside of raw HTML\n\
+  --nolabels              not generate id attributes for headers\n\
 \n\
 Converts text in specified files (or stdin) from markdown to FORMAT.\n\
 Available FORMATs:  html, latex, memoir, beamer, odf, opml\n");
@@ -136,6 +137,7 @@ int main(int argc, char * argv[]) {
       MD_ARGUMENT_FLAG( "notes", 0, 1, &opt_notes, "use notes extension (on by default)", NULL ),
       MD_ARGUMENT_FLAG( "nonotes", 0, 1, &opt_no_notes, "do not use notes extension", NULL ),
       MD_ARGUMENT_FLAG( "process-html", 0, 1, &opt_process_html, "process MultiMarkdown inside of raw HTML", NULL ),
+      MD_ARGUMENT_FLAG( "nolabels", 0, 1, &opt_no_labels, "do not generate id attributes for headers", NULL ),
       { NULL }
     };
 
