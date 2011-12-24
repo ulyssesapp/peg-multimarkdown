@@ -1251,7 +1251,9 @@ OPMLHeadingSection = a:StartList OPMLHeading { a = cons($$, a); }
     (OPMLSectionBlock {a = cons($$, a); })*
     { $$ = mk_list(HEADINGSECTION, a);}
 
-OPMLHeading = &(Heading) s:AtxStart Sp? 
+OPMLHeading = OPMLAtxHeading | OPMLSetextHeading
+
+OPMLAtxHeading = &(Heading) s:AtxStart Sp? 
     < (!Newline !(Sp? '#'* Sp Newline) .)* > 
     (Sp? '#'+)? Sp? Newline
     {
@@ -1259,6 +1261,20 @@ OPMLHeading = &(Heading) s:AtxStart Sp?
         $$->key = s->key;
         free(s);
     }
+
+OPMLSetextHeading = OPMLSetextHeading1 | OPMLSetextHeading2
+
+OPMLSetextHeading1 = <RawLine> SetextBottom1 
+	{
+		$$ = mk_str(yytext);
+		$$->key = H1;
+	}
+
+OPMLSetextHeading2 = <RawLine> SetextBottom2
+	{
+		$$ = mk_str(yytext);
+		$$->key = H2;
+	}
 
 OPMLSectionBlock =
         BlankLine*
