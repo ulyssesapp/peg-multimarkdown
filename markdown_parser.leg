@@ -1264,13 +1264,13 @@ OPMLAtxHeading = &(Heading) s:AtxStart Sp?
 
 OPMLSetextHeading = OPMLSetextHeading1 | OPMLSetextHeading2
 
-OPMLSetextHeading1 = <RawLine> SetextBottom1 
+OPMLSetextHeading1 = < (!'\r' !'\n' .)* > Newline SetextBottom1 
 	{
 		$$ = mk_str(yytext);
 		$$->key = H1;
 	}
 
-OPMLSetextHeading2 = <RawLine> SetextBottom2
+OPMLSetextHeading2 = < (!'\r' !'\n' .)* > Newline SetextBottom2
 	{
 		$$ = mk_str(yytext);
 		$$->key = H2;
