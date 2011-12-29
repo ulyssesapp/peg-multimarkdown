@@ -14,8 +14,8 @@
 #		likely to fail gracefully if there are any issues in your
 #		LaTeX file.
 
-# Be sure to include multimarkdown in our PATH
-export PATH="/usr/local/bin:$PATH"
+# Be sure to include multimarkdown and latex in our PATH
+export PATH="/usr/local/bin:/usr/texbin:$PATH"
 
 if [ $# = 0 ]
 then
