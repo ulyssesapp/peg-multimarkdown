@@ -17,7 +17,7 @@ endef
 else
 	FINALNOTES=Build complete.
 endif
-	
+
 CFLAGS ?= -Wall -O3 -ansi -include GLibFacade.h -I ./ -D MD_USE_GET_OPT=1
 
 OBJS=markdown_parser.o markdown_output.o markdown_lib.o GLibFacade.o
@@ -134,7 +134,6 @@ mac-installer:
 	--filter "\.git" \
 	--id net.fletcherpenney.multimarkdown.pkg \
 	--out "MultiMarkdown-Mac-$(VERSION).pkg";
-	
 
 # Requires installation of the platypus command line tool to create
 # a drag and drop application for Mac OS X
