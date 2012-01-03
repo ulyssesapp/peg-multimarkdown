@@ -25,7 +25,7 @@ PEGDIR=peg-0.1.4
 LEG=$(PEGDIR)/leg
 
 $(LEG):
-	CC=gcc make -C $(PEGDIR)
+	CC=gcc $(MAKE) -C $(PEGDIR)
 
 %.o : %.c markdown_peg.h
 	$(CC) -c $(CFLAGS) -o $@ $<
@@ -41,7 +41,7 @@ markdown_parser.c : markdown_parser.leg $(LEG) markdown_peg.h parsing_functions.
 
 clean:
 	rm -f markdown_parser.c $(PROGRAM) $(OBJS); \
-	make -C $(PEGDIR) clean; \
+	$(MAKE) -C $(PEGDIR) clean; \
 	rm -rf mac_installer/Package_Root/usr/local/bin; \
 	rm -rf mac_installer/Support_Root; \
 	rm mac_installer/Resources/*.html; \
@@ -52,7 +52,7 @@ clean:
 	rm -rf mac_installer/*.pkg
 
 distclean: clean
-	make -C $(PEGDIR) spotless
+	$(MAKE) -C $(PEGDIR) spotless
 
 test: $(PROGRAM)
 	cd MarkdownTest; \
