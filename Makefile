@@ -17,8 +17,15 @@ endef
 else
 	FINALNOTES=Build complete.
 endif
-	
-CFLAGS ?= -Wall -O3 -ansi -include GLibFacade.h -I ./ -D MD_USE_GET_OPT=1
+
+CFLAGS ?= -Wall -O3 -include GLibFacade.h -I ./ -D MD_USE_GET_OPT=1
+ifeq ($(UNAME), SunOS)
+	CC = gcc
+	# Use of <stdbool.h> is valid only in a c99 compilation environment
+	CFLAGS += --std=c99
+else
+	CFLAGS += -ansi
+endif
 
 OBJS=markdown_parser.o markdown_output.o markdown_lib.o GLibFacade.o
 PEGDIR_ORIG=peg-0.1.4
@@ -30,7 +37,7 @@ $(PEGDIR):
 	patch -p1 < peg-memory-fix.patch
 
 $(LEG): $(PEGDIR)
-	CC=gcc make -C $(PEGDIR)
+	CC=gcc $(MAKE) -C $(PEGDIR)
 
 %.o : %.c markdown_peg.h
 	$(CC) -c $(CFLAGS) -o $@ $<
@@ -46,7 +53,7 @@ markdown_parser.c : markdown_parser.leg $(LEG) markdown_peg.h parsing_functions.
 
 clean:
 	rm -f markdown_parser.c $(PROGRAM) $(OBJS); \
-	make -C $(PEGDIR) clean; \
+	$(MAKE) -C $(PEGDIR) clean; \
 	rm -rf mac_installer/Package_Root/usr/local/bin; \
 	rm -rf mac_installer/Support_Root; \
 	rm mac_installer/Resources/*.html; \
@@ -58,6 +65,7 @@ clean:
 
 distclean: clean
 	rm -rf $(PEGDIR)
+	$(MAKE) -C $(PEGDIR) spotless
 
 test: $(PROGRAM)
 	cd MarkdownTest; \
@@ -139,7 +147,6 @@ mac-installer:
 	--filter "\.git" \
 	--id net.fletcherpenney.multimarkdown.pkg \
 	--out "MultiMarkdown-Mac-$(VERSION).pkg";
-	
 
 # Requires installation of the platypus command line tool to create
 # a drag and drop application for Mac OS X
@@ -158,7 +165,7 @@ docs: $(PROGRAM)
 	mkdir -p ../manual; \
 	../multimarkdown manual.txt > ../manual/index.html; \
 	../multimarkdown -b -t latex manual.txt; \
-	latexmk manual.tex; \
+	latexmk -pdf manual.tex; \
 	latexmk -c manual.tex; \
 	mv manual.pdf ../manual/mmd-manual.pdf; \
 	rm ../documentation/manual.t*;
