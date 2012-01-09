@@ -765,7 +765,7 @@ static void print_latex_string(GString *out, char *str) {
             g_string_append_printf(out, "\\^{}");
             break;
         case '\\':
-            g_string_append_printf(out, "\\textbackslash");
+            g_string_append_printf(out, "\\textbackslash{}");
             break;
         case '~':
             g_string_append_printf(out, "\\ensuremath{\\sim}");
