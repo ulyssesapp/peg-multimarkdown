@@ -18,13 +18,26 @@ else
 	FINALNOTES=Build complete.
 endif
 
-CFLAGS ?= -Wall -O3 -include GLibFacade.h -I ./ -D MD_USE_GET_OPT=1
+CFLAGS ?= -Wall -O3 -include GLibFacade.h -I ./ -D MD_USE_GET_OPT=1 
 ifeq ($(UNAME), SunOS)
 	CC = gcc
 	# Use of <stdbool.h> is valid only in a c99 compilation environment
 	CFLAGS += --std=c99
 else
 	CFLAGS += -ansi
+endif
+
+# make ARCH=ppc
+# build for ppc architecture - Only works on machines with PPC compilation support installed
+# probably only Snow Leopard machines with Xcode 3 installed
+ifeq ($(ARCH), ppc)
+	CFLAGS += -arch ppc
+endif
+
+# make ARCH=i386
+# build for i386 architecture - useful with older machines or those running 10.4?
+ifeq ($(ARCH), i386)
+	CFLAGS += -arch i386
 endif
 
 OBJS=markdown_parser.o markdown_output.o markdown_lib.o GLibFacade.o
