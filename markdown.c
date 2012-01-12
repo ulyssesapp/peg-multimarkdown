@@ -79,7 +79,7 @@ Syntax extensions\n\
   --smart --nosmart       toggle smart typography extension\n\
   --notes --nonotes       toggle notes extension\n\
   --process-html          process MultiMarkdown inside of raw HTML\n\
-  --nolabels              not generate id attributes for headers\n\
+  --nolabels              do not generate id attributes for headers\n\
 \n\
 Converts text in specified files (or stdin) from markdown to FORMAT.\n\
 Available FORMATs:  html, latex, memoir, beamer, odf, opml\n");
