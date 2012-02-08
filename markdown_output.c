@@ -323,15 +323,20 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         if (lev > 6)
             lev = 6;
         pad(out, 2);
-        if ( extension(EXT_COMPATIBILITY) || extension(EXT_NO_LABELS)) {
+        if ( extension(EXT_COMPATIBILITY)) {
             /* Use regular Markdown header format */
             g_string_append_printf(out, "<h%1d>", lev);
             print_html_element_list(out, elt->children, obfuscate);
         } else if (elt->children->key == AUTOLABEL) {
-            /* generate a label for each header (MMD)*/
+            /* use label for header since one was specified (MMD)*/
             g_string_append_printf(out, "<h%d id=\"%s\">", lev,elt->children->contents.str);
             print_html_element_list(out, elt->children->next, obfuscate);
+        } else if ( extension(EXT_NO_LABELS)) {
+            /* Don't generate a label */
+            g_string_append_printf(out, "<h%1d>", lev);
+            print_html_element_list(out, elt->children, obfuscate);
         } else {
+            /* generate a label by default for MMD */
             label = label_from_element_list(elt->children, obfuscate);
             g_string_append_printf(out, "<h%d id=\"%s\">", lev, label);
             print_html_element_list(out, elt->children, obfuscate);
