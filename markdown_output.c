@@ -2290,12 +2290,12 @@ void print_html_header(GString *out, element *elt, bool obfuscate) {
 "<!DOCTYPE html>\n<html>\n<head>\n\t<meta charset=\"utf-8\"/>\n");
 
     print_html_element_list(out, elt->children, obfuscate);
-    g_string_append_printf(out, "</head>\n<body>\n");    
+    g_string_append_printf(out, "</head>\n<body>\n\n");    
 }
 
 
 void print_html_footer(GString *out, bool obfuscate) {
-    g_string_append_printf(out, "\n</body>\n</html>");
+    g_string_append_printf(out, "\n\n</body>\n</html>");
 }
 
 
