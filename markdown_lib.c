@@ -209,3 +209,22 @@ char * extract_metadata_value(char *text, int extensions, char *key) {
     return value;
 }
 
+/* has_metadata - parse document and report whether metadata is present */
+gboolean has_metadata(char *text, int extensions) {
+    gboolean hasMeta;
+    element *result;
+    GString *formatted_text;
+    
+    formatted_text = preformat_text(text);
+    
+    result = parse_metadata_only(formatted_text->str, extensions);
+    
+    if (result->children != NULL) {
+        hasMeta = TRUE;
+    } else {
+        hasMeta = FALSE;
+    }
+    free_element_list(result);
+    return hasMeta;
+}
+

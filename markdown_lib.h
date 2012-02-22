@@ -20,11 +20,13 @@ enum markdown_formats {
     OPML_FORMAT,
     GROFF_MM_FORMAT,
     ODF_FORMAT,
-    ODF_BODY_FORMAT
+    ODF_BODY_FORMAT,
+	ORIGINAL_FORMAT
 };
 
 GString * markdown_to_g_string(char *text, int extensions, int output_format);
 char * markdown_to_string(char *text, int extensions, int output_format);
 char * extract_metadata_value(char *text, int extensions, char *key);
+gboolean has_metadata(char *text, int extensions);
 
 /* vim: set ts=4 sw=4 : */
