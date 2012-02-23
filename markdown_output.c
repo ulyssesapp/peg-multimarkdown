@@ -82,8 +82,8 @@ element * print_html_headingsection(GString *out, element *list, bool obfuscate)
 
 static bool is_html_complete_doc(element *meta);
 static int find_latex_mode(int format, element *list);
-element * metadata_for_key(char *key, element *list);
-char * metavalue_for_key(char *key, element *list);
+element * metadata_for_key(const char *key, element *list);
+char * metavalue_for_key(const char *key, element *list);
 
 element * element_for_attribute(char *querystring, element *list);
 char * dimension_for_attribute(char *querystring, element *list);
@@ -2501,7 +2501,7 @@ static int find_latex_mode(int format, element *list) {
 
 
 /* find specified metadata key, if present */
-element * metadata_for_key(char *key, element *list) {
+element * metadata_for_key(const char *key, element *list) {
     element *step = NULL;
     step = list;
     char *label;
@@ -2530,7 +2530,7 @@ element * metadata_for_key(char *key, element *list) {
 
 
 /* find specified metadata key, if present */
-char * metavalue_for_key(char *key, element *list) {
+char * metavalue_for_key(const char *key, element *list) {
     element *step = NULL;
     step = list;
     char *label;

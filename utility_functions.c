@@ -3,7 +3,7 @@
 
 extern int strcasecmp(const char *string1, const char *string2);
 
-static char *label_from_string(char *str, bool obfuscate) ;
+static char *label_from_string(const char *str, bool obfuscate) ;
 static void localize_typography(GString *out, int character, int language, int output);
 
 static void print_raw_element_list(GString *out, element *list);
@@ -290,7 +290,7 @@ static char *label_from_element_list(element *list, bool obfuscate) {
     HTML id */
 /* Returns a null-terminated string, which must be freed after use. */
 
-static char *label_from_string(char *str, bool obfuscate) {
+static char *label_from_string(const char *str, bool obfuscate) {
     bool valid = FALSE;
     GString *out = g_string_new("");
     char *label;

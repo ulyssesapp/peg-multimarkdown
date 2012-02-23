@@ -25,7 +25,7 @@
 
 /* preformat_text - allocate and copy text buffer while
  * performing tab expansion. */
-static GString *preformat_text(char *text) {
+static GString *preformat_text(const char *text) {
     GString *buf;
     char next_char;
     int charstotab;
@@ -144,7 +144,7 @@ static element * process_raw_blocks(element *input, int extensions, element *ref
 
 /* markdown_to_gstring - convert markdown text to the output format specified.
  * Returns a GString, which must be freed after use using g_string_free(). */
-GString * markdown_to_g_string(char *text, int extensions, int output_format) {
+GString * markdown_to_g_string(const char *text, int extensions, int output_format) {
     element *result;
     element *references;
     element *notes;
@@ -181,7 +181,7 @@ GString * markdown_to_g_string(char *text, int extensions, int output_format) {
 
 /* markdown_to_string - convert markdown text to the output format specified.
  * Returns a null-terminated string, which must be freed after use. */
-char * markdown_to_string(char *text, int extensions, int output_format) {
+char * markdown_to_string(const char *text, int extensions, int output_format) {
     GString *out;
     char *char_out;
     out = markdown_to_g_string(text, extensions, output_format);
@@ -195,7 +195,7 @@ char * markdown_to_string(char *text, int extensions, int output_format) {
 /* extract_metadata_value - parse document and return value of specified
    metadata key (e.g. "LateX Mode")/
    Returns a null-terminated string, which must be freed after use. */
-char * extract_metadata_value(char *text, int extensions, char *key) {
+char * extract_metadata_value(const char *text, int extensions, const char *key) {
     char *value;
     element *result;
     GString *formatted_text;
