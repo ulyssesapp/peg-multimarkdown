@@ -119,4 +119,6 @@ struct Element {
 struct Element * markdown_to_ast(const char *text, int extensions);
 void markdown_free_ast(struct Element *ast);
 
+void print_tree(struct Element * elt, int indent);
+
 #endif

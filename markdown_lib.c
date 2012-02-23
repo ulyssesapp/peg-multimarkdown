@@ -55,7 +55,7 @@ static GString *preformat_text(const char *text) {
 }
 
 /* print_tree - print tree of elements, for debugging only. */
-static void print_tree(element * elt, int indent) {
+void print_tree(element * elt, int indent) {
     int i;
     char * key;
     while (elt != NULL) {
