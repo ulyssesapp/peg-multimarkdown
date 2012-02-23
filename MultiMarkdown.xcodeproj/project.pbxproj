@@ -29,6 +29,7 @@
 		4AFA467D13E3640600CFA132 /* markdown_output.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66313DF47CC00D0980C /* markdown_output.c */; };
 		65F0B69E13DF47CC00D0980C /* markdown.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66713DF47CC00D0980C /* markdown.c */; };
 		65F89EA713E37B9D006A34B8 /* libMultiMarkdown.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AFA466213E3624F00CFA132 /* libMultiMarkdown.a */; };
+		79F800D114F6CAB1003AD4AA /* markdown_parser_lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 79F800D014F6CAB1003AD4AA /* markdown_parser_lib.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +108,7 @@
 		65F89EB813E37BEF006A34B8 /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		65F89EB913E37BEF006A34B8 /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		65F89EBA13E37C2A006A34B8 /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		79F800D014F6CAB1003AD4AA /* markdown_parser_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = markdown_parser_lib.h; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* multimarkdown */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = multimarkdown; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -154,6 +156,7 @@
 				65F0B6C513DF485F00D0980C /* Makefile */,
 				65F0B66113DF47CC00D0980C /* markdown_lib.c */,
 				65F0B66213DF47CC00D0980C /* markdown_lib.h */,
+				79F800D014F6CAB1003AD4AA /* markdown_parser_lib.h */,
 				65F0B66313DF47CC00D0980C /* markdown_output.c */,
 				65F0B66513DF47CC00D0980C /* markdown_parser.leg */,
 				65F0B66613DF47CC00D0980C /* markdown_peg.h */,
@@ -248,6 +251,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79F800D114F6CAB1003AD4AA /* markdown_parser_lib.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
