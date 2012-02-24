@@ -47,6 +47,7 @@ do
 		xelatex "$file_name.tex"
 		xelatex "$file_name.tex"
 		xelatex "$file_name.tex"
+		latexmk -c "$file_name.tex"
 	
 	else
 		# Use LaTeX
