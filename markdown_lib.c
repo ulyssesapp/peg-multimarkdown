@@ -221,10 +221,11 @@ gboolean has_metadata(char *text, int extensions) {
     
     if (result->children != NULL) {
         hasMeta = TRUE;
+        free_element_list(result);
     } else {
         hasMeta = FALSE;
+        free_element(result);
     }
-    free_element_list(result);
     return hasMeta;
 }
 
