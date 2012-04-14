@@ -50,9 +50,16 @@ MetaData =  a:StartList !([A-Za-z]+ "://")
                 $$->key = METADATA;
             }
 
-MetaDataOnly = a:StartList
-             ( b:MetaData { a = cons(b, a); } )?
-             SkipBlock*
+MetaDataOnly = BOM? a:StartList
+             ( MetaData { a = cons($$, a); } )?
+#             SkipBlock*
+			.*
+             { parse_result = reverse(a); }
+
+MetaDataOnly2 = BOM? a:StartList
+             ( MetaData { a = cons($$, a); } )?
+#             SkipBlock*
+			.*
              { parse_result = mk_list(LIST,a); }
 
 MetaDataKeyValue = a:MetaDataKey
@@ -1094,7 +1101,7 @@ AutoLabels = ( &{ !extension(EXT_COMPATIBILITY) && !extension(EXT_NO_LABELS)}
             | SkipBlock )*
             { labels = a; })
 
-DefinitionList =  a:StartList &(TermLine+ ':')
+DefinitionList =  a:StartList &(TermLine+ ':') BlankLine?
                 (
                     (Term { a = cons($$, a); } )+
                     (Definition { a = cons($$, a);})+
