@@ -1101,9 +1101,10 @@ AutoLabels = ( &{ !extension(EXT_COMPATIBILITY) && !extension(EXT_NO_LABELS)}
             | SkipBlock )*
             { labels = a; })
 
-DefinitionList =  a:StartList &(TermLine+ ':') BlankLine?
+DefinitionList =  a:StartList &(TermLine+ Newline? NonindentSpace ':')
                 (
                     (Term { a = cons($$, a); } )+
+                    BlankLine?
                     (Definition { a = cons($$, a);})+
                     BlankLine*
                 )+
@@ -1121,7 +1122,7 @@ Term =  a:StartList !BlankLine !':'
 
 Definition = (a:StartList b:StartList
                 (BlankLine { b = cons(mk_str("\n"),b); } )?
-                ( ':' Sp RawLine { a = cons(mk_str(yytext), a);}) 
+                ( NonindentSpace ':' Sp RawLine { a = cons(mk_str(yytext), a);}) 
                 ( !':' !BlankLine RawLine { a = cons(mk_str(yytext), a);})*
                 ( BlankLine {a = cons(mk_str("\n"),a);}
                     (IndentedLine { a = cons(mk_str(yytext),a);})+ 
