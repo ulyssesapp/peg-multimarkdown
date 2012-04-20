@@ -155,14 +155,14 @@ GString * markdown_to_g_string(char *text, int extensions, int output_format) {
 
     formatted_text = preformat_text(text);
 
+    references = parse_references(formatted_text->str, extensions);
+    notes = parse_notes(formatted_text->str, extensions, references);
+    labels = parse_labels(formatted_text->str, extensions, references, notes);
+
     if (output_format == OPML_FORMAT) {
         result = parse_markdown_for_opml(formatted_text->str, extensions);
     } else {
-        references = parse_references(formatted_text->str, extensions);
-        notes = parse_notes(formatted_text->str, extensions, references);
-        labels = parse_labels(formatted_text->str, extensions, references, notes);
         result = parse_markdown_with_metadata(formatted_text->str, extensions, references, notes, labels);
-
         result = process_raw_blocks(result, extensions, references, notes, labels);
     }
 
@@ -171,11 +171,9 @@ GString * markdown_to_g_string(char *text, int extensions, int output_format) {
     print_element_list(out, result, output_format, extensions);
 
     free_element_list(result);
+    free_element_list(references);
+    free_element_list(labels);
 
-    if (output_format != OPML_FORMAT) {
-        free_element_list(references);
-        free_element_list(labels);
-    }
     return out;
 }
 
@@ -198,14 +196,24 @@ char * markdown_to_string(char *text, int extensions, int output_format) {
 char * extract_metadata_value(char *text, int extensions, char *key) {
     char *value;
     element *result;
+    element *references;
+    element *notes;
+    element *labels;
     GString *formatted_text;
 
     formatted_text = preformat_text(text);
-    
+
+    references = parse_references(formatted_text->str, extensions);
+    notes = parse_notes(formatted_text->str, extensions, references);
+    labels = parse_labels(formatted_text->str, extensions, references, notes);
+
     result = parse_metadata_only(formatted_text->str, extensions);
     
     value = metavalue_for_key(key, result->children);
     free_element_list(result);
+    free_element_list(references);
+    free_element_list(labels);
+
     return value;
 }
 
@@ -213,9 +221,16 @@ char * extract_metadata_value(char *text, int extensions, char *key) {
 gboolean has_metadata(char *text, int extensions) {
     gboolean hasMeta;
     element *result;
+    element *references;
+    element *notes;
+    element *labels;
     GString *formatted_text;
     
     formatted_text = preformat_text(text);
+
+    references = parse_references(formatted_text->str, extensions);
+    notes = parse_notes(formatted_text->str, extensions, references);
+    labels = parse_labels(formatted_text->str, extensions, references, notes);
     
     result = parse_metadata_only(formatted_text->str, extensions);
 
@@ -229,6 +244,9 @@ gboolean has_metadata(char *text, int extensions) {
             free_element(result);
         }
     }
+
+    free_element_list(references);
+    free_element_list(labels);
     return hasMeta;
 }
 

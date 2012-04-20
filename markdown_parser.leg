@@ -725,9 +725,9 @@ AutoLinkEmail = '<' ( "mailto:" )? < [-A-Za-z0-9+_./!%~$]+ '@' ( !Newline !'>' .
 
 Reference = a:StartList NonindentSpace !"[]" l:Label ':' Spnl s:RefSrc
         t:RefTitle
-		( &{ !extension(EXT_COMPATIBILITY) } 
-			(Attributes { a = cons($$,a);})? )?
-		BlankLine+
+        ( &{ !extension(EXT_COMPATIBILITY) } 
+            (Attributes { a = cons($$,a);})? )?
+        BlankLine+
         { 
             char *label;
             GString *text = g_string_new("");
@@ -793,13 +793,13 @@ RefTitle =  ( RefTitleSingle | RefTitleDouble | RefTitleParens | EmptyTitle )
 EmptyTitle = < "" >
 
 RefTitleSingle = Spnl '\'' < ( !( '\'' Sp Newline | Newline |
-	&{ !extension(EXT_COMPATIBILITY) } '\'' Sp AlphanumericAscii+ '=' ) . )* > '\''
+    &{ !extension(EXT_COMPATIBILITY) } '\'' Sp AlphanumericAscii+ '=' ) . )* > '\''
 
 RefTitleDouble = Spnl '"' < ( !('"' Sp Newline | Newline |
-	&{ !extension(EXT_COMPATIBILITY) } '"' Sp AlphanumericAscii+ '=' ) . )* > '"'
+    &{ !extension(EXT_COMPATIBILITY) } '"' Sp AlphanumericAscii+ '=' ) . )* > '"'
 
 RefTitleParens = Spnl '(' < ( !(')' Sp Newline | Newline |
-	&{ !extension(EXT_COMPATIBILITY) } ')' Sp AlphanumericAscii+ '=' ) . )* > ')'
+    &{ !extension(EXT_COMPATIBILITY) } ')' Sp AlphanumericAscii+ '=' ) . )* > ')'
 
 References = a:StartList
              ( b:Reference { a = cons(b, a); } | SkipBlock )*
@@ -1056,7 +1056,7 @@ RawCitationReference = "[#" < ( !Newline !']' . )+ > ']'
 
 
 AutoLabels = ( &{ !extension(EXT_COMPATIBILITY) && !extension(EXT_NO_LABELS)}
-	a:StartList ( b:Heading
+    a:StartList ( b:Heading
             { 
                 GString *label = g_string_new("");
                 char *lab;
@@ -1245,11 +1245,13 @@ MathSpan = '\\' < (
 }
 
 
-DocForOPML = a:StartList b:StartList 
-    ( &( MetaDataKey Sp ':' Sp (!Newline)) MetaData
+DocForOPML = BOM? a:StartList 
+    ( &{ !extension(EXT_COMPATIBILITY) }
+       &( MetaDataKey Sp ':' Sp (!Newline)) MetaData
             { a = cons($$, a); })?
     ( OPMLBlock { a = cons($$, a); } )*
-    { parse_result = reverse(a); }
+    { parse_result = reverse(a);
+ }
 
 OPMLBlock =     BlankLine*
             ( OPMLHeadingSection
@@ -1273,16 +1275,16 @@ OPMLAtxHeading = &(Heading) s:AtxStart Sp?
 OPMLSetextHeading = OPMLSetextHeading1 | OPMLSetextHeading2
 
 OPMLSetextHeading1 = < (!'\r' !'\n' .)* > Newline SetextBottom1 
-	{
-		$$ = mk_str(yytext);
-		$$->key = H1;
-	}
+    {
+        $$ = mk_str(yytext);
+        $$->key = H1;
+    }
 
 OPMLSetextHeading2 = < (!'\r' !'\n' .)* > Newline SetextBottom2
-	{
-		$$ = mk_str(yytext);
-		$$->key = H2;
-	}
+    {
+        $$ = mk_str(yytext);
+        $$->key = H2;
+    }
 
 OPMLSectionBlock =
         BlankLine*

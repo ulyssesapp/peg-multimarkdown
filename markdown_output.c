@@ -262,8 +262,8 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
             g_string_append_printf(out, "\"");
         } else {
             if (!(extension(EXT_COMPATIBILITY))) {
-				g_string_append_printf(out, "\" id=\"%s\"",elt->contents.link->identifier);
-			}
+                g_string_append_printf(out, "\" id=\"%s\"",elt->contents.link->identifier);
+            }
         }
         if (strlen(elt->contents.link->title) > 0) {
             g_string_append_printf(out, " title=\"");
@@ -354,12 +354,12 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         pad(out, 2);
         g_string_append_printf(out, "<p>");
         print_html_element_list(out, elt->children, obfuscate);
-		if (am_printing_html_footnote && ( elt->next == NULL)) {
-			g_string_append_printf(out, " <a href=\"#fnref:%d\" title=\"return to article\" class=\"reversefootnote\">&#160;&#8617;</a>", footnote_counter_to_print);
-			/* Only print once. For now, it's the first paragraph, until
-				I can figure out to make it the last paragraph */
-			am_printing_html_footnote = FALSE;
-		}
+        if (am_printing_html_footnote && ( elt->next == NULL)) {
+            g_string_append_printf(out, " <a href=\"#fnref:%d\" title=\"return to article\" class=\"reversefootnote\">&#160;&#8617;</a>", footnote_counter_to_print);
+            /* Only print once. For now, it's the first paragraph, until
+                I can figure out to make it the last paragraph */
+            am_printing_html_footnote = FALSE;
+        }
         g_string_append_printf(out, "</p>");
         padded = 0;
         break;
@@ -735,11 +735,11 @@ static void print_html_endnotes(GString *out) {
         } else {
             g_string_append_printf(out, "<li id=\"fn:%d\">\n", counter);
             padded = 2;
-			am_printing_html_footnote = TRUE;
-			footnote_counter_to_print = counter;
+            am_printing_html_footnote = TRUE;
+            footnote_counter_to_print = counter;
             print_html_element_list(out, note_elt, false);
-			am_printing_html_footnote = FALSE;
-			footnote_counter_to_print = 0;
+            am_printing_html_footnote = FALSE;
+            footnote_counter_to_print = 0;
             pad(out, 1);
             g_string_append_printf(out, "</li>");
         }
@@ -851,8 +851,8 @@ static void print_latex_element(GString *out, element *elt) {
     char *label;
     char *height;
     char *width;
-	char *upper;
-	int i;
+    char *upper;
+    int i;
     double floatnum;
     switch (elt->key) {
     case SPACE:
@@ -2224,6 +2224,9 @@ void print_element_list(GString *out, element *elt, int format, int exts) {
     language = ENGLISH;
     html_footer = FALSE;
     no_latex_footnote = FALSE;
+    footnote_counter_to_print = 0;
+    odf_list_needs_end_p = 0;
+    element *title;
 
     extensions = exts;
     padded = 2;  /* set padding to 2, so no extra blank lines at beginning */
@@ -2249,6 +2252,14 @@ void print_element_list(GString *out, element *elt, int format, int exts) {
         break;
     case OPML_FORMAT:
         g_string_append_printf(out, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<opml version=\"1.0\">\n");
+       if (list_contains_key(elt,METAKEY)) {
+            title = metadata_for_key("title",elt);
+            if (title != NULL) {
+                g_string_append_printf(out,"<head><title>");
+                print_raw_element(out,title->children);
+                g_string_append_printf(out,"</title></head>");
+            }
+        }
         g_string_append_printf(out, "<body>\n");
         print_opml_element_list(out, elt);
         if (html_footer == TRUE) print_opml_metadata(out, elt);
