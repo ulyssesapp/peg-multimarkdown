@@ -208,8 +208,8 @@ char * extract_metadata_value(char *text, int extensions, char *key) {
     labels = parse_labels(formatted_text->str, extensions, references, notes);
 
     result = parse_metadata_only(formatted_text->str, extensions);
-    
-    value = metavalue_for_key(key, result->children);
+
+    value = metavalue_for_key(key, result);
     free_element_list(result);
     free_element_list(references);
     free_element_list(labels);
