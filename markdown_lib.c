@@ -168,9 +168,14 @@ GString * markdown_to_g_string(char *text, int extensions, int output_format) {
 
     g_string_free(formatted_text, TRUE);
 
-    print_element_list(out, result, output_format, extensions);
-
+    if (result == NULL) {
+        /* The parsing was aborted */
+        g_string_append(out,"<p>MultiMarkdown was unable to parse this file.</p>");
+    } else {
+        print_element_list(out, result, output_format, extensions);
+    }
     free_element_list(result);
+
     free_element_list(references);
     free_element_list(labels);
 

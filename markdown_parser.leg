@@ -35,7 +35,7 @@
 Doc =       BOM? a:StartList ( Block { a = cons($$, a); } )*
             { parse_result = reverse(a); }
 
-DocWithMetaData = BOM? a:StartList b:StartList 
+DocWithMetaData = BOM? a:StartList b:StartList
     ( &{ !extension(EXT_COMPATIBILITY) }
         &( MetaDataKey Sp ':' Sp (!Newline)) MetaData
             { a = cons($$, a); b = mk_element(FOOTER);})?
@@ -519,7 +519,8 @@ Inlines  =  a:StartList ( !Endline Inline { a = cons($$, a); }
                         | c:Endline &Inline { a = cons(c, a); } )+ Endline?
             { $$ = mk_list(LIST, a); }
 
-Inline  = Str
+Inline  = &{ check_timeout() }
+        Str
         | &{ !extension(EXT_COMPATIBILITY) } MathSpan
         | Endline
         | UlOrStarLine
