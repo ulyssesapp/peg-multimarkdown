@@ -1,5 +1,3 @@
-ALL : multimarkdown
-
 VERSION=3.6
 PROGRAM=multimarkdown
 
@@ -122,6 +120,10 @@ windows: $(PROGRAM)
 	/usr/bin/i586-mingw32msvc-cc -c -Wall -O3 -ansi markdown*.c GLibFacade.c
 	/usr/bin/i586-mingw32msvc-cc markdown*.o GLibFacade.o \
 	-Wl,--dy,--warn-unresolved-symbols,-lglib-2.0 -o multimarkdown.exe
+
+# Get readme and other files ready
+# This has to be run before BitRock can create the installer
+win-prep:
 	mkdir -p windows_installer_
 	cp multimarkdown.exe windows_installer/
 	cp README.markdown windows_installer/README.txt
@@ -129,7 +131,7 @@ windows: $(PROGRAM)
 
 # After building the installer with BitRock, this creates a properly named
 # zipfile
-
+# You have to move the .exe from BitRock to the windows_installer folder
 win-installer:
 	zip -r windows_installer/MultiMarkdown-Windows-$(VERSION).zip windows_installer/MMD-windows-$(VERSION).exe -x windows_installer/MultiMarkdown*.zip
 
@@ -146,7 +148,7 @@ mac-installer:
 	./multimarkdown LICENSE > mac_installer/Resources/License.html
 	./multimarkdown mac_installer/Resources/Support_Welcome.txt > mac_installer/Resources/Support_Welcome.html
 	git clone Support mac_installer/Support_Root/Library/Application\ Support/MultiMarkdown
-	cd mac_installer; /Developer/usr/bin/packagemaker \
+	cd mac_installer; /Applications/PackageMaker.app/Contents/MacOS/PackageMaker \
 	--doc "Make Support Installer.pmdoc" \
 	--title "MultiMarkdown Support Files" \
 	--version $(VERSION) \
@@ -156,7 +158,7 @@ mac-installer:
 	--domain user \
 	--out "MultiMarkdown-Support-Mac-$(VERSION).pkg" \
 	--no-relocate; \
-	/Developer/usr/bin/packagemaker \
+	/Applications/PackageMaker.app/Contents/MacOS/PackageMaker \
 	--doc "Make OS X Installer.pmdoc" \
 	--title "MultiMarkdown" \
 	--version $(VERSION) \
