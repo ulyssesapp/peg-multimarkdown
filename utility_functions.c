@@ -552,8 +552,8 @@ static bool check_timeout() {
     clock_t end = clock();
     double elapsed = ((double) (end - start_time)) / CLOCKS_PER_SEC;
     
-    /* If > 5 clock seconds, then abort */
-    float max = 5;
+    /* If > 3 clock seconds, then abort */
+    float max = 3;
     if (elapsed > max) {
         parse_aborted = 1;
         return 0;
