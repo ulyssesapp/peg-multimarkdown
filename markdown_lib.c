@@ -170,7 +170,7 @@ GString * markdown_to_g_string(char *text, int extensions, int output_format) {
 
     if (result == NULL) {
         /* The parsing was aborted */
-        g_string_append(out,"<p>MultiMarkdown was unable to parse this file.</p>");
+        g_string_append(out,"MultiMarkdown was unable to parse this file.");
     } else {
         print_element_list(out, result, output_format, extensions);
     }
