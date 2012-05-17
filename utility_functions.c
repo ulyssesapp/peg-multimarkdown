@@ -552,6 +552,10 @@ static bool check_timeout() {
     clock_t end = clock();
     double elapsed = ((double) (end - start_time)) / CLOCKS_PER_SEC;
     
+	/* fprintf(stderr,"%2.2f elapsed; (%4.2f CLOCKS_PER_SEC)\n",elapsed,CLOCKS_PER_SEC); */
+	fprintf(stderr,"%2.2f elapsed\n",elapsed);
+	
+	
     /* If > 3 clock seconds, then abort */
     float max = 3;
     if (elapsed > max) {
