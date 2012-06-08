@@ -421,7 +421,6 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				HEADER_SEARCH_PATHS = .;
-				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = multimarkdown;
 			};
 			name = Debug;
@@ -435,7 +434,6 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PREFIX_HEADER = MarkdownMacPrefix.h;
 				HEADER_SEARCH_PATHS = .;
-				INSTALL_PATH = /usr/local/bin;
 				OTHER_CFLAGS = "-DSTANDALONE_MAC_VERSION=1";
 				PRODUCT_NAME = multimarkdown;
 				SEPARATE_STRIP = YES;
@@ -488,6 +486,7 @@
 					"$(inherited)",
 				);
 				HEADER_SEARCH_PATHS = .;
+				INSTALL_PATH = "@rpath";
 				PRODUCT_NAME = MultiMarkdown;
 			};
 			name = Debug;
@@ -498,6 +497,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				HEADER_SEARCH_PATHS = .;
+				INSTALL_PATH = "@rpath";
 				PRODUCT_NAME = MultiMarkdown;
 			};
 			name = Release;
@@ -508,6 +508,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				HEADER_SEARCH_PATHS = .;
+				INSTALL_PATH = "@rpath";
 				PRODUCT_NAME = MultiMarkdown;
 			};
 			name = "Release10.6+";
@@ -535,7 +536,6 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				HEADER_SEARCH_PATHS = .;
-				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = multimarkdown;
 			};
 			name = "Release10.6+";
