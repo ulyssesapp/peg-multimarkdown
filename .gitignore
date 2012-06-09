@@ -31,3 +31,6 @@ peg-0.1.4/leg
 
 *.pbxuser
 *.perspectivev3
+
+MultiMarkdown.xcodeproj/project.xcworkspace/
+MultiMarkdown.xcodeproj/xcuserdata/
