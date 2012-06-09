@@ -487,6 +487,7 @@
 				);
 				HEADER_SEARCH_PATHS = .;
 				PRODUCT_NAME = MultiMarkdown;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -497,6 +498,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				HEADER_SEARCH_PATHS = .;
 				PRODUCT_NAME = MultiMarkdown;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -507,6 +509,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				HEADER_SEARCH_PATHS = .;
 				PRODUCT_NAME = MultiMarkdown;
+				SKIP_INSTALL = YES;
 			};
 			name = "Release10.6+";
 		};
