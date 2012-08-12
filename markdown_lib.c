@@ -22,6 +22,7 @@
 #include "markdown_peg.h"
 
 #define TABSTOP 4
+#define VERSION "3.6.1"
 
 /* preformat_text - allocate and copy text buffer while
  * performing tab expansion. */
@@ -255,3 +256,11 @@ gboolean has_metadata(char *text, int extensions) {
     return hasMeta;
 }
 
+/* version - return the MultiMarkdown library version */
+char * mmd_version() {
+    char *result;
+    result = malloc(sizeof(VERSION));
+    sprintf(result, "%s",VERSION);
+    //*result = VERSION;
+    return result;
+}

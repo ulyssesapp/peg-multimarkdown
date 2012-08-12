@@ -37,7 +37,7 @@ static int extensions;
 
  ***********************************************************************/
 
-#define VERSION "3.6"
+#define VERSION "3.6.1"
 #define COPYRIGHT "portions Copyright (c) 2010-2012 Fletcher T. Penney.\n" \
 				  "portions Copyright (c) 2011 Daniel Jalkut, MIT licensed.\n" \
                   "original Copyright (c) 2008-2009 John MacFarlane.  License GPLv2+ or MIT.\n" \
