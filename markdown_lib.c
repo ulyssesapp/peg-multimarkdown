@@ -261,6 +261,6 @@ char * mmd_version() {
     char *result;
     result = malloc(sizeof(VERSION));
     sprintf(result, "%s",VERSION);
-    //*result = VERSION;
+    /*result = VERSION;*/
     return result;
 }
