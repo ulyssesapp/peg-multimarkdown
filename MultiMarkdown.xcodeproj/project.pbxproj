@@ -352,7 +352,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./peg-0.1.4/leg -o markdown_parser.c markdown_parser.leg";
+			shellScript = "./peg/leg -o markdown_parser.c markdown_parser.leg";
 		};
 		65F0B8E913DF714E00D0980C /* Run Tests */ = {
 			isa = PBXShellScriptBuildPhase;
