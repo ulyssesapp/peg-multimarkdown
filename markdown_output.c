@@ -36,7 +36,6 @@ static char cell_type = 'd';
 static int language = ENGLISH;
 static bool html_footer = FALSE;
 static int odf_type = 0;
-static bool in_list = FALSE;
 static bool no_latex_footnote = FALSE;
 static bool am_printing_html_footnote = FALSE;
 static int footnote_counter_to_print = 0;
@@ -2337,8 +2336,6 @@ void print_memoir_element_list(GString *out, element *list) {
 
 /* print_memoir_element - print an element as LaTeX for memoir class */
 static void print_memoir_element(GString *out, element *elt) {
-    int lev;
-    char *label;
     switch (elt->key) {
     case VERBATIM:
         pad(out, 1);
