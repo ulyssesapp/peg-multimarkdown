@@ -1,3 +1,4 @@
+
 /**********************************************************************
 
   markdown_lib.c - markdown in C using a PEG grammar.
@@ -258,9 +259,7 @@ gboolean has_metadata(char *text, int extensions) {
 
 /* version - return the MultiMarkdown library version */
 char * mmd_version() {
-    char *result;
-    result = malloc(sizeof(VERSION));
+    char* result = (char*)malloc(8);
     sprintf(result, "%s",VERSION);
-    /*result = VERSION;*/
     return result;
 }
