@@ -1731,7 +1731,7 @@ void print_odf_element(GString *out, element *elt) {
     char *label;
     char *height;
     char *width;
-    element *locator = NULL;
+    /* element *locator = NULL; */
     int old_type = 0;
     switch (elt->key) {
     case SPACE:
@@ -2018,7 +2018,7 @@ void print_odf_element(GString *out, element *elt) {
     case NOCITATION:
     case CITATION:
         /* Get locator, if present */
-        locator = locator_for_citation(elt);
+        /* locator = locator_for_citation(elt); */
 
         if (strncmp(elt->contents.str,"[#",2) == 0) {
             /* reference specified externally, so just display it */
