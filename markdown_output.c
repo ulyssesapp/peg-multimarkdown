@@ -905,9 +905,9 @@ static void print_latex_element(GString *out, element *elt) {
             label = label_from_string(elt->contents.link->url,0);
             if (elt->contents.link->label != NULL) {
                     print_latex_element_list(out, elt->contents.link->label);
-                g_string_append_printf(out, " (\\autoref\{%s})", label);             
+                g_string_append_printf(out, " (\\autoref{%s})", label);             
             } else {
-                g_string_append_printf(out, "\\autoref\{%s}", label);
+                g_string_append_printf(out, "\\autoref{%s}", label);
             }
             free(label);
         } else if ( (elt->contents.link->label != NULL) &&

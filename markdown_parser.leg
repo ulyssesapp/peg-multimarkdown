@@ -101,6 +101,7 @@ Block =     BlankLine*
             | OrderedList
             | BulletList
             | HtmlBlock
+            | MarkdownHtmlBlock
             | StyleBlock
             | &{ !extension(EXT_COMPATIBILITY) } Table
             | &{ !extension(EXT_COMPATIBILITY) } ImageBlock
@@ -120,6 +121,7 @@ HeadingSectionBlock =
             | OrderedList
             | BulletList
             | HtmlBlock
+            | MarkdownHtmlBlock
             | StyleBlock
             | &{ !extension(EXT_COMPATIBILITY) } Table
             | &{ !extension(EXT_COMPATIBILITY) } ImageBlock
@@ -491,6 +493,12 @@ HtmlBlock = !MarkdownHtmlTagOpen < ( HtmlBlockInTags | HtmlComment | HtmlBlockSe
                     if ( extension(EXT_PROCESS_HTML)) $$->key = RAW;
                         else $$->key = HTMLBLOCK;
                 }
+            }
+
+MarkdownHtmlBlock = &MarkdownHtmlTagOpen < ( HtmlBlockInTags | HtmlComment | HtmlBlockSelfClosing) >
+            BlankLine+
+            {       $$ = mk_str(yytext);
+                    $$->key = RAW;
             }
 
 HtmlBlockSelfClosing = '<' Spnl HtmlBlockType Spnl HtmlAttribute* '/' Spnl '>'
