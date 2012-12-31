@@ -23,7 +23,7 @@
 #include "markdown_peg.h"
 
 #define TABSTOP 4
-#define VERSION "3.6.1"
+#define VERSION "3.7"
 
 /* preformat_text - allocate and copy text buffer while
  * performing tab expansion. */
