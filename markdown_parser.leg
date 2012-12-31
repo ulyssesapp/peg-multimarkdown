@@ -584,7 +584,9 @@ UlLine   =      < "____" '_'* > | < Spacechar '_'+ &Spacechar >
 
 Emph =      EmphStar | EmphUl
 
-EmphStar =  '*' &Nonspacechar
+Whitespace = Spacechar | Newline
+
+EmphStar =  '*' !Whitespace
             a:StartList
             ( !'*' b:Inline { a = cons(b, a); }
             | b:StrongStar  { a = cons(b, a); }
@@ -592,7 +594,7 @@ EmphStar =  '*' &Nonspacechar
             '*'
             { $$ = mk_list(EMPH, a); }
 
-EmphUl =    '_' &Nonspacechar
+EmphUl =    '_' !Whitespace
             a:StartList
             ( !'_' b:Inline { a = cons(b, a); }
             | b:StrongUl  { a = cons(b, a); }
@@ -602,13 +604,13 @@ EmphUl =    '_' &Nonspacechar
 
 Strong = StrongStar | StrongUl
 
-StrongStar =    "**" &Nonspacechar
+StrongStar =    "**" !Whitespace
                 a:StartList
                 ( !"**" b:Inline { a = cons(b, a); })+
                 "**"
                 { $$ = mk_list(STRONG, a); }
 
-StrongUl   =    "__" &Nonspacechar
+StrongUl   =    "__" !Whitespace
                 a:StartList
                 ( !"__" b:Inline { a = cons(b, a); })+
                 "__"
