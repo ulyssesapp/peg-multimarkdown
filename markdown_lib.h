@@ -28,5 +28,6 @@ GString * markdown_to_g_string(char *text, int extensions, int output_format);
 char * markdown_to_string(char *text, int extensions, int output_format);
 char * extract_metadata_value(char *text, int extensions, char *key);
 gboolean has_metadata(char *text, int extensions);
+char * mmd_version();
 
 /* vim: set ts=4 sw=4 : */

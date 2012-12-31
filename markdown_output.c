@@ -36,7 +36,6 @@ static char cell_type = 'd';
 static int language = ENGLISH;
 static bool html_footer = FALSE;
 static int odf_type = 0;
-static bool in_list = FALSE;
 static bool no_latex_footnote = FALSE;
 static bool am_printing_html_footnote = FALSE;
 static int footnote_counter_to_print = 0;
@@ -153,8 +152,8 @@ static void print_html_string(GString *out, char *str, bool obfuscate) {
             g_string_append_printf(out, "&quot;");
             break;
         default:
-            if (obfuscate) {
-                if (rand() % 2 == 0)
+            if (obfuscate && ((int) *str < 128) && ((int) *str >= 0)){
+                 if (rand() % 2 == 0)
                     g_string_append_printf(out, "&#%d;", (int) *str);
                 else
                     g_string_append_printf(out, "&#x%x;", (unsigned int) *str);
@@ -1732,7 +1731,7 @@ void print_odf_element(GString *out, element *elt) {
     char *label;
     char *height;
     char *width;
-    element *locator = NULL;
+    /* element *locator = NULL; */
     int old_type = 0;
     switch (elt->key) {
     case SPACE:
@@ -2019,7 +2018,7 @@ void print_odf_element(GString *out, element *elt) {
     case NOCITATION:
     case CITATION:
         /* Get locator, if present */
-        locator = locator_for_citation(elt);
+        /* locator = locator_for_citation(elt); */
 
         if (strncmp(elt->contents.str,"[#",2) == 0) {
             /* reference specified externally, so just display it */
@@ -2337,8 +2336,6 @@ void print_memoir_element_list(GString *out, element *list) {
 
 /* print_memoir_element - print an element as LaTeX for memoir class */
 static void print_memoir_element(GString *out, element *elt) {
-    int lev;
-    char *label;
     switch (elt->key) {
     case VERBATIM:
         pad(out, 1);

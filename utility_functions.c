@@ -1,6 +1,8 @@
 /* utility_functions.c - List manipulation functions, element
  * constructors, and macro definitions for leg markdown parser. */
 
+#include <time.h>
+
 extern int strcasecmp(const char *string1, const char *string2);
 
 static char *label_from_string(char *str, bool obfuscate) ;
@@ -76,6 +78,9 @@ static element *parse_result;  /* Results of parse. */
 int syntax_extensions;  /* Syntax extensions selected. */
 
 static element *labels = NULL;      /* List of labels found in document. */
+
+static clock_t start_time = 0;                 /* Used for ensuring we're not stuck in a loop */
+static bool parse_aborted = 0;      /* flag indicating we ran out of time */
 
 /**********************************************************************
 
@@ -532,4 +537,30 @@ static void trim_trailing_whitespace(char *str) {
         ( str[strlen(str)-1] == '\t' ) ) {
         str[strlen(str)-1] = '\0';
     }
+}
+
+/* Don't let us get caught in "infinite" loop */
+static bool check_timeout() {
+    /* Once we abort, keep aborting */
+    if (parse_aborted)
+        return 0;
+    
+    /* We're not timing this run */
+    if (start_time == 0)
+        return 1;
+
+    clock_t end = clock();
+    double elapsed = ((double) (end - start_time)) / CLOCKS_PER_SEC;
+    
+	/* fprintf(stderr,"%2.2f elapsed; (%4.2f CLOCKS_PER_SEC)\n",elapsed,CLOCKS_PER_SEC); */
+	/* fprintf(stderr,"%2.2f elapsed\n",elapsed); */
+	
+	
+    /* If > 3 clock seconds, then abort */
+    float max = 3;
+    if (elapsed > max) {
+        parse_aborted = 1;
+        return 0;
+    }
+    return 1;
 }

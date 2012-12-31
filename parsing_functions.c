@@ -129,6 +129,12 @@ element * parse_markdown(char *string, int extensions, element *reference_list, 
     yyparsefrom(yy_Doc);
 
     charbuf = oldcharbuf;          /* restore charbuf to original value */
+
+/*    if (parse_aborted) {
+        free_element_list(parse_result);
+        return NULL;
+    }*/
+
     return parse_result;
 
 }
@@ -144,9 +150,20 @@ element * parse_markdown_with_metadata(char *string, int extensions, element *re
     oldcharbuf = charbuf;
     charbuf = string;
 
-    yyparsefrom(yy_DocWithMetaData);
+	start_time = clock();
 
+    yyparsefrom(yy_DocWithMetaData);
     charbuf = oldcharbuf;          /* restore charbuf to original value */
+
+    /* reset start_time for subsequent passes */
+    start_time = 0;
+    
+    if (parse_aborted) {
+        parse_aborted = 0;
+        free_element_list(parse_result);
+        return NULL;
+    }
+
     return parse_result;
 
 }

@@ -1,3 +1,4 @@
+
 /**********************************************************************
 
   markdown_lib.c - markdown in C using a PEG grammar.
@@ -22,6 +23,7 @@
 #include "markdown_peg.h"
 
 #define TABSTOP 4
+#define VERSION "3.6.1"
 
 /* preformat_text - allocate and copy text buffer while
  * performing tab expansion. */
@@ -168,9 +170,14 @@ GString * markdown_to_g_string(char *text, int extensions, int output_format) {
 
     g_string_free(formatted_text, TRUE);
 
-    print_element_list(out, result, output_format, extensions);
-
+    if (result == NULL) {
+        /* The parsing was aborted */
+        g_string_append(out,"MultiMarkdown was unable to parse this file.");
+    } else {
+        print_element_list(out, result, output_format, extensions);
+    }
     free_element_list(result);
+
     free_element_list(references);
     free_element_list(labels);
 
@@ -250,3 +257,9 @@ gboolean has_metadata(char *text, int extensions) {
     return hasMeta;
 }
 
+/* version - return the MultiMarkdown library version */
+char * mmd_version() {
+    char* result = (char*)malloc(8);
+    sprintf(result, "%s",VERSION);
+    return result;
+}
