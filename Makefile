@@ -165,7 +165,9 @@ mac-installer:
 	--filter "\.DS_Store" \
 	--filter "\.git" \
 	--id net.fletcherpenney.multimarkdown.pkg \
-	--out "MultiMarkdown-Mac-$(VERSION).pkg";
+	--out "MultiMarkdown-Mac-$(VERSION).pkg"
+	cd mac_installer; zip -r MultiMarkdown-Mac-$(VERSION).zip MultiMarkdown-Mac-$(VERSION).pkg
+	cd mac_installer; zip -r MultiMarkdown-Support-Mac-$(VERSION).zip MultiMarkdown-Support-Mac-$(VERSION).pkg	
 
 # Requires installation of the platypus command line tool to create
 # a drag and drop application for Mac OS X
