@@ -16,7 +16,7 @@ else
 	FINALNOTES=Build complete.
 endif
 
-CFLAGS ?= -Wall -O3 -include GLibFacade.h -I ./ -D MD_USE_GET_OPT=1 
+CFLAGS ?= -Wall -O3 -include GLibFacade.h -I ./ -D MD_USE_GET_OPT=1 -D_GNU_SOURCE
 ifeq ($(UNAME), SunOS)
 	CC = gcc
 	# Use of <stdbool.h> is valid only in a c99 compilation environment
@@ -38,18 +38,13 @@ ifeq ($(ARCH), i386)
 	CFLAGS += -arch i386
 endif
 
-OBJS=markdown_parser.o markdown_output.o markdown_lib.o GLibFacade.o
-PEGDIR_ORIG=peg-0.1.4
-PEGDIR=peg
+CFLAGS ?= -Wall -O3 -ansi -D_GNU_SOURCE # -flto for newer GCC versions
+OBJS=markdown_parser.o markdown_output.o markdown_lib.o GLibFacade.o utility_functions.o parsing_functions.o odf.o
+PEGDIR=peg-0.1.9
 LEG=$(PEGDIR)/leg$(X)
 PKG_CONFIG = pkg-config
 
 ALL : $(PROGRAM)
-
-$(PEGDIR):
-	cp -r $(PEGDIR_ORIG) $(PEGDIR) ; \
-	patch -p1 < peg-memory-fix.patch ; \
-	patch -p1 < peg-exe-ext.patch
 
 $(LEG): $(PEGDIR)
 	CC=gcc $(MAKE) -C $(PEGDIR)

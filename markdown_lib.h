@@ -1,3 +1,6 @@
+#ifndef MARKDOWN_LIB_H
+#define MARKDOWN_LIB_H
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "glib.h"
@@ -31,3 +34,5 @@ gboolean has_metadata(char *text, int extensions);
 char * mmd_version();
 
 /* vim: set ts=4 sw=4 : */
+#endif
+
