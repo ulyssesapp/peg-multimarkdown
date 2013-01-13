@@ -124,7 +124,7 @@ windows: $(PROGRAM)
 # Get readme and other files ready
 # This has to be run before BitRock can create the installer
 win-prep:
-	mkdir -p windows_installer_
+	mkdir -p windows_installer
 	cp multimarkdown.exe windows_installer/
 	cp README.markdown windows_installer/README.txt
 	./multimarkdown LICENSE > windows_installer/LICENSE.html
@@ -132,9 +132,10 @@ win-prep:
 # After building the installer with BitRock, this creates a properly named
 # zipfile
 # You have to move the .exe from BitRock to the windows_installer folder
+# Also - create a portable mmd zipfile
 win-installer:
 	zip -r windows_installer/MultiMarkdown-Windows-$(VERSION).zip windows_installer/MMD-windows-$(VERSION).exe -x windows_installer/MultiMarkdown*.zip
-
+	cd windows_installer; zip -r MultiMarkdown-Windows-Portable-$(VERSION).zip *.bat multimarkdown.exe README.txt LICENSE.html -x install_multimarkdown.bat
 
 # Build Mac installer - requires that you first build multimarkdown itself,
 # either with "make" or with Xcode
