@@ -10,7 +10,7 @@ Base Header Level:	2
 
 [peg-multimarkdown] is an implementation of MultiMarkdown derived from John MacFarlane's [peg-markdown]. It makes use of a parsing expression grammar (PEG), and is written in C. It should compile for most any (major) operating system. 
 
-Thanks to work by Daniel Jalikut, MMD no longer requires GLib2 as a dependency. This should make it easier to compile on various operating systems. 
+Thanks to work by Daniel Jalkut, MMD no longer requires GLib2 as a dependency. This should make it easier to compile on various operating systems. 
 
 
 # Installation #
@@ -196,7 +196,7 @@ I recommend checking out the default [LaTeX Support Files] that are available on
 
 **Note**: You can still use this version of MultiMarkdown to convert text into XHTML, and then process the XHTML using XSLT to create a LaTeX document, just like you used to in MMD 2.0. 
 
-[LaTeX Support Files]: https://github.com/fletcher/peg-multimarkdown-latex-support
+[LaTeX Support Files]:	https://github.com/fletcher/peg-multimarkdown-latex-support
 
 
 ## Footnotes ##
@@ -268,27 +268,27 @@ You would, of course, need to change the `xhtml header` metadata to point to you
 **Note**: MultiMarkdown doesn't actually *do* anything with the code inside the brackets. It simply strips away the extra backslash and passes the LaTeX source unchanged, where it is handled by MathJax *if* it's properly installed, or by LaTeX. If you're having trouble, you can certainly email the [MultiMarkdown Discussion List], but I do not provide support for LaTeX code. 
 
 [ASCIIMathML]:	http://www.chapman.edu/~jipsen/mathml/Asciimath.html
-[MathJax]: 		http://www.mathjax.org/
-[MultiMarkdown Discussion List]: http://groups.google.com/group/multimarkdown/
+[MathJax]:	http://www.mathjax.org/
+[MultiMarkdown Discussion List]:	http://groups.google.com/group/multimarkdown/
 
 
 # Acknowledgments #
 
 Thanks to John MacFarlane for [peg-markdown]. Obviously, this derivative work would not be possible without his work. Additionally, he was very gracious in giving me some pointers when I was getting started with trying to modify his software, and he continues to update peg-markdown with the various edge cases MultiMarkdown users have found.   Hopefully both programs are better as a result.
 
-Thanks to Daniel Jalikut for his work on enabling MultiMarkdown to run without relying on GLib2.  This makes it much more flexible! 
+Thanks to Daniel Jalkut for his work on enabling MultiMarkdown to run without relying on GLib2.  This makes it much more flexible! 
 
 Thanks to John Gruber for the original [Markdown]. 'Nuff said. 
 
 And thanks to the many contributors and users of the original MultiMarkdown that helped me refine the syntax and search out bugs. 
 
 
-[peg-markdown]:			https://github.com/jgm/peg-markdown
-[Markdown]:				http://daringfireball.net/projects/markdown/
-[MultiMarkdown]:		http://fletcherpenney.net/multimarkdown/
+[peg-markdown]:	https://github.com/jgm/peg-markdown
+[Markdown]:	http://daringfireball.net/projects/markdown/
+[MultiMarkdown]:	http://fletcherpenney.net/multimarkdown/
 [peg-multimarkdown]:	https://github.com/fletcher/peg-multimarkdown
-[fink]:					http://www.finkproject.org/
-[downloads]:			http://github.com/fletcher/peg-multimarkdown/downloads
-[GTK+]:					http://www.gtk.org/
-[homebrew]:				https://github.com/mxcl/homebrew
-[MacPorts]:             http://www.macports.org/
+[fink]:	http://www.finkproject.org/
+[downloads]:	http://github.com/fletcher/peg-multimarkdown/downloads
+[GTK+]:	http://www.gtk.org/
+[homebrew]:	https://github.com/mxcl/homebrew
+[MacPorts]:	http://www.macports.org/

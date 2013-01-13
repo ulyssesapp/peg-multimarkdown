@@ -24,8 +24,9 @@
 #include <assert.h>
 #include "glib.h"
 #include "markdown_peg.h"
-#include "utility_functions.c"
-#include "odf.c"
+#include "odf.h"
+
+#include "utility_functions.h"
 
 static int extensions;
 static int base_header_level = 1;
@@ -110,7 +111,7 @@ static void pad(GString *out, int num) {
 }
 
 /* determine whether a certain element is contained within a given list */
-bool list_contains_key(element *list, int key) {
+static bool list_contains_key(element *list, int key) {
     element *step = NULL;
 
     step = list;
@@ -152,8 +153,8 @@ static void print_html_string(GString *out, char *str, bool obfuscate) {
             g_string_append_printf(out, "&quot;");
             break;
         default:
-            if (obfuscate && ((int) *str < 128) && ((int) *str >= 0)){
-                 if (rand() % 2 == 0)
+	  if (obfuscate && ((int) *str < 128) && ((int) *str >= 0)){
+                if (rand() % 2 == 0)
                     g_string_append_printf(out, "&#%d;", (int) *str);
                 else
                     g_string_append_printf(out, "&#x%x;", (unsigned int) *str);
@@ -1718,7 +1719,7 @@ static void print_odf_string(GString *out, char *str) {
 }
 
 /* print_odf_element_list - print an element list as ODF */
-void print_odf_element_list(GString *out, element *list) {
+static void print_odf_element_list(GString *out, element *list) {
     while (list != NULL) {
         print_odf_element(out, list);
         list = list->next;
@@ -1726,7 +1727,7 @@ void print_odf_element_list(GString *out, element *list) {
 }
 
 /* print_odf_element - print an element as ODF */
-void print_odf_element(GString *out, element *elt) {
+static void print_odf_element(GString *out, element *elt) {
     int lev;
     char *label;
     char *height;

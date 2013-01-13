@@ -1,14 +1,12 @@
 /* utility_functions.c - List manipulation functions, element
  * constructors, and macro definitions for leg markdown parser. */
 
-#include <time.h>
+#include "utility_functions.h"
+#include "markdown_peg.h"
 
-extern int strcasecmp(const char *string1, const char *string2);
+#include <string.h>
+#include <assert.h>
 
-static char *label_from_string(char *str, bool obfuscate) ;
-static void localize_typography(GString *out, int character, int language, int output);
-
-static void print_raw_element_list(GString *out, element *list);
 
 /**********************************************************************
 
@@ -17,14 +15,14 @@ static void print_raw_element_list(GString *out, element *list);
  ***********************************************************************/
 
 /* cons - cons an element onto a list, returning pointer to new head */
-static element * cons(element *new, element *list) {
+element * cons(element *new, element *list) {
     assert(new != NULL);
     new->next = list;
     return new;
 }
 
 /* reverse - reverse a list, returning pointer to new list */
-static element *reverse(element *list) {
+element *reverse(element *list) {
     element *new = NULL;
     element *next = NULL;
     while (list != NULL) {
@@ -36,7 +34,7 @@ static element *reverse(element *list) {
 }
 
 /* append_list - add element to end of list */
-static void append_list(element *new, element *list) {
+void append_list(element *new, element *list) {
     assert(new != NULL);
     element *step = list;
     
@@ -50,7 +48,7 @@ static void append_list(element *new, element *list) {
 
 /* concat_string_list - concatenates string contents of list of STR elements.
  * Frees STR elements as they are added to the concatenation. */
-static GString *concat_string_list(element *list) {
+GString *concat_string_list(element *list) {
     GString *result;
     element *next;
     result = g_string_new("");
@@ -71,16 +69,16 @@ static GString *concat_string_list(element *list) {
 
  ***********************************************************************/
 
-static char *charbuf = "";     /* Buffer of characters to be parsed. */
-static element *references = NULL;    /* List of link references found. */
-static element *notes = NULL;         /* List of footnotes found. */
-static element *parse_result;  /* Results of parse. */
+
+char *charbuf = "";     /* Buffer of characters to be parsed. */
+element *references = NULL;    /* List of link references found. */
+element *notes = NULL;         /* List of footnotes found. */
+element *parse_result;  /* Results of parse. */
 int syntax_extensions;  /* Syntax extensions selected. */
 
-static element *labels = NULL;      /* List of labels found in document. */
-
-static clock_t start_time = 0;                 /* Used for ensuring we're not stuck in a loop */
-static bool parse_aborted = 0;      /* flag indicating we ran out of time */
+element *labels = NULL;      /* List of labels found in document. */
+clock_t start_time = 0;                 /* Used for ensuring we're not stuck in a loop */
+bool parse_aborted = 0;      /* flag indicating we ran out of time */
 
 /**********************************************************************
 
@@ -91,7 +89,7 @@ static bool parse_aborted = 0;      /* flag indicating we ran out of time */
  ***********************************************************************/
 
 /* mk_element - generic constructor for element */
-static element * mk_element(int key) {
+element * mk_element(int key) {
     element *result = malloc(sizeof(element));
     result->key = key;
     result->children = NULL;
@@ -101,7 +99,7 @@ static element * mk_element(int key) {
 }
 
 /* mk_str - constructor for STR element */
-static element * mk_str(char *string) {
+element * mk_str(char *string) {
     element *result;
     assert(string != NULL);
     result = mk_element(STR);
@@ -111,7 +109,7 @@ static element * mk_str(char *string) {
 
 /* mk_str_from_list - makes STR element by concatenating a
  * reversed list of strings, adding optional extra newline */
-static element * mk_str_from_list(element *list, bool extra_newline) {
+element * mk_str_from_list(element *list, bool extra_newline) {
     element *result;
     GString *c = concat_string_list(reverse(list));
     if (extra_newline)
@@ -125,7 +123,7 @@ static element * mk_str_from_list(element *list, bool extra_newline) {
 /* mk_list - makes new list with key 'key' and children the reverse of 'lst'.
  * This is designed to be used with cons to build lists in a parser action.
  * The reversing is necessary because cons adds to the head of a list. */
-static element * mk_list(int key, element *lst) {
+element * mk_list(int key, element *lst) {
     element *result;
     result = mk_element(key);
     result->children = reverse(lst);
@@ -133,7 +131,7 @@ static element * mk_list(int key, element *lst) {
 }
 
 /* mk_link - constructor for LINK element */
-static element * mk_link(element *label, char *url, char *title, element *attr, char *id) {
+element * mk_link(element *label, char *url, char *title, element *attr, char *id) {
     element *result;
     result = mk_element(LINK);
     result->contents.link = malloc(sizeof(link));
@@ -146,12 +144,12 @@ static element * mk_link(element *label, char *url, char *title, element *attr, 
 }
 
 /* extension = returns true if extension is selected */
-static bool extension(int ext) {
+bool extension(int ext) {
     return (syntax_extensions & ext);
 }
 
 /* match_inlines - returns true if inline lists match (case-insensitive...) */
-static bool match_inlines(element *l1, element *l2) {
+bool match_inlines(element *l1, element *l2) {
     while (l1 != NULL && l2 != NULL) {
         if (l1->key != l2->key)
             return false;
@@ -195,7 +193,7 @@ static bool match_inlines(element *l1, element *l2) {
 
 /* find_reference - return true if link found in references matching label.
  * 'link' is modified with the matching url and title. */
-static bool find_reference(link *result, element *label) {
+bool find_reference(link *result, element *label) {
     element *cur = references;  /* pointer to walk up list of references */
     link *curitem;
     while (cur != NULL) {
@@ -213,7 +211,7 @@ static bool find_reference(link *result, element *label) {
 /* find_note - return true if note found in notes matching label.
 if found, 'result' is set to point to matched note. */
 
-static bool find_note(element **result, char *label) {
+bool find_note(element **result, char *label) {
    element *cur = notes;  /* pointer to walk up list of notes */
    while (cur != NULL) {
        if (strcmp(label, cur->contents.str) == 0) {
@@ -227,36 +225,10 @@ static bool find_note(element **result, char *label) {
 }
 
 
-
-/**********************************************************************
-
-  Definitions for leg parser generator.
-  YY_INPUT is the function the parser calls to get new input.
-  We take all new input from (static) charbuf.
-
- ***********************************************************************/
-
-# define YYSTYPE element *
-#ifdef __DEBUG__
-# define YY_DEBUG 1
-#endif
-
-#define YY_INPUT(buf, result, max_size)              \
-{                                                    \
-    int yyc;                                         \
-    if (charbuf && *charbuf != '\0') {               \
-        yyc= *charbuf++;                             \
-    } else {                                         \
-        yyc= EOF;                                    \
-    }                                                \
-    result= (EOF == yyc) ? 0 : (*(buf)= yyc, 1);     \
-}
-
-
 /* peg-multimarkdown additions */
 
 /* print_raw_element - print an element as original text */
-static void print_raw_element(GString *out, element *elt) {
+void print_raw_element(GString *out, element *elt) {
     if (elt->key == LINK) {
         print_raw_element_list(out,elt->contents.link->label);
     } else {
@@ -269,7 +241,7 @@ static void print_raw_element(GString *out, element *elt) {
 }
 
 /* print_raw_element_list - print a list of elements as original text */
-static void print_raw_element_list(GString *out, element *list) {
+void print_raw_element_list(GString *out, element *list) {
     while (list != NULL) {
         print_raw_element(out, list);
         list = list->next;
@@ -279,7 +251,7 @@ static void print_raw_element_list(GString *out, element *list) {
 /* label_from_element_list */
 /* Returns a null-terminated string, which must be freed after use. */
 
-static char *label_from_element_list(element *list, bool obfuscate) {
+char *label_from_element_list(element *list, bool obfuscate) {
     char *label;
     char *label2;
     GString *raw = g_string_new("");
@@ -295,7 +267,7 @@ static char *label_from_element_list(element *list, bool obfuscate) {
     HTML id */
 /* Returns a null-terminated string, which must be freed after use. */
 
-static char *label_from_string(char *str, bool obfuscate) {
+char *label_from_string(char *str, bool obfuscate) {
     bool valid = FALSE;
     GString *out = g_string_new("");
     char *label;
@@ -326,7 +298,7 @@ static char *label_from_string(char *str, bool obfuscate) {
 
 /* find_label - return true if header, table, etc is found matching label.
  * 'link' is modified with the matching url and title. */
-static bool find_label(link *result, element *label) {
+bool find_label(link *result, element *label) {
     char *lab;
     element *cur = labels;  /* pointer to walk up list of references */
     GString *text = g_string_new("");
@@ -352,7 +324,7 @@ static bool find_label(link *result, element *label) {
 /* localize_typography - return the proper string, based on language chosen */
 /* Default action is English */
 
-static void localize_typography(GString *out, int character, int lang, int output) {
+void localize_typography(GString *out, int character, int lang, int output) {
 
     switch (output) {
         case HTMLOUT:
@@ -530,7 +502,7 @@ static void localize_typography(GString *out, int character, int lang, int outpu
 }
 
 /* Trim spaces at end of string */
-static void trim_trailing_whitespace(char *str) {    
+void trim_trailing_whitespace(char *str) {    
     while ( ( str[strlen(str)-1] == ' ' ) ||
         ( str[strlen(str)-1] == '\n' ) || 
         ( str[strlen(str)-1] == '\r' ) || 
@@ -540,7 +512,7 @@ static void trim_trailing_whitespace(char *str) {
 }
 
 /* Don't let us get caught in "infinite" loop */
-static bool check_timeout() {
+bool check_timeout() {
     /* Once we abort, keep aborting */
     if (parse_aborted)
         return 0;
@@ -564,3 +536,4 @@ static bool check_timeout() {
     }
     return 1;
 }
+
