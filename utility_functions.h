@@ -85,6 +85,9 @@ void append_list(element *new, element *list);
 bool find_label(link *result, element *label);
 bool check_timeout();
 void trim_trailing_whitespace(char *str);
+char *label_from_element_list(element *list, bool obfuscate);
+void print_raw_element_list(GString *out, element *list);
+void print_raw_element(GString *out, element *elt);
 
 #endif
 
