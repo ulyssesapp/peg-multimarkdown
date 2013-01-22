@@ -59,6 +59,11 @@ static void free_element_contents(element elt) {
       case GLOSSARY:
       case GLOSSARYTERM:
       case NOTELABEL:
+      case CELLSPAN:
+      case EMDASH:
+      case ENDASH:
+      case GLOSSARYSORTKEY:
+      case MATHSPAN:
         free(elt.contents.str);
         elt.contents.str = NULL;
         break;
