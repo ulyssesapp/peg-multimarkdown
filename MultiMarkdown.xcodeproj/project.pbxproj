@@ -29,6 +29,12 @@
 		4AFA467D13E3640600CFA132 /* markdown_output.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66313DF47CC00D0980C /* markdown_output.c */; };
 		65F0B69E13DF47CC00D0980C /* markdown.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66713DF47CC00D0980C /* markdown.c */; };
 		65F89EA713E37B9D006A34B8 /* libMultiMarkdown.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AFA466213E3624F00CFA132 /* libMultiMarkdown.a */; };
+		79C2C97F16E774B6002B79F3 /* markdown_parser_lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 79C2C97E16E774B6002B79F3 /* markdown_parser_lib.h */; };
+		79C2C98116E774BF002B79F3 /* markdown_parser_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 79C2C98016E774BF002B79F3 /* markdown_parser_lib.c */; };
+		79C2C98316E775D7002B79F3 /* parsing_functions.h in Headers */ = {isa = PBXBuildFile; fileRef = 79C2C98216E775D7002B79F3 /* parsing_functions.h */; };
+		79C2C98416E7766B002B79F3 /* utility_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B69A13DF47CC00D0980C /* utility_functions.c */; };
+		79C2C98516E7766F002B79F3 /* parsing_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66A13DF47CC00D0980C /* parsing_functions.c */; };
+		79C2C98616E7767F002B79F3 /* odf.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66813DF47CC00D0980C /* odf.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,19 +91,6 @@
 		65F0B66813DF47CC00D0980C /* odf.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = odf.c; sourceTree = "<group>"; };
 		65F0B66913DF47CC00D0980C /* odf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = odf.h; sourceTree = "<group>"; };
 		65F0B66A13DF47CC00D0980C /* parsing_functions.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = parsing_functions.c; sourceTree = "<group>"; };
-		65F0B66C13DF47CC00D0980C /* compile.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = compile.c; sourceTree = "<group>"; };
-		65F0B68B13DF47CC00D0980C /* leg */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = leg; sourceTree = "<group>"; };
-		65F0B68C13DF47CC00D0980C /* leg.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = leg.c; sourceTree = "<group>"; };
-		65F0B68D13DF47CC00D0980C /* leg.leg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = leg.leg; sourceTree = "<group>"; };
-		65F0B68F13DF47CC00D0980C /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		65F0B69013DF47CC00D0980C /* peg */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = peg; sourceTree = "<group>"; };
-		65F0B69113DF47CC00D0980C /* peg.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = peg.1; sourceTree = "<group>"; };
-		65F0B69213DF47CC00D0980C /* peg.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = peg.c; sourceTree = "<group>"; };
-		65F0B69413DF47CC00D0980C /* peg.peg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = peg.peg; sourceTree = "<group>"; };
-		65F0B69513DF47CC00D0980C /* peg.peg-c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "peg.peg-c"; sourceTree = "<group>"; };
-		65F0B69613DF47CC00D0980C /* tree.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = tree.c; sourceTree = "<group>"; };
-		65F0B69713DF47CC00D0980C /* tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tree.h; sourceTree = "<group>"; };
-		65F0B69913DF47CC00D0980C /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 		65F0B69A13DF47CC00D0980C /* utility_functions.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = utility_functions.c; sourceTree = "<group>"; };
 		65F0B6C513DF485F00D0980C /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		65F0B6D713DF4C6B00D0980C /* MarkdownMacPrefix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarkdownMacPrefix.h; sourceTree = "<group>"; };
@@ -107,6 +100,10 @@
 		65F89EB813E37BEF006A34B8 /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		65F89EB913E37BEF006A34B8 /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		65F89EBA13E37C2A006A34B8 /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		79C2C97C16E772E9002B79F3 /* peg-0.1.9 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "peg-0.1.9"; sourceTree = "<group>"; };
+		79C2C97E16E774B6002B79F3 /* markdown_parser_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = markdown_parser_lib.h; sourceTree = "<group>"; };
+		79C2C98016E774BF002B79F3 /* markdown_parser_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = markdown_parser_lib.c; sourceTree = "<group>"; };
+		79C2C98216E775D7002B79F3 /* parsing_functions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parsing_functions.h; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* multimarkdown */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = multimarkdown; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -134,6 +131,8 @@
 			isa = PBXGroup;
 			children = (
 				651A525B13E1BEFE00BCB02A /* TODO.txt */,
+				79C2C97E16E774B6002B79F3 /* markdown_parser_lib.h */,
+				79C2C98016E774BF002B79F3 /* markdown_parser_lib.c */,
 				651A528113E1C30100BCB02A /* GLibFacade.h */,
 				651A528213E1C30100BCB02A /* GLibFacade.c */,
 				65F0B6D713DF4C6B00D0980C /* MarkdownMacPrefix.h */,
@@ -151,6 +150,7 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				79C2C97C16E772E9002B79F3 /* peg-0.1.9 */,
 				65F0B6C513DF485F00D0980C /* Makefile */,
 				65F0B66113DF47CC00D0980C /* markdown_lib.c */,
 				65F0B66213DF47CC00D0980C /* markdown_lib.h */,
@@ -160,8 +160,8 @@
 				65F0B66713DF47CC00D0980C /* markdown.c */,
 				65F0B66813DF47CC00D0980C /* odf.c */,
 				65F0B66913DF47CC00D0980C /* odf.h */,
+				79C2C98216E775D7002B79F3 /* parsing_functions.h */,
 				65F0B66A13DF47CC00D0980C /* parsing_functions.c */,
-				65F0B66B13DF47CC00D0980C /* peg-0.1.4 */,
 				65F0B69A13DF47CC00D0980C /* utility_functions.c */,
 			);
 			name = Source;
@@ -193,26 +193,6 @@
 				4AFA466913E3624F00CFA132 /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
-			sourceTree = "<group>";
-		};
-		65F0B66B13DF47CC00D0980C /* peg-0.1.4 */ = {
-			isa = PBXGroup;
-			children = (
-				65F0B66C13DF47CC00D0980C /* compile.c */,
-				65F0B68B13DF47CC00D0980C /* leg */,
-				65F0B68C13DF47CC00D0980C /* leg.c */,
-				65F0B68D13DF47CC00D0980C /* leg.leg */,
-				65F0B68F13DF47CC00D0980C /* Makefile */,
-				65F0B69013DF47CC00D0980C /* peg */,
-				65F0B69113DF47CC00D0980C /* peg.1 */,
-				65F0B69213DF47CC00D0980C /* peg.c */,
-				65F0B69413DF47CC00D0980C /* peg.peg */,
-				65F0B69513DF47CC00D0980C /* peg.peg-c */,
-				65F0B69613DF47CC00D0980C /* tree.c */,
-				65F0B69713DF47CC00D0980C /* tree.h */,
-				65F0B69913DF47CC00D0980C /* version.h */,
-			);
-			path = "peg-0.1.4";
 			sourceTree = "<group>";
 		};
 		65F0B8B513DF6D4700D0980C /* Generated Sources */ = {
@@ -248,6 +228,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79C2C97F16E774B6002B79F3 /* markdown_parser_lib.h in Headers */,
+				79C2C98316E775D7002B79F3 /* parsing_functions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,7 +243,7 @@
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = "./peg-0.1.4";
+			buildWorkingDirectory = "./peg-0.1.9";
 			dependencies = (
 			);
 			name = Peg;
@@ -352,7 +334,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./peg/leg -o markdown_parser.c markdown_parser.leg";
+			shellScript = "./peg-0.1.9/leg -o markdown_parser.c markdown_parser.leg";
 		};
 		65F0B8E913DF714E00D0980C /* Run Tests */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -379,6 +361,10 @@
 				4AFA467613E362B500CFA132 /* markdown_parser.c in Sources */,
 				4AFA467A13E363FA00CFA132 /* markdown_lib.c in Sources */,
 				4AFA467D13E3640600CFA132 /* markdown_output.c in Sources */,
+				79C2C98116E774BF002B79F3 /* markdown_parser_lib.c in Sources */,
+				79C2C98416E7766B002B79F3 /* utility_functions.c in Sources */,
+				79C2C98516E7766F002B79F3 /* parsing_functions.c in Sources */,
+				79C2C98616E7767F002B79F3 /* odf.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,7 +469,10 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				HEADER_SEARCH_PATHS = .;
+				HEADER_SEARCH_PATHS = (
+					.,
+					"peg-0.1.9/",
+				);
 				PRODUCT_NAME = MultiMarkdown;
 			};
 			name = Debug;
@@ -493,7 +482,10 @@
 			baseConfigurationReference = 65F89EBA13E37C2A006A34B8 /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				HEADER_SEARCH_PATHS = .;
+				HEADER_SEARCH_PATHS = (
+					.,
+					"peg-0.1.9/",
+				);
 				PRODUCT_NAME = MultiMarkdown;
 			};
 			name = Release;
@@ -503,7 +495,10 @@
 			baseConfigurationReference = 65F89E8113E379ED006A34B8 /* Release10.6+.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				HEADER_SEARCH_PATHS = .;
+				HEADER_SEARCH_PATHS = (
+					.,
+					"peg-0.1.9/",
+				);
 				PRODUCT_NAME = MultiMarkdown;
 			};
 			name = "Release10.6+";
