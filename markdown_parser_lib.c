@@ -20,8 +20,6 @@ element *markdown_to_ast(const char *markdownString, int extensions)
     element *notes;
     element *labels;
     GString *formatted_text;
-    GString *out;
-    out = g_string_new("");
     
     formatted_text = preformat_text((char*)markdownString);
     
