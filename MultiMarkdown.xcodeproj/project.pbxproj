@@ -24,7 +24,6 @@
 /* Begin PBXBuildFile section */
 		4AFA467413E3625F00CFA132 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AFA466913E3624F00CFA132 /* Foundation.framework */; };
 		4AFA467513E362AC00CFA132 /* GLibFacade.c in Sources */ = {isa = PBXBuildFile; fileRef = 651A528213E1C30100BCB02A /* GLibFacade.c */; };
-		4AFA467613E362B500CFA132 /* markdown_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B8B113DF6D4000D0980C /* markdown_parser.c */; };
 		4AFA467A13E363FA00CFA132 /* markdown_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66113DF47CC00D0980C /* markdown_lib.c */; };
 		4AFA467D13E3640600CFA132 /* markdown_output.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66313DF47CC00D0980C /* markdown_output.c */; };
 		65F0B69E13DF47CC00D0980C /* markdown.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66713DF47CC00D0980C /* markdown.c */; };
@@ -358,7 +357,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4AFA467513E362AC00CFA132 /* GLibFacade.c in Sources */,
-				4AFA467613E362B500CFA132 /* markdown_parser.c in Sources */,
 				4AFA467A13E363FA00CFA132 /* markdown_lib.c in Sources */,
 				4AFA467D13E3640600CFA132 /* markdown_output.c in Sources */,
 				79C2C98116E774BF002B79F3 /* markdown_parser_lib.c in Sources */,
@@ -465,10 +463,7 @@
 			baseConfigurationReference = 65F89EB913E37BEF006A34B8 /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
 				HEADER_SEARCH_PATHS = (
 					.,
 					"peg-0.1.9/",
@@ -482,6 +477,7 @@
 			baseConfigurationReference = 65F89EBA13E37C2A006A34B8 /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
 				HEADER_SEARCH_PATHS = (
 					.,
 					"peg-0.1.9/",
@@ -495,6 +491,7 @@
 			baseConfigurationReference = 65F89E8113E379ED006A34B8 /* Release10.6+.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
 				HEADER_SEARCH_PATHS = (
 					.,
 					"peg-0.1.9/",
