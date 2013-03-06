@@ -20,7 +20,38 @@
 #include <stdbool.h>
 #include <assert.h>
 #include "markdown_peg.h"
-#include "utility_functions.c"
+#include "utility_functions.h"
+
+
+
+/**********************************************************************
+
+  Definitions for leg parser generator.
+  YY_INPUT is the function the parser calls to get new input.
+  We take all new input from (static) charbuf.
+
+ ***********************************************************************/
+
+
+
+# define YYSTYPE element *
+#ifdef __DEBUG__
+# define YY_DEBUG 1
+#endif
+
+#define YY_INPUT(buf, result, max_size)              \
+{                                                    \
+    int yyc;                                         \
+    if (charbuf && *charbuf != '\0') {               \
+        yyc= *charbuf++;                             \
+    } else {                                         \
+        yyc= EOF;                                    \
+    }                                                \
+    result= (EOF == yyc) ? 0 : (*(buf)= yyc, 1);     \
+}
+
+#define YY_RULE(T)	T
+
 
 #define YY_DEBUG_OFF
 
@@ -35,7 +66,7 @@
 Doc =       BOM? a:StartList ( Block { a = cons($$, a); } )*
             { parse_result = reverse(a); }
 
-DocWithMetaData = BOM? a:StartList b:StartList 
+DocWithMetaData = BOM? a:StartList b:StartList
     ( &{ !extension(EXT_COMPATIBILITY) }
         &( MetaDataKey Sp ':' Sp (!Newline)) MetaData
             { a = cons($$, a); b = mk_element(FOOTER);})?
@@ -50,9 +81,16 @@ MetaData =  a:StartList !([A-Za-z]+ "://")
                 $$->key = METADATA;
             }
 
-MetaDataOnly = a:StartList
-             ( b:MetaData { a = cons(b, a); } )?
-             SkipBlock*
+MetaDataOnly = BOM? a:StartList
+             ( MetaData { a = cons($$, a); } )?
+#             SkipBlock*
+			.*
+             { parse_result = reverse(a); }
+
+MetaDataOnly2 = BOM? a:StartList
+             ( MetaData { a = cons($$, a); } )?
+#             SkipBlock*
+			.*
              { parse_result = mk_list(LIST,a); }
 
 MetaDataKeyValue = a:MetaDataKey
@@ -94,6 +132,7 @@ Block =     BlankLine*
             | OrderedList
             | BulletList
             | HtmlBlock
+            | MarkdownHtmlBlock
             | StyleBlock
             | &{ !extension(EXT_COMPATIBILITY) } Table
             | &{ !extension(EXT_COMPATIBILITY) } ImageBlock
@@ -113,6 +152,7 @@ HeadingSectionBlock =
             | OrderedList
             | BulletList
             | HtmlBlock
+            | MarkdownHtmlBlock
             | StyleBlock
             | &{ !extension(EXT_COMPATIBILITY) } Table
             | &{ !extension(EXT_COMPATIBILITY) } ImageBlock
@@ -136,9 +176,9 @@ AtxHeading = s:AtxStart Sp? a:StartList ( AtxInline { a = cons($$, a); } )+ ( Sp
 
 SetextHeading = SetextHeading1 | SetextHeading2
 
-SetextBottom1 = "===" '='* Newline
+SetextBottom1 = '='+ Newline
 
-SetextBottom2 = "---" '-'* Newline
+SetextBottom2 = '-'+ Newline
 
 SetextHeading1 =  &(RawLine SetextBottom1)
                   a:StartList ( !Endline !( &{ !extension(EXT_COMPATIBILITY) } Sp AutoLabel ) Inline { a = cons($$, a); } )+ ( Sp b:AutoLabel { append_list(b,a);} Sp? )? Sp? Newline
@@ -486,6 +526,12 @@ HtmlBlock = !MarkdownHtmlTagOpen < ( HtmlBlockInTags | HtmlComment | HtmlBlockSe
                 }
             }
 
+MarkdownHtmlBlock = &MarkdownHtmlTagOpen < ( HtmlBlockInTags | HtmlComment | HtmlBlockSelfClosing) >
+            BlankLine+
+            {       $$ = mk_str(yytext);
+                    $$->key = RAW;
+            }
+
 HtmlBlockSelfClosing = '<' Spnl HtmlBlockType Spnl HtmlAttribute* '/' Spnl '>'
 
 HtmlBlockType = "address" | "blockquote" | "center" | "dir" | "div" | "dl" | "fieldset" | "form" | "h1" | "h2" | "h3" |
@@ -512,7 +558,8 @@ Inlines  =  a:StartList ( !Endline Inline { a = cons($$, a); }
                         | c:Endline &Inline { a = cons(c, a); } )+ Endline?
             { $$ = mk_list(LIST, a); }
 
-Inline  = Str
+Inline  = &{ check_timeout() }
+        Str
         | &{ !extension(EXT_COMPATIBILITY) } MathSpan
         | Endline
         | UlOrStarLine
@@ -555,7 +602,7 @@ Entity =    ( HexEntity | DecEntity | CharEntity )
 Endline =   LineBreak | TerminalEndline | NormalEndline
 
 NormalEndline =   Sp Newline !BlankLine !'>' !AtxStart
-                  !(Line ("===" '='* | "---" '-'*) Newline)
+                  !(Line ('='+ | '-'+) Newline)
                   { $$ = mk_str("\n");
                     $$->key = SPACE; }
 
@@ -576,43 +623,37 @@ UlLine   =      < "____" '_'* > | < Spacechar '_'+ &Spacechar >
 
 Emph =      EmphStar | EmphUl
 
-OneStarOpen  =  !StarLine '*' !Spacechar !Newline
-OneStarClose =  !Spacechar !Newline a:Inline '*' { $$ = a; }
+Whitespace = Spacechar | Newline
 
-EmphStar =  OneStarOpen
+EmphStar =  '*' !Whitespace
             a:StartList
-            ( !OneStarClose Inline { a = cons($$, a); } )*
-            OneStarClose { a = cons($$, a); }
+            ( !'*' b:Inline { a = cons(b, a); }
+            | b:StrongStar  { a = cons(b, a); }
+            )+
+            '*'
             { $$ = mk_list(EMPH, a); }
 
-OneUlOpen  =  !UlLine '_' !Spacechar !Newline
-OneUlClose =  !Spacechar !Newline a:Inline '_' !Alphanumeric { $$ = a; }
-
-EmphUl =    OneUlOpen
+EmphUl =    '_' !Whitespace
             a:StartList
-            ( !OneUlClose Inline { a = cons($$, a); } )*
-            OneUlClose { a = cons($$, a); }
+            ( !'_' b:Inline { a = cons(b, a); }
+            | b:StrongUl  { a = cons(b, a); }
+            )+
+            '_'
             { $$ = mk_list(EMPH, a); }
 
 Strong = StrongStar | StrongUl
 
-TwoStarOpen =   !StarLine "**" !Spacechar !Newline
-TwoStarClose =  !Spacechar !Newline a:Inline "**" { $$ = a; }
-
-StrongStar =    TwoStarOpen
+StrongStar =    "**" !Whitespace
                 a:StartList
-                ( !TwoStarClose Inline { a = cons($$, a); } )*
-                TwoStarClose { a = cons($$, a); }
+                ( !"**" b:Inline { a = cons(b, a); })+
+                "**"
                 { $$ = mk_list(STRONG, a); }
 
-TwoUlOpen =     !UlLine "__" !Spacechar !Newline
-TwoUlClose =    !Spacechar !Newline a:Inline "__" !Alphanumeric { $$ = a; }
-
-StrongUl =  TwoUlOpen
-            a:StartList
-            ( !TwoUlClose Inline { a = cons($$, a); } )*
-            TwoUlClose { a = cons($$, a); }
-            { $$ = mk_list(STRONG, a); }
+StrongUl   =    "__" !Whitespace
+                a:StartList
+                ( !"__" b:Inline { a = cons(b, a); })+
+                "__"
+                { $$ = mk_list(STRONG, a); }
 
 
 ImageBlock = Image Sp Newline BlankLine+
@@ -683,7 +724,7 @@ ReferenceLinkSingle =  a:Label < (Spnl "[]")? >
                            }
                        }
 
-ExplicitLink =  l:Label Spnl '(' Sp s:Source Spnl t:Title Sp ')'
+ExplicitLink =  l:Label '(' Sp s:Source Spnl t:Title Sp ')'
                 {
                     $$ = mk_link(l->children, s->contents.str, t->contents.str, NULL, "");
                     free_element(s);
@@ -694,8 +735,7 @@ ExplicitLink =  l:Label Spnl '(' Sp s:Source Spnl t:Title Sp ')'
 Source  = ( '<' < SourceContents > '>' | < SourceContents > )
           { $$ = mk_str(yytext); }
 
-SourceContents = ( ( !'(' !')' !'>' Nonspacechar )+ | '(' SourceContents ')')+
-                 | ""
+SourceContents = ( ( !'(' !')' !'>' Nonspacechar )+ | '(' SourceContents ')')*
 
 Title = ( TitleSingle | TitleDouble | < "" > )
         { $$ = mk_str(yytext); }
@@ -718,9 +758,9 @@ AutoLinkEmail = '<' ( "mailto:" )? < [-A-Za-z0-9+_./!%~$]+ '@' ( !Newline !'>' .
 
 Reference = a:StartList NonindentSpace !"[]" l:Label ':' Spnl s:RefSrc
         t:RefTitle
-		( &{ !extension(EXT_COMPATIBILITY) } 
-			(Attributes { a = cons($$,a);})? )?
-		BlankLine+
+        ( &{ !extension(EXT_COMPATIBILITY) } 
+            (Attributes { a = cons($$,a);})? )?
+        BlankLine+
         { 
             char *label;
             GString *text = g_string_new("");
@@ -786,13 +826,13 @@ RefTitle =  ( RefTitleSingle | RefTitleDouble | RefTitleParens | EmptyTitle )
 EmptyTitle = < "" >
 
 RefTitleSingle = Spnl '\'' < ( !( '\'' Sp Newline | Newline |
-	&{ !extension(EXT_COMPATIBILITY) } '\'' Sp AlphanumericAscii+ '=' ) . )* > '\''
+    &{ !extension(EXT_COMPATIBILITY) } '\'' Sp AlphanumericAscii+ '=' ) . )* > '\''
 
 RefTitleDouble = Spnl '"' < ( !('"' Sp Newline | Newline |
-	&{ !extension(EXT_COMPATIBILITY) } '"' Sp AlphanumericAscii+ '=' ) . )* > '"'
+    &{ !extension(EXT_COMPATIBILITY) } '"' Sp AlphanumericAscii+ '=' ) . )* > '"'
 
 RefTitleParens = Spnl '(' < ( !(')' Sp Newline | Newline |
-	&{ !extension(EXT_COMPATIBILITY) } ')' Sp AlphanumericAscii+ '=' ) . )* > ')'
+    &{ !extension(EXT_COMPATIBILITY) } ')' Sp AlphanumericAscii+ '=' ) . )* > ')'
 
 References = a:StartList
              ( b:Reference { a = cons(b, a); } | SkipBlock )*
@@ -835,7 +875,6 @@ Sp =            Spacechar*
 Spnl =          Sp (Newline Sp)?
 SpecialChar =   '*' | '_' | '`' | '&' | '[' | ']' | '(' | ')' | '<' | '!' | '#' | '\\' | '\'' | '"' | ExtendedSpecialChar
 NormalChar =    !( SpecialChar | Spacechar | Newline ) .
-NonAlphanumeric = [\000-\057\072-\100\133-\140\173-\177]
 Alphanumeric = [0-9A-Za-z] | '\200' | '\201' | '\202' | '\203' | '\204' | '\205' | '\206' | '\207' | '\210' | '\211' | '\212' | '\213' | '\214' | '\215' | '\216' | '\217' | '\220' | '\221' | '\222' | '\223' | '\224' | '\225' | '\226' | '\227' | '\230' | '\231' | '\232' | '\233' | '\234' | '\235' | '\236' | '\237' | '\240' | '\241' | '\242' | '\243' | '\244' | '\245' | '\246' | '\247' | '\250' | '\251' | '\252' | '\253' | '\254' | '\255' | '\256' | '\257' | '\260' | '\261' | '\262' | '\263' | '\264' | '\265' | '\266' | '\267' | '\270' | '\271' | '\272' | '\273' | '\274' | '\275' | '\276' | '\277' | '\300' | '\301' | '\302' | '\303' | '\304' | '\305' | '\306' | '\307' | '\310' | '\311' | '\312' | '\313' | '\314' | '\315' | '\316' | '\317' | '\320' | '\321' | '\322' | '\323' | '\324' | '\325' | '\326' | '\327' | '\330' | '\331' | '\332' | '\333' | '\334' | '\335' | '\336' | '\337' | '\340' | '\341' | '\342' | '\343' | '\344' | '\345' | '\346' | '\347' | '\350' | '\351' | '\352' | '\353' | '\354' | '\355' | '\356' | '\357' | '\360' | '\361' | '\362' | '\363' | '\364' | '\365' | '\366' | '\367' | '\370' | '\371' | '\372' | '\373' | '\374' | '\375' | '\376' | '\377'
 AlphanumericAscii = [A-Za-z0-9]
 Digit = [0-9]
@@ -1049,7 +1088,7 @@ RawCitationReference = "[#" < ( !Newline !']' . )+ > ']'
 
 
 AutoLabels = ( &{ !extension(EXT_COMPATIBILITY) && !extension(EXT_NO_LABELS)}
-	a:StartList ( b:Heading
+    a:StartList ( b:Heading
             { 
                 GString *label = g_string_new("");
                 char *lab;
@@ -1094,9 +1133,10 @@ AutoLabels = ( &{ !extension(EXT_COMPATIBILITY) && !extension(EXT_NO_LABELS)}
             | SkipBlock )*
             { labels = a; })
 
-DefinitionList =  a:StartList &(TermLine+ ':')
+DefinitionList =  a:StartList &(TermLine+ Newline? NonindentSpace ':')
                 (
                     (Term { a = cons($$, a); } )+
+                    BlankLine?
                     (Definition { a = cons($$, a);})+
                     BlankLine*
                 )+
@@ -1114,7 +1154,7 @@ Term =  a:StartList !BlankLine !':'
 
 Definition = (a:StartList b:StartList
                 (BlankLine { b = cons(mk_str("\n"),b); } )?
-                ( ':' Sp RawLine { a = cons(mk_str(yytext), a);}) 
+                ( NonindentSpace ':' Sp RawLine { a = cons(mk_str(yytext), a);}) 
                 ( !':' !BlankLine RawLine { a = cons(mk_str(yytext), a);})*
                 ( BlankLine {a = cons(mk_str("\n"),a);}
                     (IndentedLine { a = cons(mk_str(yytext),a);})+ 
@@ -1237,11 +1277,13 @@ MathSpan = '\\' < (
 }
 
 
-DocForOPML = a:StartList b:StartList 
-    ( &( MetaDataKey Sp ':' Sp (!Newline)) MetaData
+DocForOPML = BOM? a:StartList 
+    ( &{ !extension(EXT_COMPATIBILITY) }
+       &( MetaDataKey Sp ':' Sp (!Newline)) MetaData
             { a = cons($$, a); })?
     ( OPMLBlock { a = cons($$, a); } )*
-    { parse_result = reverse(a); }
+    { parse_result = reverse(a);
+ }
 
 OPMLBlock =     BlankLine*
             ( OPMLHeadingSection
@@ -1265,16 +1307,16 @@ OPMLAtxHeading = &(Heading) s:AtxStart Sp?
 OPMLSetextHeading = OPMLSetextHeading1 | OPMLSetextHeading2
 
 OPMLSetextHeading1 = < (!'\r' !'\n' .)* > Newline SetextBottom1 
-	{
-		$$ = mk_str(yytext);
-		$$->key = H1;
-	}
+    {
+        $$ = mk_str(yytext);
+        $$->key = H1;
+    }
 
 OPMLSetextHeading2 = < (!'\r' !'\n' .)* > Newline SetextBottom2
-	{
-		$$ = mk_str(yytext);
-		$$->key = H2;
-	}
+    {
+        $$ = mk_str(yytext);
+        $$->key = H2;
+    }
 
 OPMLSectionBlock =
         BlankLine*
@@ -1304,5 +1346,4 @@ MarkdownHtmlTagOpen = a:StartList '<' {a = cons(mk_str("<"),a);}
 
 %%
 
-#include "parsing_functions.c"
 

@@ -4,7 +4,7 @@
                       markdown_peg.
   (c) 2008 John MacFarlane (jgm at berkeley dot edu).
   
-  portions Copyright (c) 2010-2011 Fletcher T. Penney
+  portions Copyright (c) 2010-2013 Fletcher T. Penney
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License or the MIT
@@ -24,8 +24,9 @@
 #include <assert.h>
 #include "glib.h"
 #include "markdown_peg.h"
-#include "utility_functions.c"
-#include "odf.c"
+#include "odf.h"
+
+#include "utility_functions.h"
 
 static int extensions;
 static int base_header_level = 1;
@@ -81,8 +82,8 @@ element * print_html_headingsection(GString *out, element *list, bool obfuscate)
 
 static bool is_html_complete_doc(element *meta);
 static int find_latex_mode(int format, element *list);
-element * metadata_for_key(const char *key, element *list);
-char * metavalue_for_key(const char *key, element *list);
+element * metadata_for_key(char *key, element *list);
+char * metavalue_for_key(char *key, element *list);
 
 element * element_for_attribute(char *querystring, element *list);
 char * dimension_for_attribute(char *querystring, element *list);
@@ -110,7 +111,7 @@ static void pad(GString *out, int num) {
 }
 
 /* determine whether a certain element is contained within a given list */
-bool list_contains_key(element *list, int key) {
+static bool list_contains_key(element *list, int key) {
     element *step = NULL;
 
     step = list;
@@ -152,7 +153,7 @@ static void print_html_string(GString *out, char *str, bool obfuscate) {
             g_string_append_printf(out, "&quot;");
             break;
         default:
-            if (obfuscate) {
+	  if (obfuscate && ((int) *str < 128) && ((int) *str >= 0)){
                 if (rand() % 2 == 0)
                     g_string_append_printf(out, "&#%d;", (int) *str);
                 else
@@ -261,8 +262,8 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
             g_string_append_printf(out, "\"");
         } else {
             if (!(extension(EXT_COMPATIBILITY))) {
-				g_string_append_printf(out, "\" id=\"%s\"",elt->contents.link->identifier);
-			}
+                g_string_append_printf(out, "\" id=\"%s\"",elt->contents.link->identifier);
+            }
         }
         if (strlen(elt->contents.link->title) > 0) {
             g_string_append_printf(out, " title=\"");
@@ -322,15 +323,20 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         if (lev > 6)
             lev = 6;
         pad(out, 2);
-        if ( extension(EXT_COMPATIBILITY) || extension(EXT_NO_LABELS)) {
+        if ( extension(EXT_COMPATIBILITY)) {
             /* Use regular Markdown header format */
             g_string_append_printf(out, "<h%1d>", lev);
             print_html_element_list(out, elt->children, obfuscate);
         } else if (elt->children->key == AUTOLABEL) {
-            /* generate a label for each header (MMD)*/
+            /* use label for header since one was specified (MMD)*/
             g_string_append_printf(out, "<h%d id=\"%s\">", lev,elt->children->contents.str);
             print_html_element_list(out, elt->children->next, obfuscate);
+        } else if ( extension(EXT_NO_LABELS)) {
+            /* Don't generate a label */
+            g_string_append_printf(out, "<h%1d>", lev);
+            print_html_element_list(out, elt->children, obfuscate);
         } else {
+            /* generate a label by default for MMD */
             label = label_from_element_list(elt->children, obfuscate);
             g_string_append_printf(out, "<h%d id=\"%s\">", lev, label);
             print_html_element_list(out, elt->children, obfuscate);
@@ -348,12 +354,12 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         pad(out, 2);
         g_string_append_printf(out, "<p>");
         print_html_element_list(out, elt->children, obfuscate);
-		if (am_printing_html_footnote && ( elt->next == NULL)) {
-			g_string_append_printf(out, " <a href=\"#fnref:%d\" title=\"return to article\" class=\"reversefootnote\">&#160;&#8617;</a>", footnote_counter_to_print);
-			/* Only print once. For now, it's the first paragraph, until
-				I can figure out to make it the last paragraph */
-			am_printing_html_footnote = FALSE;
-		}
+        if (am_printing_html_footnote && ( elt->next == NULL)) {
+            g_string_append_printf(out, " <a href=\"#fnref:%d\" title=\"return to article\" class=\"reversefootnote\">&#160;&#8617;</a>", footnote_counter_to_print);
+            /* Only print once. For now, it's the first paragraph, until
+                I can figure out to make it the last paragraph */
+            am_printing_html_footnote = FALSE;
+        }
         g_string_append_printf(out, "</p>");
         padded = 0;
         break;
@@ -419,7 +425,7 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         /* if contents.str == 0, then print note; else ignore, since this
          * is a note block that has been incorporated into the notes list */
         if (elt->contents.str == 0) {
-            if ( elt->children->contents.str == 0 ){
+            if (elt->children->contents.str == 0) {
                 /* The referenced note has not been used before */
                 add_endnote(elt->children);
                 ++notenumber;
@@ -729,11 +735,11 @@ static void print_html_endnotes(GString *out) {
         } else {
             g_string_append_printf(out, "<li id=\"fn:%d\">\n", counter);
             padded = 2;
-			am_printing_html_footnote = TRUE;
-			footnote_counter_to_print = counter;
+            am_printing_html_footnote = TRUE;
+            footnote_counter_to_print = counter;
             print_html_element_list(out, note_elt, false);
-			am_printing_html_footnote = FALSE;
-			footnote_counter_to_print = 0;
+            am_printing_html_footnote = FALSE;
+            footnote_counter_to_print = 0;
             pad(out, 1);
             g_string_append_printf(out, "</li>");
         }
@@ -845,8 +851,8 @@ static void print_latex_element(GString *out, element *elt) {
     char *label;
     char *height;
     char *width;
-	char *upper;
-	int i;
+    char *upper;
+    int i;
     double floatnum;
     switch (elt->key) {
     case SPACE:
@@ -900,9 +906,9 @@ static void print_latex_element(GString *out, element *elt) {
             label = label_from_string(elt->contents.link->url,0);
             if (elt->contents.link->label != NULL) {
                     print_latex_element_list(out, elt->contents.link->label);
-                g_string_append_printf(out, " (\\autoref\{%s})", label);             
+                g_string_append_printf(out, " (\\autoref{%s})", label);             
             } else {
-                g_string_append_printf(out, "\\autoref\{%s}", label);
+                g_string_append_printf(out, "\\autoref{%s}", label);
             }
             free(label);
         } else if ( (elt->contents.link->label != NULL) &&
@@ -1713,7 +1719,7 @@ static void print_odf_string(GString *out, char *str) {
 }
 
 /* print_odf_element_list - print an element list as ODF */
-void print_odf_element_list(GString *out, element *list) {
+static void print_odf_element_list(GString *out, element *list) {
     while (list != NULL) {
         print_odf_element(out, list);
         list = list->next;
@@ -1721,12 +1727,12 @@ void print_odf_element_list(GString *out, element *list) {
 }
 
 /* print_odf_element - print an element as ODF */
-void print_odf_element(GString *out, element *elt) {
+static void print_odf_element(GString *out, element *elt) {
     int lev;
     char *label;
     char *height;
     char *width;
-
+    /* element *locator = NULL; */
     int old_type = 0;
     switch (elt->key) {
     case SPACE:
@@ -2013,7 +2019,7 @@ void print_odf_element(GString *out, element *elt) {
     case NOCITATION:
     case CITATION:
         /* Get locator, if present */
-        locator_for_citation(elt);
+        /* locator = locator_for_citation(elt); */
 
         if (strncmp(elt->contents.str,"[#",2) == 0) {
             /* reference specified externally, so just display it */
@@ -2021,7 +2027,7 @@ void print_odf_element(GString *out, element *elt) {
         } else {
             /* reference specified within the MMD document,
                so will output as footnote */
-            if (elt && elt->children && (elt->children->contents.str == NULL)) {
+            if (elt->children->contents.str == NULL) {
                 /* First use of this citation */
                 ++notenumber;
                 char buf[5];
@@ -2218,6 +2224,9 @@ void print_element_list(GString *out, element *elt, int format, int exts) {
     language = ENGLISH;
     html_footer = FALSE;
     no_latex_footnote = FALSE;
+    footnote_counter_to_print = 0;
+    odf_list_needs_end_p = 0;
+    element *title;
 
     extensions = exts;
     padded = 2;  /* set padding to 2, so no extra blank lines at beginning */
@@ -2243,6 +2252,14 @@ void print_element_list(GString *out, element *elt, int format, int exts) {
         break;
     case OPML_FORMAT:
         g_string_append_printf(out, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<opml version=\"1.0\">\n");
+       if (list_contains_key(elt,METAKEY)) {
+            title = metadata_for_key("title",elt);
+            if (title != NULL) {
+                g_string_append_printf(out,"<head><title>");
+                print_raw_element(out,title->children);
+                g_string_append_printf(out,"</title></head>");
+            }
+        }
         g_string_append_printf(out, "<body>\n");
         print_opml_element_list(out, elt);
         if (html_footer == TRUE) print_opml_metadata(out, elt);
@@ -2284,12 +2301,12 @@ void print_html_header(GString *out, element *elt, bool obfuscate) {
 "<!DOCTYPE html>\n<html>\n<head>\n\t<meta charset=\"utf-8\"/>\n");
 
     print_html_element_list(out, elt->children, obfuscate);
-    g_string_append_printf(out, "</head>\n<body>\n");    
+    g_string_append_printf(out, "</head>\n<body>\n\n");    
 }
 
 
 void print_html_footer(GString *out, bool obfuscate) {
-    g_string_append_printf(out, "\n</body>\n</html>");
+    g_string_append_printf(out, "\n\n</body>\n</html>");
 }
 
 
@@ -2498,7 +2515,7 @@ static int find_latex_mode(int format, element *list) {
 
 
 /* find specified metadata key, if present */
-element * metadata_for_key(const char *key, element *list) {
+element * metadata_for_key(char *key, element *list) {
     element *step = NULL;
     step = list;
     char *label;
@@ -2527,7 +2544,7 @@ element * metadata_for_key(const char *key, element *list) {
 
 
 /* find specified metadata key, if present */
-char * metavalue_for_key(const char *key, element *list) {
+char * metavalue_for_key(char *key, element *list) {
     element *step = NULL;
     step = list;
     char *label;

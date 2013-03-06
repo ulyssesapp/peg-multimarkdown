@@ -1,7 +1,25 @@
 /* parsing_functions.c - Functions for parsing markdown and
  * freeing element lists. */
 
-int yyparse(void);
+/* These yy_* functions come from markdown_parser.c which is
+ * generated from markdown_parser.leg
+ * */
+typedef int (*yyrule)();
+
+extern int yyparse();
+extern int yyparsefrom(yyrule);
+extern int yy_References();
+extern int yy_Notes();
+extern int yy_Doc();
+
+extern int yy_AutoLabels();
+extern int yy_DocWithMetaData();
+extern int yy_MetaDataOnly();
+extern int yy_DocForOPML();
+
+#include "utility_functions.h"
+#include "parsing_functions.h"
+#include "markdown_peg.h"
 
 static void free_element_contents(element elt);
 
@@ -41,6 +59,11 @@ static void free_element_contents(element elt) {
       case GLOSSARY:
       case GLOSSARYTERM:
       case NOTELABEL:
+      case CELLSPAN:
+      case EMDASH:
+      case ENDASH:
+      case GLOSSARYSORTKEY:
+      case MATHSPAN:
         free(elt.contents.str);
         elt.contents.str = NULL;
         break;
@@ -129,6 +152,12 @@ element * parse_markdown(char *string, int extensions, element *reference_list, 
     yyparsefrom(yy_Doc);
 
     charbuf = oldcharbuf;          /* restore charbuf to original value */
+
+/*    if (parse_aborted) {
+        free_element_list(parse_result);
+        return NULL;
+    }*/
+
     return parse_result;
 
 }
@@ -144,9 +173,20 @@ element * parse_markdown_with_metadata(char *string, int extensions, element *re
     oldcharbuf = charbuf;
     charbuf = string;
 
-    yyparsefrom(yy_DocWithMetaData);
+	start_time = clock();
 
+    yyparsefrom(yy_DocWithMetaData);
     charbuf = oldcharbuf;          /* restore charbuf to original value */
+
+    /* reset start_time for subsequent passes */
+    start_time = 0;
+    
+    if (parse_aborted) {
+        parse_aborted = 0;
+        free_element_list(parse_result);
+        return NULL;
+    }
+
     return parse_result;
 
 }

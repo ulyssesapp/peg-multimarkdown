@@ -1,3 +1,6 @@
+#ifndef MARKDOWN_LIB_H
+#define MARKDOWN_LIB_H
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "glib.h"
@@ -20,11 +23,16 @@ enum markdown_formats {
     OPML_FORMAT,
     GROFF_MM_FORMAT,
     ODF_FORMAT,
-    ODF_BODY_FORMAT
+    ODF_BODY_FORMAT,
+	ORIGINAL_FORMAT
 };
 
-GString * markdown_to_g_string(const char *text, int extensions, int output_format);
-char * markdown_to_string(const char *text, int extensions, int output_format);
-char * extract_metadata_value(const char *text, int extensions, const char *key);
+GString * markdown_to_g_string(char *text, int extensions, int output_format);
+char * markdown_to_string(char *text, int extensions, int output_format);
+char * extract_metadata_value(char *text, int extensions, char *key);
+gboolean has_metadata(char *text, int extensions);
+char * mmd_version();
 
 /* vim: set ts=4 sw=4 : */
+#endif
+

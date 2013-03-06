@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 45;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -29,7 +29,6 @@
 		4AFA467D13E3640600CFA132 /* markdown_output.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66313DF47CC00D0980C /* markdown_output.c */; };
 		65F0B69E13DF47CC00D0980C /* markdown.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66713DF47CC00D0980C /* markdown.c */; };
 		65F89EA713E37B9D006A34B8 /* libMultiMarkdown.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AFA466213E3624F00CFA132 /* libMultiMarkdown.a */; };
-		79F800D114F6CAB1003AD4AA /* markdown_parser_lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 79F800D014F6CAB1003AD4AA /* markdown_parser_lib.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,7 +107,6 @@
 		65F89EB813E37BEF006A34B8 /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		65F89EB913E37BEF006A34B8 /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		65F89EBA13E37C2A006A34B8 /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
-		79F800D014F6CAB1003AD4AA /* markdown_parser_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = markdown_parser_lib.h; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* multimarkdown */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = multimarkdown; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -156,7 +154,6 @@
 				65F0B6C513DF485F00D0980C /* Makefile */,
 				65F0B66113DF47CC00D0980C /* markdown_lib.c */,
 				65F0B66213DF47CC00D0980C /* markdown_lib.h */,
-				79F800D014F6CAB1003AD4AA /* markdown_parser_lib.h */,
 				65F0B66313DF47CC00D0980C /* markdown_output.c */,
 				65F0B66513DF47CC00D0980C /* markdown_parser.leg */,
 				65F0B66613DF47CC00D0980C /* markdown_peg.h */,
@@ -251,7 +248,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				79F800D114F6CAB1003AD4AA /* markdown_parser_lib.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,7 +265,7 @@
 			dependencies = (
 			);
 			name = Peg;
-			passBuildSettingsInEnvironment = 0;
+			passBuildSettingsInEnvironment = 1;
 			productName = Peg;
 		};
 /* End PBXLegacyTarget section */
@@ -319,10 +315,10 @@
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0410;
 			};
 			buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "MultiMarkdown" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -356,7 +352,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./peg-0.1.4/leg -o markdown_parser.c markdown_parser.leg";
+			shellScript = "./peg/leg -o markdown_parser.c markdown_parser.leg";
 		};
 		65F0B8E913DF714E00D0980C /* Run Tests */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -420,11 +416,9 @@
 			baseConfigurationReference = 65F89EB913E37BEF006A34B8 /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=iphoneos*]" = armv7;
 				HEADER_SEARCH_PATHS = .;
-				ONLY_ACTIVE_ARCH = NO;
+				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = multimarkdown;
-				"VALID_ARCHS[sdk=iphoneos*]" = armv7;
 			};
 			name = Debug;
 		};
@@ -433,16 +427,15 @@
 			baseConfigurationReference = 65F89EBA13E37C2A006A34B8 /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=iphoneos*]" = armv7;
 				COPY_PHASE_STRIP = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREFIX_HEADER = MarkdownMacPrefix.h;
 				HEADER_SEARCH_PATHS = .;
+				INSTALL_PATH = /usr/local/bin;
 				OTHER_CFLAGS = "-DSTANDALONE_MAC_VERSION=1";
 				PRODUCT_NAME = multimarkdown;
 				SEPARATE_STRIP = YES;
 				STRIP_INSTALLED_PRODUCT = YES;
-				"VALID_ARCHS[sdk=iphoneos*]" = armv7;
 			};
 			name = Release;
 		};
@@ -459,6 +452,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -475,6 +469,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				PREBINDING = NO;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -484,17 +479,12 @@
 			baseConfigurationReference = 65F89EB913E37BEF006A34B8 /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=iphoneos*]" = armv7;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				HEADER_SEARCH_PATHS = .;
-				INSTALL_PATH = "@rpath";
-				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				PRODUCT_NAME = MultiMarkdown;
-				SKIP_INSTALL = YES;
-				"VALID_ARCHS[sdk=iphoneos*]" = armv7;
 			};
 			name = Debug;
 		};
@@ -503,13 +493,8 @@
 			baseConfigurationReference = 65F89EBA13E37C2A006A34B8 /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=iphoneos*]" = armv7;
 				HEADER_SEARCH_PATHS = .;
-				INSTALL_PATH = "@rpath";
-				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				PRODUCT_NAME = MultiMarkdown;
-				SKIP_INSTALL = YES;
-				"VALID_ARCHS[sdk=iphoneos*]" = armv7;
 			};
 			name = Release;
 		};
@@ -518,13 +503,8 @@
 			baseConfigurationReference = 65F89E8113E379ED006A34B8 /* Release10.6+.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=iphoneos*]" = armv7;
 				HEADER_SEARCH_PATHS = .;
-				INSTALL_PATH = "@rpath";
-				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				PRODUCT_NAME = MultiMarkdown;
-				SKIP_INSTALL = YES;
-				"VALID_ARCHS[sdk=iphoneos*]" = armv7;
 			};
 			name = "Release10.6+";
 		};
@@ -540,6 +520,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				PREBINDING = NO;
 				SDKROOT = macosx;
 			};
 			name = "Release10.6+";
@@ -549,20 +530,18 @@
 			baseConfigurationReference = 65F89E8113E379ED006A34B8 /* Release10.6+.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=iphoneos*]" = armv7;
 				HEADER_SEARCH_PATHS = .;
+				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = multimarkdown;
-				"VALID_ARCHS[sdk=iphoneos*]" = armv7;
 			};
 			name = "Release10.6+";
 		};
 		651A542A13E20D2400BCB02A /* Release10.6+ */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				PRODUCT_NAME = Peg;
 				ZERO_LINK = NO;
 			};
@@ -573,6 +552,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				PRODUCT_NAME = "MultiMarkdown Tests";
 				ZERO_LINK = NO;
 			};
@@ -581,11 +561,9 @@
 		65F0B88913DF6C0D00D0980C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				PRODUCT_NAME = Peg;
 			};
 			name = Debug;
@@ -593,10 +571,9 @@
 		65F0B88A13DF6C0D00D0980C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				PRODUCT_NAME = Peg;
 				ZERO_LINK = NO;
 			};
@@ -617,6 +594,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				PRODUCT_NAME = "MultiMarkdown Tests";
 				ZERO_LINK = NO;
 			};
