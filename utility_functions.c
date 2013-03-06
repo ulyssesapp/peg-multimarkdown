@@ -65,23 +65,6 @@ GString *concat_string_list(element *list) {
 
 /**********************************************************************
 
-  Global variables used in parsing
-
- ***********************************************************************/
-
-
-char *charbuf = "";     /* Buffer of characters to be parsed. */
-element *references = NULL;    /* List of link references found. */
-element *notes = NULL;         /* List of footnotes found. */
-element *parse_result;  /* Results of parse. */
-int syntax_extensions;  /* Syntax extensions selected. */
-
-element *labels = NULL;      /* List of labels found in document. */
-clock_t start_time = 0;                 /* Used for ensuring we're not stuck in a loop */
-bool parse_aborted = 0;      /* flag indicating we ran out of time */
-
-/**********************************************************************
-
   Auxiliary functions for parsing actions.
   These make it easier to build up data structures (including lists)
   in the parsing actions.
@@ -144,8 +127,8 @@ element * mk_link(element *label, char *url, char *title, element *attr, char *i
 }
 
 /* extension = returns true if extension is selected */
-bool extension(int ext) {
-    return (syntax_extensions & ext);
+bool extension(markdown_parser_state *state, int ext) {
+    return (state->syntax_extensions & ext);
 }
 
 /* match_inlines - returns true if inline lists match (case-insensitive...) */
@@ -193,8 +176,8 @@ bool match_inlines(element *l1, element *l2) {
 
 /* find_reference - return true if link found in references matching label.
  * 'link' is modified with the matching url and title. */
-bool find_reference(link *result, element *label) {
-    element *cur = references;  /* pointer to walk up list of references */
+bool find_reference(markdown_parser_state *state, link *result, element *label) {
+    element *cur = state->references;  /* pointer to walk up list of references */
     link *curitem;
     while (cur != NULL) {
         curitem = cur->contents.link;
@@ -211,8 +194,8 @@ bool find_reference(link *result, element *label) {
 /* find_note - return true if note found in notes matching label.
 if found, 'result' is set to point to matched note. */
 
-bool find_note(element **result, char *label) {
-   element *cur = notes;  /* pointer to walk up list of notes */
+bool find_note(markdown_parser_state *state, element **result, char *label) {
+   element *cur = state->notes;  /* pointer to walk up list of notes */
    while (cur != NULL) {
        if (strcmp(label, cur->contents.str) == 0) {
            *result = cur;
@@ -298,9 +281,9 @@ char *label_from_string(char *str, bool obfuscate) {
 
 /* find_label - return true if header, table, etc is found matching label.
  * 'link' is modified with the matching url and title. */
-bool find_label(link *result, element *label) {
+bool find_label(markdown_parser_state *state, link *result, element *label) {
     char *lab;
-    element *cur = labels;  /* pointer to walk up list of references */
+    element *cur = state->labels;  /* pointer to walk up list of references */
     GString *text = g_string_new("");
     print_raw_element_list(text, label);
     lab = label_from_string(text->str,0);
@@ -512,28 +495,37 @@ void trim_trailing_whitespace(char *str) {
 }
 
 /* Don't let us get caught in "infinite" loop */
-bool check_timeout() {
+bool check_timeout(markdown_parser_state *state) {
     /* Once we abort, keep aborting */
-    if (parse_aborted)
+    if (state->parse_aborted)
         return 0;
     
     /* We're not timing this run */
-    if (start_time == 0)
+    if (state->start_time == 0)
         return 1;
 
     clock_t end = clock();
-    double elapsed = ((double) (end - start_time)) / CLOCKS_PER_SEC;
+    double elapsed = ((double) (end - state->start_time)) / CLOCKS_PER_SEC;
     
 	/* fprintf(stderr,"%2.2f elapsed; (%4.2f CLOCKS_PER_SEC)\n",elapsed,CLOCKS_PER_SEC); */
 	/* fprintf(stderr,"%2.2f elapsed\n",elapsed); */
 	
 	
-    /* If > 3 clock seconds, then abort */
-    float max = 3;
+    /* If > 30 clock seconds, then abort */
+    float max = 30;
     if (elapsed > max) {
-        parse_aborted = 1;
+        state->parse_aborted = 1;
         return 0;
     }
     return 1;
 }
 
+char read_character(markdown_parser_state *state)
+{
+	return *(state->charbuf);
+}
+
+void next_character(markdown_parser_state *state)
+{
+	state->charbuf ++;
+}

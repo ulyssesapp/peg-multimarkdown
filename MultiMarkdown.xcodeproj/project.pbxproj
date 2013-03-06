@@ -34,6 +34,7 @@
 		79C2C98416E7766B002B79F3 /* utility_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B69A13DF47CC00D0980C /* utility_functions.c */; };
 		79C2C98516E7766F002B79F3 /* parsing_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66A13DF47CC00D0980C /* parsing_functions.c */; };
 		79C2C98616E7767F002B79F3 /* odf.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66813DF47CC00D0980C /* odf.c */; };
+		79C2C98C16E78708002B79F3 /* utility_functions.h in Headers */ = {isa = PBXBuildFile; fileRef = 79C2C98B16E78708002B79F3 /* utility_functions.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +104,7 @@
 		79C2C97E16E774B6002B79F3 /* markdown_parser_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = markdown_parser_lib.h; sourceTree = "<group>"; };
 		79C2C98016E774BF002B79F3 /* markdown_parser_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = markdown_parser_lib.c; sourceTree = "<group>"; };
 		79C2C98216E775D7002B79F3 /* parsing_functions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parsing_functions.h; sourceTree = "<group>"; };
+		79C2C98B16E78708002B79F3 /* utility_functions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utility_functions.h; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* multimarkdown */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = multimarkdown; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -161,6 +163,7 @@
 				65F0B66913DF47CC00D0980C /* odf.h */,
 				79C2C98216E775D7002B79F3 /* parsing_functions.h */,
 				65F0B66A13DF47CC00D0980C /* parsing_functions.c */,
+				79C2C98B16E78708002B79F3 /* utility_functions.h */,
 				65F0B69A13DF47CC00D0980C /* utility_functions.c */,
 			);
 			name = Source;
@@ -229,6 +232,7 @@
 			files = (
 				79C2C97F16E774B6002B79F3 /* markdown_parser_lib.h in Headers */,
 				79C2C98316E775D7002B79F3 /* parsing_functions.h in Headers */,
+				79C2C98C16E78708002B79F3 /* utility_functions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
