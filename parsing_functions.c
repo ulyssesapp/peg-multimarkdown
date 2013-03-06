@@ -29,7 +29,7 @@ void free_element_list(element * elt) {
         elt = next;
     }
 }
-
+ 
 /* free_element_contents - free element contents depending on type */
 static void free_element_contents(element elt) {
     switch (elt.key) {

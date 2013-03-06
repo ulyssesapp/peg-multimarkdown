@@ -519,13 +519,3 @@ bool check_timeout(markdown_parser_state *state) {
     }
     return 1;
 }
-
-char read_character(markdown_parser_state *state)
-{
-	return *(state->charbuf);
-}
-
-void next_character(markdown_parser_state *state)
-{
-	state->charbuf ++;
-}

@@ -41,9 +41,9 @@
 
 #define YY_INPUT(buf, result, max_size)              \
 {                                                    \
-    int yyc = read_character(ctx->state);            \
+    int yyc = *(ctx->state->charbuf);            \
     if (ctx->state->charbuf && *(ctx->state->charbuf) != '\0') {               \
-        next_character(ctx->state);\
+        ctx->state->charbuf ++;\
     } else {                                         \
         yyc= EOF;                                    \
     }                                                \
