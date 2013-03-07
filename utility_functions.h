@@ -78,6 +78,7 @@ if found, 'result' is set to point to matched note. */
 
 bool find_note(markdown_parser_state *state, element **result, char *label);
 
+char *string_from_element_list(element *list, bool freeList);
 
 char *label_from_string(char *str, bool obfuscate);
 void localize_typography(GString *out, int character, int language, int output);
@@ -89,9 +90,6 @@ void trim_trailing_whitespace(char *str);
 char *label_from_element_list(element *list, bool obfuscate);
 void print_raw_element_list(GString *out, element *list);
 void print_raw_element(GString *out, element *elt);
-
-char read_character(markdown_parser_state *state);
-void next_character(markdown_parser_state *state);
 
 #endif
 

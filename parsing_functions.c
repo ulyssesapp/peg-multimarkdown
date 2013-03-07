@@ -56,7 +56,10 @@ static void free_element_contents(element elt) {
       case ENDASH:
       case GLOSSARYSORTKEY:
       case MATHSPAN:
-        free(elt.contents.str);
+	  case LISTITEM:
+		if (elt.contents.str)
+			free(elt.contents.str);
+		
         elt.contents.str = NULL;
         break;
       case LINK:

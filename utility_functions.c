@@ -231,6 +231,18 @@ void print_raw_element_list(GString *out, element *list) {
     }
 }
 
+/* string_from_element_list */
+/* Creates a flat string from an element list */
+char *string_from_element_list(element *list, bool freeList) {
+	GString *raw = g_string_new("");
+	print_raw_element(raw, list);
+	
+	if (freeList)
+		free(list);
+	
+	return g_string_free(raw, false);
+}
+
 /* label_from_element_list */
 /* Returns a null-terminated string, which must be freed after use. */
 
