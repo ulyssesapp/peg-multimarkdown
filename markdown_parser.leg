@@ -258,7 +258,7 @@ ListItem =  m:BulletOrEnum
                raw->key = RAW;
                $$ = mk_element(LISTITEM);
                $$->children = raw;
-			   if (extension(ctx->state, EXT_KEEP_TAGS)) $$->contents.str = string_from_element_list(m, true);
+			   $$->contents.str = string_from_element_list(m, true);
             }
 
 ListItemTight =
@@ -273,7 +273,7 @@ ListItemTight =
                raw->key = RAW;
                $$ = mk_element(LISTITEM);
                $$->children = raw;
-			   if (extension(ctx->state, EXT_KEEP_TAGS)) $$->contents.str = string_from_element_list(m, true);
+			   $$->contents.str = string_from_element_list(m, true);
             }
 
 ListBlock = a:StartList
@@ -638,7 +638,7 @@ EmphStar =  '*' !Whitespace
             )+
             '*'
             { $$ = mk_list(EMPH, a); 
-			  if (extension(ctx->state, EXT_KEEP_TAGS)) $$->contents.str = "*";
+			  $$->contents.str = "*";
 			}
 
 EmphUl =    '_' !Whitespace
@@ -648,7 +648,7 @@ EmphUl =    '_' !Whitespace
             )+
             '_'
             { $$ = mk_list(EMPH, a); 
-			  if (extension(ctx->state, EXT_KEEP_TAGS)) $$->contents.str = "_";
+			  $$->contents.str = "_";
 			}
 
 Strong = StrongStar | StrongUl
@@ -658,7 +658,7 @@ StrongStar =    "**" !Whitespace
                 ( !"**" b:Inline { a = cons(b, a); })+
                 "**"
                 { $$ = mk_list(STRONG, a);
-				  if (extension(ctx->state, EXT_KEEP_TAGS)) $$->contents.str = "**";
+				  $$->contents.str = "**";
 				}
 
 StrongUl   =    "__" !Whitespace
@@ -666,7 +666,7 @@ StrongUl   =    "__" !Whitespace
                 ( !"__" b:Inline { a = cons(b, a); })+
                 "__"
                 { $$ = mk_list(STRONG, a); 
-				  if (extension(ctx->state, EXT_KEEP_TAGS)) $$->contents.str = "__";
+				  $$->contents.str = "__";
 				}
 
 

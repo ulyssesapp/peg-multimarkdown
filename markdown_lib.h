@@ -12,8 +12,7 @@ enum markdown_extensions {
     EXT_FILTER_STYLES    = 1 << 3,
     EXT_COMPATIBILITY    = 1 << 4,
     EXT_PROCESS_HTML     = 1 << 5,
-	EXT_NO_LABELS		 = 1 << 6,
-	EXT_KEEP_TAGS		 = 1 << 7
+	EXT_NO_LABELS		 = 1 << 6
 };
 
 enum markdown_formats {
