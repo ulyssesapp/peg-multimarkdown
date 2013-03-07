@@ -631,7 +631,9 @@ EmphStar =  '*' !Whitespace
             | b:StrongStar  { a = cons(b, a); }
             )+
             '*'
-            { $$ = mk_list(EMPH, a); }
+            { $$ = mk_list(EMPH, a); 
+			  if (extension(ctx->state, EXT_KEEP_TAGS)) $$->contents.str = "*";
+			}
 
 EmphUl =    '_' !Whitespace
             a:StartList
@@ -639,7 +641,9 @@ EmphUl =    '_' !Whitespace
             | b:StrongUl  { a = cons(b, a); }
             )+
             '_'
-            { $$ = mk_list(EMPH, a); }
+            { $$ = mk_list(EMPH, a); 
+			  if (extension(ctx->state, EXT_KEEP_TAGS)) $$->contents.str = "_";
+			}
 
 Strong = StrongStar | StrongUl
 
@@ -647,13 +651,17 @@ StrongStar =    "**" !Whitespace
                 a:StartList
                 ( !"**" b:Inline { a = cons(b, a); })+
                 "**"
-                { $$ = mk_list(STRONG, a); }
+                { $$ = mk_list(STRONG, a);
+				  if (extension(ctx->state, EXT_KEEP_TAGS)) $$->contents.str = "**";
+				}
 
 StrongUl   =    "__" !Whitespace
                 a:StartList
                 ( !"__" b:Inline { a = cons(b, a); })+
                 "__"
-                { $$ = mk_list(STRONG, a); }
+                { $$ = mk_list(STRONG, a); 
+				  if (extension(ctx->state, EXT_KEEP_TAGS)) $$->contents.str = "__";
+				}
 
 
 ImageBlock = Image Sp Newline BlankLine+
