@@ -159,8 +159,16 @@ HeadingSectionBlock =
             | !(Sp? HtmlBlockOpenDiv) Para
             | Plain )
 
-Para =      NonindentSpace a:Inlines BlankLine+
-            { $$ = a; $$->key = PARA; }
+Para =      s:CapturingNonindentSpace			{ }
+			a:Inlines
+			BlankLine+
+            { 
+				if (s)
+					a->children = cons(s, a->children);
+
+				$$ = a;
+				$$->key = PARA;
+			}
 
 Plain =     a:Inlines
             { $$ = a; $$->key = PLAIN; }
@@ -226,7 +234,7 @@ HorizontalRule = NonindentSpace
                  Sp Newline BlankLine+
                  { $$ = mk_element(HRULE); }
 
-Bullet = !HorizontalRule < NonindentSpace ('+' | '*' | '-') Spacechar+ >
+Bullet = !HorizontalRule < NonindentSpace ('+' | '*' | '-') > &(Spacechar+)
 		 {{ $$ = mk_str(yytext); }}
 
 BulletList = &Bullet (ListTight | ListLoose)
@@ -251,19 +259,24 @@ ListLoose = a:StartList
 
 ListItem =  m:BulletOrEnum
             a:StartList
+			s:Space					{ if (extension(ctx->state, EXT_KEEP_WHITESPACES)) a = cons(s, a); }
             ListBlock { a = cons($$, a); }
             ( ListContinuationBlock { a = cons($$, a); } )*
-            {  element *raw;
+            {  
+			   element *raw;
                raw = mk_str_from_list(a, false);
-               raw->key = RAW;
+               
+			   raw->key = RAW;
                $$ = mk_element(LISTITEM);
                $$->children = raw;
+
 			   $$->contents.str = string_from_element_list(m, true);
             }
 
 ListItemTight =
             m:BulletOrEnum
             a:StartList
+			s:Space					{ if (extension(ctx->state, EXT_KEEP_WHITESPACES)) a = cons(s, a); }			
             ListBlock { a = cons($$, a); }
             ( !BlankLine
               ListContinuationBlock { a = cons($$, a); } )*
@@ -290,7 +303,7 @@ ListContinuationBlock = a:StartList
                         ( Indent ListBlock { a = cons($$, a); } )+
                         {  $$ = mk_str_from_list(a, false); }
 
-Enumerator = < NonindentSpace [0-9]+ '.' Spacechar+ >
+Enumerator = < NonindentSpace [0-9]+ '.' > &(Spacechar+)
 			 {{ $$ = mk_str(yytext); }}
 
 OrderedList = &Enumerator (ListTight | ListLoose)
@@ -585,8 +598,13 @@ Inline  = &{ check_timeout(ctx->state) }
         | Smart
         | Symbol
 
-Space = Spacechar+
-        { $$ = mk_str(" ");
+Space = < Spacechar+ >
+        {
+			if (extension(ctx->state, EXT_KEEP_WHITESPACES))
+				$$ = mk_str(yytext);
+			else
+				$$ = mk_str(" ");
+
           $$->key = SPACE; }
 
 Str = a:StartList < NormalChar+ > { a = cons(mk_str(yytext), a); }
@@ -902,6 +920,16 @@ NonindentSpace =    "   " | "  " | " " | ""
 Indent =            "\t" | "    "
 IndentedLine =      Indent Line
 OptionallyIndentedLine = Indent? Line
+
+CapturingNonindentSpace		=  <NonindentSpace>
+							{
+								if (extension(ctx->state, EXT_KEEP_WHITESPACES)) {
+									$$ = mk_str(yytext);
+									$$->key = SPACE;
+								}
+								else
+									$$ = NULL;
+							}
 
 # StartList starts a list data structure that can be added to with cons:
 StartList = &.

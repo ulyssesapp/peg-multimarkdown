@@ -53,7 +53,7 @@ GString *concat_string_list(element *list) {
     element *next;
     result = g_string_new("");
     while (list != NULL) {
-        assert(list->key == STR);
+        assert(list->key == STR || list->key == SPACE);
         assert(list->contents.str != NULL);
         g_string_append(result, list->contents.str);
         next = list->next;
