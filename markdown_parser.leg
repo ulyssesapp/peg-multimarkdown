@@ -178,7 +178,7 @@ AtxInline = !Newline !( &{ !extension(ctx->state, EXT_COMPATIBILITY) } Sp AutoLa
 AtxStart =  < ( "######" | "#####" | "####" | "###" | "##" | "#" ) >
             { $$ = mk_element(H1 + (strlen(yytext) - 1)); }
 
-AtxHeading = s:AtxStart Sp? a:StartList ( AtxInline { a = cons($$, a); } )+ ( Sp? b:AutoLabel { append_list(b,a);})? (Sp? '#'* Sp)?  Newline
+AtxHeading = s:AtxStart Sp? a:StartList ( AtxInline { a = cons($$, a); } (l:LineBreak { a = cons(l, a); })? )+ ( Sp? b:AutoLabel { append_list(b,a);})? (Sp? '#'* Sp)?  Newline
             { $$ = mk_list(s->key,a);
             free(s); }
 
