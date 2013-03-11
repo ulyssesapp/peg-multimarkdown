@@ -534,7 +534,7 @@ HtmlBlockInTags = HtmlBlockAddress
                 | HtmlBlockTr
                 | HtmlBlockScript
 
-HtmlBlock = !MarkdownHtmlTagOpen < ( HtmlBlockInTags | HtmlComment | HtmlBlockSelfClosing ) >
+HtmlBlock = !MarkdownHtmlTagOpen < ( HtmlBlockInTags | HtmlComment | HtmlBlockSelfClosing ) > ("")?
             BlankLine+
             {   if (extension(ctx->state, EXT_FILTER_HTML)) {
                     $$ = mk_list(LIST, NULL);
