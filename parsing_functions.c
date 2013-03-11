@@ -123,8 +123,6 @@ void free_parsing_context(yycontext *context)
 	free(context);
 }
 
-
-
 element * parse_references(char *string, int extensions)
 {
 	yycontext *context = create_parsing_context(string, extensions, NULL, NULL, NULL);
@@ -174,7 +172,6 @@ element * parse_markdown(char *string, int extensions, element *reference_list, 
 	free_parsing_context(context);
 
     return parse_result;
-
 }
 
 element * parse_markdown_with_metadata(char *string, int extensions, element *reference_list, element *note_list, element *label_list) {
