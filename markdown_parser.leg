@@ -234,7 +234,7 @@ HorizontalRule = NonindentSpace
                  Sp Newline BlankLine+
                  { $$ = mk_element(HRULE); }
 
-Bullet = !HorizontalRule < NonindentSpace ('+' | '*' | '-') > &(Spacechar+)
+Bullet = !HorizontalRule < NonindentSpace ('+' | '*' | '-') ( &{ extension(ctx->state, EXT_KEEP_WHITESPACES)} Spacechar)? > &(Spacechar*)
 		 {{ $$ = mk_str(yytext); }}
 
 BulletList = &Bullet (ListTight | ListLoose)
@@ -259,7 +259,6 @@ ListLoose = a:StartList
 
 ListItem =  m:BulletOrEnum
             a:StartList
-			s:Space					{ if (extension(ctx->state, EXT_KEEP_WHITESPACES)) a = cons(s, a); }
             ListBlock { a = cons($$, a); }
             ( ListContinuationBlock { a = cons($$, a); } )*
             {  
@@ -273,10 +272,10 @@ ListItem =  m:BulletOrEnum
 			   $$->contents.str = string_from_element_list(m, true);
             }
 
+
 ListItemTight =
             m:BulletOrEnum
             a:StartList
-			s:Space					{ if (extension(ctx->state, EXT_KEEP_WHITESPACES)) a = cons(s, a); }			
             ListBlock { a = cons($$, a); }
             ( !BlankLine
               ListContinuationBlock { a = cons($$, a); } )*
@@ -303,7 +302,7 @@ ListContinuationBlock = a:StartList
                         ( Indent ListBlock { a = cons($$, a); } )+
                         {  $$ = mk_str_from_list(a, false); }
 
-Enumerator = < NonindentSpace [0-9]+ '.' > &(Spacechar+)
+Enumerator = < NonindentSpace [0-9]+ '.' ( &{ extension(ctx->state, EXT_KEEP_WHITESPACES)} Spacechar)? > &(Spacechar*)
 			 {{ $$ = mk_str(yytext); }}
 
 OrderedList = &Enumerator (ListTight | ListLoose)
