@@ -234,7 +234,7 @@ HorizontalRule = NonindentSpace
                  Sp Newline BlankLine+
                  { $$ = mk_element(HRULE); }
 
-Bullet = !HorizontalRule < NonindentSpace ('+' | '*' | '-') ( &{ extension(ctx->state, EXT_KEEP_WHITESPACES)} Spacechar)? > &(Spacechar*)
+Bullet = !HorizontalRule < NonindentSpace ('+' | '*' | '-') Spacechar > &(Spacechar*)
 		 {{ $$ = mk_str(yytext); }}
 
 BulletList = &Bullet (ListTight | ListLoose)
@@ -302,7 +302,7 @@ ListContinuationBlock = a:StartList
                         ( Indent ListBlock { a = cons($$, a); } )+
                         {  $$ = mk_str_from_list(a, false); }
 
-Enumerator = < NonindentSpace [0-9]+ '.' ( &{ extension(ctx->state, EXT_KEEP_WHITESPACES)} Spacechar)? > &(Spacechar*)
+Enumerator = < NonindentSpace [0-9]+ '.' Spacechar > &(Spacechar*)
 			 {{ $$ = mk_str(yytext); }}
 
 OrderedList = &Enumerator (ListTight | ListLoose)
