@@ -593,7 +593,8 @@ Inline  = &{ check_timeout(ctx->state) }
         | MarkdownHtmlTagOpen
         | RawHtml
         | Entity
-        | EscapedChar
+        | &{ !extension(ctx->state, EXT_KEEP_ESCAPES) }EscapedChar
+        | &{ extension(ctx->state, EXT_KEEP_ESCAPES) }KeptEscapedChar		
         | Smart
         | Symbol
 
@@ -618,6 +619,9 @@ AposChunk = &{ extension(ctx->state, EXT_SMART) } '\'' &Alphanumeric
 
 EscapedChar =   '\\' !Newline < [-\\`|*_{}[\]()#+.!><] >
                 { $$ = mk_str(yytext); }
+
+KeptEscapedChar =   < '\\' !Newline [-\\`|*_{}[\]()#+.!><] >
+					{ $$ = mk_str(yytext); }
 
 Entity =    ( HexEntity | DecEntity | CharEntity )
             { $$ = mk_str(yytext); $$->key = HTML; }
