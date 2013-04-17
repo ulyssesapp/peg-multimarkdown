@@ -484,7 +484,6 @@
 			baseConfigurationReference = 65F89EB913E37BEF006A34B8 /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=iphoneos*]" = armv7;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -492,9 +491,9 @@
 				HEADER_SEARCH_PATHS = .;
 				INSTALL_PATH = "@rpath";
 				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = MultiMarkdown;
 				SKIP_INSTALL = YES;
-				"VALID_ARCHS[sdk=iphoneos*]" = armv7;
 			};
 			name = Debug;
 		};
@@ -503,13 +502,11 @@
 			baseConfigurationReference = 65F89EBA13E37C2A006A34B8 /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=iphoneos*]" = armv7;
 				HEADER_SEARCH_PATHS = .;
 				INSTALL_PATH = "@rpath";
 				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				PRODUCT_NAME = MultiMarkdown;
 				SKIP_INSTALL = YES;
-				"VALID_ARCHS[sdk=iphoneos*]" = armv7;
 			};
 			name = Release;
 		};
@@ -518,13 +515,11 @@
 			baseConfigurationReference = 65F89E8113E379ED006A34B8 /* Release10.6+.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=iphoneos*]" = armv7;
 				HEADER_SEARCH_PATHS = .;
 				INSTALL_PATH = "@rpath";
 				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				PRODUCT_NAME = MultiMarkdown;
 				SKIP_INSTALL = YES;
-				"VALID_ARCHS[sdk=iphoneos*]" = armv7;
 			};
 			name = "Release10.6+";
 		};
