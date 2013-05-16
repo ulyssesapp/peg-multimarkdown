@@ -277,7 +277,7 @@ ListItemTight =
             m:BulletOrEnum
             a:StartList
             ListBlock { a = cons($$, a); }
-            ( !BlankLine
+            ( !MagicBlankLine
               ListContinuationBlock { a = cons($$, a); } )*
             !ListContinuationBlock
             {  element *raw;
@@ -289,14 +289,18 @@ ListItemTight =
             }
 
 ListBlock = a:StartList
-            !BlankLine Line { a = cons($$, a); }
+            !MagicBlankLine Line { a = cons($$, a); }
             ( ListBlockLine { a = cons($$, a); } )*
             { $$ = mk_str_from_list(a, false); }
 
 ListContinuationBlock = a:StartList
-                        ( < BlankLine* >
-                          {   if (strlen(yytext) == 0)
+                        ( < MagicBlankLine* >
+                          {   if (strlen(yytext) == 0) {
+									if (extension(ctx->state, EXT_KEEP_MAGIC_BLANK_LINES))
+										a = cons(mk_str(yytext), a);
+
                                    a = cons(mk_str("\001"), a); /* block separator */
+							  }
                               else
                                    a = cons(mk_str(yytext), a); } )
                         ( Indent ListBlock { a = cons($$, a); } )+
@@ -308,7 +312,7 @@ Enumerator = < NonindentSpace [0-9]+ '.' Spacechar > &(Spacechar*)
 OrderedList = &Enumerator (ListTight | ListLoose)
               { $$->key = ORDEREDLIST; }
 
-ListBlockLine = !BlankLine
+ListBlockLine = !MagicBlankLine
                 !( Indent? (Bullet | Enumerator) )
                 !HorizontalRule
                 OptionallyIndentedLine
@@ -897,6 +901,10 @@ RawHtml =   < (HtmlComment | HtmlBlockScript | HtmlTag) >
             }
 
 BlankLine =     Sp Newline
+
+# PEG doesn't support \uXXXX characters, so we encode \ueeee as octal byte sequence
+
+MagicBlankLine =		( &{ extension(ctx->state, EXT_KEEP_MAGIC_BLANK_LINES)  } '\356' '\273' '\256')? Sp Newline
 
 Quoted =        '"' (!'"' .)* '"' | '\'' (!'\'' .)* '\''
 HtmlAttribute = (AlphanumericAscii | '-')+ Spnl ('=' Spnl (Quoted | (!'>' Nonspacechar)+))? Spnl
