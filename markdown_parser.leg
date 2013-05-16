@@ -799,7 +799,7 @@ Reference = a:StartList NonindentSpace !"[]" l:Label ':' Spnl s:RefSrc
         t:RefTitle
         ( &{ !extension(ctx->state, EXT_COMPATIBILITY) }
             (Attributes { a = cons($$,a);})? )?
-        BlankLine+
+        MagicBlankLine+
         { 
             char *label;
             GString *text = g_string_new("");
