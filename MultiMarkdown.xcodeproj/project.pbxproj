@@ -472,7 +472,6 @@
 					.,
 					"peg-0.1.9/",
 				);
-				HEADER_SEARCH_PATHS = .;
 				INSTALL_PATH = "@rpath";
 				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				ONLY_ACTIVE_ARCH = NO;
