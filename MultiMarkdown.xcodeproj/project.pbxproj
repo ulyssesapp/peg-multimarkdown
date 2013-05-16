@@ -467,12 +467,15 @@
 			baseConfigurationReference = 65F89EB913E37BEF006A34B8 /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
 				HEADER_SEARCH_PATHS = (
 					.,
 					"peg-0.1.9/",
 				);
+				HEADER_SEARCH_PATHS = .;
+				INSTALL_PATH = "@rpath";
+				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = MultiMarkdown;
 			};
 			name = Debug;
