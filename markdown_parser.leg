@@ -951,8 +951,8 @@ Line =  RawLine
 RawLine = ( < (!'\r' !'\n' .)* Newline > | < .+ > Eof )
 
 SkipBlock = HtmlBlock
-          | ( !'#' !SetextBottom1 !SetextBottom2 !BlankLine RawLine )+ BlankLine*
-          | BlankLine+
+          | ( !'#' !SetextBottom1 !SetextBottom2 !MagicBlankLine RawLine )+ MagicBlankLine*
+          | MagicBlankLine+
           | RawLine
 
 
@@ -1073,8 +1073,8 @@ Notes =         a:StartList
                 { ctx->state->notes = reverse(a); }
 
 RawNoteBlock =  a:StartList
-                    ( !BlankLine OptionallyIndentedLine { a = cons($$, a); } )+
-                ( < BlankLine* > { a = cons(mk_str(yytext), a); } )
+                    ( !MagicBlankLine OptionallyIndentedLine { a = cons($$, a); } )+
+                ( < MagicBlankLine* > { a = cons(mk_str(yytext), a); } )
                 {   $$ = mk_str_from_list(a, true);
                     $$->key = RAW;
                 }
