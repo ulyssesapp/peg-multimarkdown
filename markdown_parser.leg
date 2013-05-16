@@ -218,12 +218,20 @@ BlockQuoteRaw =  a:StartList
 
 NonblankIndentedLine = !BlankLine IndentedLine
 
-VerbatimChunk = a:StartList
-                ( BlankLine { a = cons(mk_str("\n"), a); } )*
+FirstVerbatimChunk = a:StartList
                 ( NonblankIndentedLine { a = cons($$, a); } )+
                 { $$ = mk_str_from_list(a, false); }
 
-Verbatim =     a:StartList ( VerbatimChunk { a = cons($$, a); } )+ BlankLine*
+FollowingVerbatimChunk = a:StartList
+                ( MagicBlankLine { a = cons(mk_str("\n"), a); } )*
+                ( NonblankIndentedLine { a = cons($$, a); } )+
+                { $$ = mk_str_from_list(a, false); }
+
+
+Verbatim =     a:StartList 
+				FirstVerbatimChunk { a = cons($$, a); }
+				( FollowingVerbatimChunk { a = cons($$, a); } )*
+				BlankLine*
                { $$ = mk_str_from_list(a, false);
                  $$->key = VERBATIM; }
 
