@@ -331,9 +331,11 @@
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/markdown_parser.leg",
 			);
 			name = "Generate Parser";
 			outputPaths = (
+				"$(SRCROOT)/markdown_parser.c",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
