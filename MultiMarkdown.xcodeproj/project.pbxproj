@@ -457,6 +457,11 @@
 			baseConfigurationReference = 65F89EB913E37BEF006A34B8 /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				"ARCHS[sdk=iphoneos*]" = (
+					armv7,
+					armv7s,
+					arm64,
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
 				HEADER_SEARCH_PATHS = (
 					.,
@@ -466,6 +471,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = MultiMarkdown;
+				"VALID_ARCHS[sdk=iphoneos*]" = "armv7 armv7s arm64";
 			};
 			name = Debug;
 		};
@@ -474,6 +480,11 @@
 			baseConfigurationReference = 65F89EBA13E37C2A006A34B8 /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				"ARCHS[sdk=iphoneos*]" = (
+					armv7,
+					armv7s,
+					arm64,
+				);
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
 				HEADER_SEARCH_PATHS = (
@@ -481,6 +492,7 @@
 					"peg-0.1.9/",
 				);
 				PRODUCT_NAME = MultiMarkdown;
+				"VALID_ARCHS[sdk=iphoneos*]" = "armv7 armv7s arm64";
 			};
 			name = Release;
 		};
@@ -489,6 +501,11 @@
 			baseConfigurationReference = 65F89E8113E379ED006A34B8 /* Release10.6+.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				"ARCHS[sdk=iphoneos*]" = (
+					armv7,
+					armv7s,
+					arm64,
+				);
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
 				HEADER_SEARCH_PATHS = (
@@ -496,6 +513,7 @@
 					"peg-0.1.9/",
 				);
 				PRODUCT_NAME = MultiMarkdown;
+				"VALID_ARCHS[sdk=iphoneos*]" = "armv7 armv7s arm64";
 			};
 			name = "Release10.6+";
 		};
