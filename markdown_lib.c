@@ -122,14 +122,16 @@ element * process_raw_blocks(element *input, int extensions, element *references
 
     while (current != NULL) {
         if (current->key == RAW) {
+			char *nextString = current->contents.str;
+			
             /* \001 is used to indicate boundaries between nested lists when there
              * is no blank line.  We split the string by \001 and parse
              * each chunk separately. */
-            contents = strtok(current->contents.str, "\001");
+            contents = strsep(&nextString, "\001");
             current->key = LIST;
             current->children = parse_markdown(contents, extensions, references, notes, labels);
             last_child = current->children;
-            while ((contents = strtok(NULL, "\001"))) {
+            while ((contents = strsep(&nextString, "\001"))) {
                 while (last_child->next != NULL)
                     last_child = last_child->next;
                 last_child->next = parse_markdown(contents, extensions, references, notes, labels);
