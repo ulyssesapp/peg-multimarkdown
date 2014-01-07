@@ -237,7 +237,7 @@ Verbatim =     a:StartList
 
 HorizontalRule = NonindentSpace
                  ( '*' Sp '*' Sp '*' (Sp '*')*
-                 | '-' Sp '-' Sp '-' (Sp '-')*
+                 | '-' Sp '-' Sp '-' Sp '-' (Sp '-')*
                  | '_' Sp '_' Sp '_' (Sp '_')*)
                  Sp Newline BlankLine+
                  { $$ = mk_element(HRULE); }
