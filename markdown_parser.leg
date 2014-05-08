@@ -619,6 +619,15 @@ Space = < Spacechar+ >
 
           $$->key = SPACE; }
 
+OptionalSpace = < Spacechar* >
+        {
+			if (extension(ctx->state, EXT_KEEP_WHITESPACES))
+				$$ = mk_str(yytext);
+			else
+				$$ = mk_str(" ");
+
+          $$->key = SPACE; }
+
 Str = a:StartList < NormalChar+ > { a = cons(mk_str(yytext), a); }
       ( StrChunk { a = cons($$, a); } )*
       { if (a->next == NULL) { $$ = a; } else { $$ = mk_list(LIST, a); } }
@@ -719,7 +728,7 @@ Link =  ExplicitLink | ReferenceLink | AutoLink
 
 ReferenceLink = ReferenceLinkDouble | ReferenceLinkSingle
 
-ReferenceLinkDouble =  a:Label < Spnl > !"[]" b:Label
+ReferenceLinkDouble =  a:Label s:OptionalSpace !"[]" b:Label
                        {   link match;
                            if (find_reference(ctx->state, &match, b->children)) {
                                $$ = mk_link(a->children, match.url, match.title, match.attr, match.identifier);
@@ -741,7 +750,7 @@ ReferenceLinkDouble =  a:Label < Spnl > !"[]" b:Label
                             } else {
                                element *result;
                                result = mk_element(LIST);
-                               result->children = cons(mk_str("["), cons(a, cons(mk_str("]"), cons(mk_str("["), cons(b, mk_str("]"))))));
+                               result->children = cons(mk_str("["), cons(a, cons(mk_str("]"), cons(s, cons(mk_str("["), cons(b, mk_str("]")))))));
                                $$ = result;
                            }
                        }
