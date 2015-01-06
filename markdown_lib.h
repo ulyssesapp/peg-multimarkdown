@@ -1,15 +1,21 @@
+#ifndef MARKDOWN_LIB_H
+#define MARKDOWN_LIB_H
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "glib.h"
 
 enum markdown_extensions {
-    EXT_SMART            = 1 << 0,
-    EXT_NOTES            = 1 << 1,
-    EXT_FILTER_HTML      = 1 << 2,
-    EXT_FILTER_STYLES    = 1 << 3,
-    EXT_COMPATIBILITY    = 1 << 4,
-    EXT_PROCESS_HTML     = 1 << 5,
-	EXT_NO_LABELS		 = 1 << 6,
+    EXT_SMART						= 1 << 0,
+    EXT_NOTES						= 1 << 1,
+    EXT_FILTER_HTML					= 1 << 2,
+    EXT_FILTER_STYLES				= 1 << 3,
+    EXT_COMPATIBILITY				= 1 << 4,
+    EXT_PROCESS_HTML				= 1 << 5,
+	EXT_NO_LABELS					= 1 << 6,
+	EXT_KEEP_WHITESPACES			= 1 << 7,
+	EXT_KEEP_ESCAPES				= 1 << 8,
+	EXT_KEEP_MAGIC_BLANK_LINES		= 1 << 9
 };
 
 enum markdown_formats {
@@ -20,11 +26,16 @@ enum markdown_formats {
     OPML_FORMAT,
     GROFF_MM_FORMAT,
     ODF_FORMAT,
-    ODF_BODY_FORMAT
+    ODF_BODY_FORMAT,
+	ORIGINAL_FORMAT
 };
 
-GString * markdown_to_g_string(const char *text, int extensions, int output_format);
-char * markdown_to_string(const char *text, int extensions, int output_format);
-char * extract_metadata_value(const char *text, int extensions, const char *key);
+GString * markdown_to_g_string(char *text, int extensions, int output_format);
+char * markdown_to_string(char *text, int extensions, int output_format);
+char * extract_metadata_value(char *text, int extensions, char *key);
+gboolean has_metadata(char *text, int extensions);
+char * mmd_version();
 
 /* vim: set ts=4 sw=4 : */
+#endif
+

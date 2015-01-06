@@ -4,7 +4,7 @@
                       markdown_peg.
   (c) 2008 John MacFarlane (jgm at berkeley dot edu).
   
-  portions Copyright (c) 2010-2011 Fletcher T. Penney
+  portions Copyright (c) 2010-2013 Fletcher T. Penney
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License or the MIT
@@ -24,8 +24,9 @@
 #include <assert.h>
 #include "glib.h"
 #include "markdown_peg.h"
-#include "utility_functions.c"
-#include "odf.c"
+#include "odf.h"
+
+#include "utility_functions.h"
 
 static int extensions;
 static int base_header_level = 1;
@@ -41,9 +42,9 @@ static bool am_printing_html_footnote = FALSE;
 static int footnote_counter_to_print = 0;
 static int odf_list_needs_end_p = 0;
 
-static void print_html_string(GString *out, char *str, bool obfuscate);
-static void print_html_element_list(GString *out, element *list, bool obfuscate);
-static void print_html_element(GString *out, element *elt, bool obfuscate);
+static void print_html_string(int ext, GString *out, char *str, bool obfuscate);
+static void print_html_element_list(int ext, GString *out, element *list, bool obfuscate);
+static void print_html_element(int ext, GString *out, element *elt, bool obfuscate);
 static void print_latex_string(GString *out, char *str);
 static void print_latex_element_list(GString *out, element *list);
 static void print_latex_element(GString *out, element *elt);
@@ -59,8 +60,8 @@ static bool list_contains_key(element *list, int key);
 
 
 /* MultiMarkdown Routines */
-static void print_html_header(GString *out, element *elt, bool obfuscate);
-static void print_html_footer(GString *out, bool obfuscate);
+static void print_html_header(int ext, GString *out, element *elt, bool obfuscate);
+static void print_html_footer(int ext, GString *out, bool obfuscate);
 
 static void print_latex_header(GString *out, element *elt);
 static void print_latex_footer(GString *out);
@@ -77,12 +78,12 @@ static void print_opml_element(GString *out, element *elt);
 static void print_opml_metadata(GString *out, element *elt);
 static void print_opml_section_and_children(GString *out, element *list);
 
-element * print_html_headingsection(GString *out, element *list, bool obfuscate);
+element * print_html_headingsection(int ext, GString *out, element *list, bool obfuscate);
 
 static bool is_html_complete_doc(element *meta);
 static int find_latex_mode(int format, element *list);
-element * metadata_for_key(const char *key, element *list);
-char * metavalue_for_key(const char *key, element *list);
+element * metadata_for_key(char *key, element *list);
+char * metavalue_for_key(char *key, element *list);
 
 element * element_for_attribute(char *querystring, element *list);
 char * dimension_for_attribute(char *querystring, element *list);
@@ -110,7 +111,7 @@ static void pad(GString *out, int num) {
 }
 
 /* determine whether a certain element is contained within a given list */
-bool list_contains_key(element *list, int key) {
+static bool list_contains_key(element *list, int key) {
     element *step = NULL;
 
     step = list;
@@ -136,7 +137,7 @@ bool list_contains_key(element *list, int key) {
 
 /* print_html_string - print string, escaping for HTML  
  * If obfuscate selected, convert characters to hex or decimal entities at random */
-static void print_html_string(GString *out, char *str, bool obfuscate) {
+static void print_html_string(int ext, GString *out, char *str, bool obfuscate) {
     while (*str != '\0') {
         switch (*str) {
         case '&':
@@ -152,7 +153,7 @@ static void print_html_string(GString *out, char *str, bool obfuscate) {
             g_string_append_printf(out, "&quot;");
             break;
         default:
-            if (obfuscate) {
+	  if (obfuscate && ((int) *str < 128) && ((int) *str >= 0)){
                 if (rand() % 2 == 0)
                     g_string_append_printf(out, "&#%d;", (int) *str);
                 else
@@ -166,12 +167,12 @@ static void print_html_string(GString *out, char *str, bool obfuscate) {
 }
 
 /* print_html_element_list - print a list of elements as HTML */
-static void print_html_element_list(GString *out, element *list, bool obfuscate) {
+static void print_html_element_list(int ext, GString *out, element *list, bool obfuscate) {
     while (list != NULL) {
         if (list->key == HEADINGSECTION) {
-            list = print_html_headingsection(out, list, obfuscate);
+            list = print_html_headingsection(ext, out, list, obfuscate);
         } else {
-            print_html_element(out, list, obfuscate);
+            print_html_element(ext, out, list, obfuscate);
             list = list->next;
         }
     }
@@ -183,7 +184,7 @@ static void add_endnote(element *elt) {
 }
 
 /* print_html_element - print an element as HTML */
-static void print_html_element(GString *out, element *elt, bool obfuscate) {
+static void print_html_element(int ext, GString *out, element *elt, bool obfuscate) {
     int lev;
     char *label;
     element *attribute;
@@ -198,7 +199,7 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         g_string_append_printf(out, "<br/>\n");
         break;
     case STR:
-        print_html_string(out, elt->contents.str, obfuscate);
+        print_html_string(ext, out, elt->contents.str, obfuscate);
         break;
     case ELLIPSIS:
         localize_typography(out, ELLIP, language, HTMLOUT);
@@ -214,17 +215,17 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         break;
     case SINGLEQUOTED:
         localize_typography(out, LSQUOTE, language, HTMLOUT);
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         localize_typography(out, RSQUOTE, language, HTMLOUT);
         break;
     case DOUBLEQUOTED:
         localize_typography(out, LDQUOTE, language, HTMLOUT);
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         localize_typography(out, RDQUOTE, language, HTMLOUT);
         break;
     case CODE:
         g_string_append_printf(out, "<code>");
-        print_html_string(out, elt->contents.str, obfuscate);
+        print_html_string(ext, out, elt->contents.str, obfuscate);
         g_string_append_printf(out, "</code>");
         break;
     case HTML:
@@ -234,16 +235,16 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         if (strstr(elt->contents.link->url, "mailto:") == elt->contents.link->url)
             obfuscate = true;  /* obfuscate mailto: links */
         g_string_append_printf(out, "<a href=\"");
-        print_html_string(out, elt->contents.link->url, obfuscate);
+        print_html_string(ext, out, elt->contents.link->url, obfuscate);
         g_string_append_printf(out, "\"");
         if (strlen(elt->contents.link->title) > 0) {
             g_string_append_printf(out, " title=\"");
-            print_html_string(out, elt->contents.link->title, obfuscate);
+            print_html_string(ext, out, elt->contents.link->title, obfuscate);
             g_string_append_printf(out, "\"");
         }
-        print_html_element_list(out, elt->contents.link->attr, obfuscate);
+        print_html_element_list(ext, out, elt->contents.link->attr, obfuscate);
         g_string_append_printf(out, ">");
-        print_html_element_list(out, elt->contents.link->label, obfuscate);
+        print_html_element_list(ext, out, elt->contents.link->label, obfuscate);
         g_string_append_printf(out, "</a>");
         break;
     case IMAGEBLOCK:
@@ -253,20 +254,20 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
             g_string_append_printf(out, "<figure>\n");
         }
         g_string_append_printf(out, "<img src=\"");
-        print_html_string(out, elt->contents.link->url, obfuscate);
+        print_html_string(ext, out, elt->contents.link->url, obfuscate);
         g_string_append_printf(out, "\" alt=\"");
         print_raw_element_list(out,elt->contents.link->label);
-        if ( (extension(EXT_COMPATIBILITY)) || 
+        if ( (ext & EXT_COMPATIBILITY) ||
             (strcmp(elt->contents.link->identifier, "") == 0) ) {
             g_string_append_printf(out, "\"");
         } else {
-            if (!(extension(EXT_COMPATIBILITY))) {
-				g_string_append_printf(out, "\" id=\"%s\"",elt->contents.link->identifier);
-			}
+            if (!(ext & EXT_COMPATIBILITY)) {
+                g_string_append_printf(out, "\" id=\"%s\"",elt->contents.link->identifier);
+            }
         }
         if (strlen(elt->contents.link->title) > 0) {
             g_string_append_printf(out, " title=\"");
-            print_html_string(out, elt->contents.link->title, obfuscate);
+            print_html_string(ext, out, elt->contents.link->title, obfuscate);
             g_string_append_printf(out, "\"");
         }
         width = NULL;
@@ -287,12 +288,12 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
                 g_string_append_printf(out, "width:%s;", width);
             g_string_append_printf(out, "\"");
         }
-        print_html_element_list(out, elt->contents.link->attr, obfuscate);
+        print_html_element_list(ext, out, elt->contents.link->attr, obfuscate);
         g_string_append_printf(out, " />");
         if (elt->key == IMAGEBLOCK) {
             if (elt->contents.link->label != NULL) {
                 g_string_append_printf(out, "\n<figcaption>");
-                print_html_element_list(out, elt->contents.link->label, obfuscate);
+                print_html_element_list(ext, out, elt->contents.link->label, obfuscate);
                 g_string_append_printf(out, "</figcaption>");
             }
             g_string_append_printf(out, "</figure>\n");
@@ -302,16 +303,16 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         break;
     case EMPH:
         g_string_append_printf(out, "<em>");
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         g_string_append_printf(out, "</em>");
         break;
     case STRONG:
         g_string_append_printf(out, "<strong>");
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         g_string_append_printf(out, "</strong>");
         break;
     case LIST:
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         break;
     case RAW:
         /* Shouldn't occur - these are handled by process_raw_blocks() */
@@ -322,18 +323,23 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         if (lev > 6)
             lev = 6;
         pad(out, 2);
-        if ( extension(EXT_COMPATIBILITY) || extension(EXT_NO_LABELS)) {
+        if ( ext & EXT_COMPATIBILITY) {
             /* Use regular Markdown header format */
             g_string_append_printf(out, "<h%1d>", lev);
-            print_html_element_list(out, elt->children, obfuscate);
+            print_html_element_list(ext, out, elt->children, obfuscate);
         } else if (elt->children->key == AUTOLABEL) {
-            /* generate a label for each header (MMD)*/
+            /* use label for header since one was specified (MMD)*/
             g_string_append_printf(out, "<h%d id=\"%s\">", lev,elt->children->contents.str);
-            print_html_element_list(out, elt->children->next, obfuscate);
+            print_html_element_list(ext, out, elt->children->next, obfuscate);
+        } else if ( ext & EXT_NO_LABELS) {
+            /* Don't generate a label */
+            g_string_append_printf(out, "<h%1d>", lev);
+            print_html_element_list(ext, out, elt->children, obfuscate);
         } else {
+            /* generate a label by default for MMD */
             label = label_from_element_list(elt->children, obfuscate);
             g_string_append_printf(out, "<h%d id=\"%s\">", lev, label);
-            print_html_element_list(out, elt->children, obfuscate);
+            print_html_element_list(ext, out, elt->children, obfuscate);
             free(label);
         }
         g_string_append_printf(out, "</h%1d>", lev);
@@ -341,19 +347,19 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         break;
     case PLAIN:
         pad(out, 1);
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         padded = 0;
         break;
     case PARA:
         pad(out, 2);
         g_string_append_printf(out, "<p>");
-        print_html_element_list(out, elt->children, obfuscate);
-		if (am_printing_html_footnote && ( elt->next == NULL)) {
-			g_string_append_printf(out, " <a href=\"#fnref:%d\" title=\"return to article\" class=\"reversefootnote\">&#160;&#8617;</a>", footnote_counter_to_print);
-			/* Only print once. For now, it's the first paragraph, until
-				I can figure out to make it the last paragraph */
-			am_printing_html_footnote = FALSE;
-		}
+        print_html_element_list(ext, out, elt->children, obfuscate);
+        if (am_printing_html_footnote && ( elt->next == NULL)) {
+            g_string_append_printf(out, " <a href=\"#fnref:%d\" title=\"return to article\" class=\"reversefootnote\">&#160;&#8617;</a>", footnote_counter_to_print);
+            /* Only print once. For now, it's the first paragraph, until
+                I can figure out to make it the last paragraph */
+            am_printing_html_footnote = FALSE;
+        }
         g_string_append_printf(out, "</p>");
         padded = 0;
         break;
@@ -370,7 +376,7 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
     case VERBATIM:
         pad(out, 2);
         g_string_append_printf(out, "%s", "<pre><code>");
-        print_html_string(out, elt->contents.str, obfuscate);
+        print_html_string(ext, out, elt->contents.str, obfuscate);
         g_string_append_printf(out, "%s", "</code></pre>");
         padded = 0;
         break;
@@ -378,7 +384,7 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         pad(out, 2);
         g_string_append_printf(out, "%s", "<ul>");
         padded = 0;
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         pad(out, 1);
         g_string_append_printf(out, "%s", "</ul>");
         padded = 0;
@@ -387,7 +393,7 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         pad(out, 2);
         g_string_append_printf(out, "%s", "<ol>");
         padded = 0;
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         pad(out, 1);
         g_string_append_printf(out, "</ol>");
         padded = 0;
@@ -396,7 +402,7 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         pad(out, 1);
         g_string_append_printf(out, "<li>");
         padded = 2;
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         g_string_append_printf(out, "</li>");
         padded = 0;
         break;
@@ -404,7 +410,7 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         pad(out, 2);
         g_string_append_printf(out, "<blockquote>\n");
         padded = 2;
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         pad(out, 1);
         g_string_append_printf(out, "</blockquote>");
         padded = 0;
@@ -419,7 +425,7 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         /* if contents.str == 0, then print note; else ignore, since this
          * is a note block that has been incorporated into the notes list */
         if (elt->contents.str == 0) {
-            if ( elt->children->contents.str == 0 ){
+            if (elt->children->contents.str == 0) {
                 /* The referenced note has not been used before */
                 add_endnote(elt->children);
                 ++notenumber;
@@ -447,11 +453,11 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         break;
     case GLOSSARYTERM:
         g_string_append_printf(out,"<span class=\"glossary name\">");
-        print_html_string(out, elt->children->contents.str, obfuscate);
+        print_html_string(ext, out, elt->children->contents.str, obfuscate);
         g_string_append_printf(out, "</span>");
         if ((elt->next != NULL) && (elt->next->key == GLOSSARYSORTKEY) ) {
             g_string_append_printf(out, "<span class=\"glossary sort\" style=\"display:none\">");
-            print_html_string(out, elt->next->contents.str, obfuscate);
+            print_html_string(ext, out, elt->next->contents.str, obfuscate);
             g_string_append_printf(out, "</span>");
         }
         g_string_append_printf(out, ": ");
@@ -473,7 +479,7 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
                 g_string_append_printf(out, "<span class=\"externalcitation\">");
                 if (locator != NULL) {
                     g_string_append_printf(out, "[");
-                    print_html_element(out,locator,obfuscate);
+                    print_html_element(ext, out,locator,obfuscate);
                     g_string_append_printf(out, "]");
                 }
                 g_string_append_printf(out, "%s",elt->contents.str);
@@ -499,7 +505,7 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
                         elt->children->contents.str);
                 } else {
                     g_string_append_printf(out, "<a class=\"citation\" href=\"#fn:%s\" title=\"Jump to citation\">[<span class=\"locator\">", elt->children->contents.str);
-                    print_html_element(out,locator,obfuscate);
+                    print_html_element(ext, out,locator,obfuscate);
                     g_string_append_printf(out,"</span>, %s]",
                         elt->children->contents.str);
                 }
@@ -519,20 +525,20 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         }
         break;
     case LOCATOR:
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         break;
     case DEFLIST:
         pad(out,1);
         padded = 1;
         g_string_append_printf(out, "<dl>\n");
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         g_string_append_printf(out, "</dl>\n");
         padded = 0;
         break;
     case TERM:
         pad(out,1);
         g_string_append_printf(out, "<dt>");
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         g_string_append_printf(out, "</dt>\n");
         padded = 1;
         break;
@@ -540,7 +546,7 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         pad(out,1);
         padded = 1;
         g_string_append_printf(out, "<dd>");
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         g_string_append_printf(out, "</dd>\n");
         padded = 0;
         break;
@@ -548,19 +554,19 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         /* Metadata is present, so this should be a "complete" document */
         html_footer = is_html_complete_doc(elt);
         if (html_footer) {
-            print_html_header(out, elt, obfuscate);
+            print_html_header(ext, out, elt, obfuscate);
         } else {
-            print_html_element_list(out, elt->children, obfuscate);
+            print_html_element_list(ext, out, elt->children, obfuscate);
         }
         break;
     case METAKEY:
         if (strcmp(elt->contents.str, "title") == 0) {
             g_string_append_printf(out, "\t<title>");
-            print_html_element(out, elt->children, obfuscate);
+            print_html_element(ext, out, elt->children, obfuscate);
             g_string_append_printf(out, "</title>\n");
         } else if (strcmp(elt->contents.str, "css") == 0) {
             g_string_append_printf(out, "\t<link type=\"text/css\" rel=\"stylesheet\" href=\"");
-            print_html_element(out, elt->children, obfuscate);
+            print_html_element(ext, out, elt->children, obfuscate);
             g_string_append_printf(out, "\"/>\n");
         } else if (strcmp(elt->contents.str, "xhtmlheader") == 0) {
             print_raw_element(out, elt->children);
@@ -584,23 +590,23 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
             free(label);
        } else {
             g_string_append_printf(out, "\t<meta name=\"");
-            print_html_string(out, elt->contents.str, obfuscate);
+            print_html_string(ext, out, elt->contents.str, obfuscate);
             g_string_append_printf(out, "\" content=\"");
-            print_html_element(out, elt->children, obfuscate);
+            print_html_element(ext, out, elt->children, obfuscate);
             g_string_append_printf(out, "\"/>\n");
         }
         break;
     case METAVALUE:
-        print_html_string(out, elt->contents.str, obfuscate);
+        print_html_string(ext, out, elt->contents.str, obfuscate);
         break;
     case FOOTER:
         break;
     case HEADINGSECTION:
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         break;
     case TABLE:
         g_string_append_printf(out, "\n\n<table>\n");
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         g_string_append_printf(out, "</table>\n");
         break;
     case TABLESEPARATOR:
@@ -613,7 +619,7 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
             label = label_from_element_list(elt->children,obfuscate);
         }
         g_string_append_printf(out, "<caption id=\"%s\">", label);
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         g_string_append_printf(out, "</caption>\n");
         free(label);
         break;
@@ -640,19 +646,19 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         g_string_append_printf(out, "</colgroup>\n");
         cell_type = 'h';
         g_string_append_printf(out, "\n<thead>\n");
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         g_string_append_printf(out, "</thead>\n");
         cell_type = 'd';
         break;
     case TABLEBODY:
         g_string_append_printf(out, "\n<tbody>\n");
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         g_string_append_printf(out, "</tbody>\n");
         break;
     case TABLEROW:
         g_string_append_printf(out, "<tr>\n");
         table_column = 0;
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         g_string_append_printf(out, "</tr>\n");
         break;
     case TABLECELL:
@@ -672,7 +678,7 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
         }
         g_string_append_printf(out, ">");
         padded = 2;
-        print_html_element_list(out, elt->children, obfuscate);
+        print_html_element_list(ext, out, elt->children, obfuscate);
         g_string_append_printf(out, "</t%c>\n", cell_type);
         table_column++;
         break;
@@ -701,7 +707,7 @@ static void print_html_element(GString *out, element *elt, bool obfuscate) {
     }
 }
 
-static void print_html_endnotes(GString *out) {
+static void print_html_endnotes(int ext, GString *out) {
     int counter = 0;
     GSList *note;
     element *note_elt;
@@ -718,22 +724,22 @@ static void print_html_endnotes(GString *out) {
             element *temp = note_elt;
             while ( temp != NULL ) {
                 if (temp->key == NOTELABEL)
-                    print_html_string(out, temp->contents.str, 0);
+                    print_html_string(ext, out, temp->contents.str, 0);
                 temp = temp->next;
             }
             g_string_append_printf(out, "</span>");
             padded = 2;
-            print_html_element_list(out, note_elt->children, false);
+            print_html_element_list(ext, out, note_elt->children, false);
             pad(out, 1);
             g_string_append_printf(out, "</li>");
         } else {
             g_string_append_printf(out, "<li id=\"fn:%d\">\n", counter);
             padded = 2;
-			am_printing_html_footnote = TRUE;
-			footnote_counter_to_print = counter;
-            print_html_element_list(out, note_elt, false);
-			am_printing_html_footnote = FALSE;
-			footnote_counter_to_print = 0;
+            am_printing_html_footnote = TRUE;
+            footnote_counter_to_print = counter;
+            print_html_element_list(ext, out, note_elt, false);
+            am_printing_html_footnote = FALSE;
+            footnote_counter_to_print = 0;
             pad(out, 1);
             g_string_append_printf(out, "</li>");
         }
@@ -845,8 +851,8 @@ static void print_latex_element(GString *out, element *elt) {
     char *label;
     char *height;
     char *width;
-	char *upper;
-	int i;
+    char *upper;
+    int i;
     double floatnum;
     switch (elt->key) {
     case SPACE:
@@ -900,9 +906,9 @@ static void print_latex_element(GString *out, element *elt) {
             label = label_from_string(elt->contents.link->url,0);
             if (elt->contents.link->label != NULL) {
                     print_latex_element_list(out, elt->contents.link->label);
-                g_string_append_printf(out, " (\\autoref\{%s})", label);             
+                g_string_append_printf(out, " (\\autoref{%s})", label);             
             } else {
-                g_string_append_printf(out, "\\autoref\{%s}", label);
+                g_string_append_printf(out, "\\autoref{%s}", label);
             }
             free(label);
         } else if ( (elt->contents.link->label != NULL) &&
@@ -1713,7 +1719,7 @@ static void print_odf_string(GString *out, char *str) {
 }
 
 /* print_odf_element_list - print an element list as ODF */
-void print_odf_element_list(GString *out, element *list) {
+static void print_odf_element_list(GString *out, element *list) {
     while (list != NULL) {
         print_odf_element(out, list);
         list = list->next;
@@ -1721,12 +1727,12 @@ void print_odf_element_list(GString *out, element *list) {
 }
 
 /* print_odf_element - print an element as ODF */
-void print_odf_element(GString *out, element *elt) {
+static void print_odf_element(GString *out, element *elt) {
     int lev;
     char *label;
     char *height;
     char *width;
-
+    /* element *locator = NULL; */
     int old_type = 0;
     switch (elt->key) {
     case SPACE:
@@ -1736,7 +1742,7 @@ void print_odf_element(GString *out, element *elt) {
         g_string_append_printf(out, "<text:line-break/>");
         break;
     case STR:
-        print_html_string(out, elt->contents.str, 0);
+        print_html_string(0, out, elt->contents.str, 0);
         break;
     case ELLIPSIS:
         localize_typography(out, ELLIP, language, HTMLOUT);
@@ -1762,7 +1768,7 @@ void print_odf_element(GString *out, element *elt) {
         break;
     case CODE:
         g_string_append_printf(out, "<text:span text:style-name=\"Source_20_Text\">");
-        print_html_string(out, elt->contents.str, 0);
+        print_html_string(0, out, elt->contents.str, 0);
         g_string_append_printf(out, "</text:span>");
         break;
     case HTML:
@@ -1787,14 +1793,14 @@ void print_odf_element(GString *out, element *elt) {
             }
         } else {
             g_string_append_printf(out, "<text:a xlink:type=\"simple\" xlink:href=\"");
-            print_html_string(out, elt->contents.link->url, 0);
+            print_html_string(0, out, elt->contents.link->url, 0);
             g_string_append_printf(out, "\"");
             if (strlen(elt->contents.link->title) > 0) {
                 g_string_append_printf(out, " office:name=\"");
-                print_html_string(out, elt->contents.link->title, 0);
+                print_html_string(0, out, elt->contents.link->title, 0);
                 g_string_append_printf(out, "\"");
             }
-    /*        print_html_element_list(out, elt->contents.link->attr, obfuscate);*/
+    /*        print_html_element_list(ext, out, elt->contents.link->attr, obfuscate);*/
             g_string_append_printf(out, ">");
             print_odf_element_list(out, elt->contents.link->label);
             g_string_append_printf(out, "</text:a>");
@@ -2013,7 +2019,7 @@ void print_odf_element(GString *out, element *elt) {
     case NOCITATION:
     case CITATION:
         /* Get locator, if present */
-        locator_for_citation(elt);
+        /* locator = locator_for_citation(elt); */
 
         if (strncmp(elt->contents.str,"[#",2) == 0) {
             /* reference specified externally, so just display it */
@@ -2021,7 +2027,7 @@ void print_odf_element(GString *out, element *elt) {
         } else {
             /* reference specified within the MMD document,
                so will output as footnote */
-            if (elt && elt->children && (elt->children->contents.str == NULL)) {
+            if (elt->children->contents.str == NULL) {
                 /* First use of this citation */
                 ++notenumber;
                 char buf[5];
@@ -2218,6 +2224,9 @@ void print_element_list(GString *out, element *elt, int format, int exts) {
     language = ENGLISH;
     html_footer = FALSE;
     no_latex_footnote = FALSE;
+    footnote_counter_to_print = 0;
+    odf_list_needs_end_p = 0;
+    element *title;
 
     extensions = exts;
     padded = 2;  /* set padding to 2, so no extra blank lines at beginning */
@@ -2225,12 +2234,12 @@ void print_element_list(GString *out, element *elt, int format, int exts) {
     format = find_latex_mode(format, elt);
     switch (format) {
     case HTML_FORMAT:
-        print_html_element_list(out, elt, false);
+        print_html_element_list(exts, out, elt, false);
         if (endnotes != NULL) {
             pad(out, 2);
-            print_html_endnotes(out);
+            print_html_endnotes(exts, out);
         }
-        if (html_footer == TRUE) print_html_footer(out, false);
+        if (html_footer == TRUE) print_html_footer(exts, out, false);
         break;
     case LATEX_FORMAT:
         print_latex_element_list(out, elt);
@@ -2243,6 +2252,14 @@ void print_element_list(GString *out, element *elt, int format, int exts) {
         break;
     case OPML_FORMAT:
         g_string_append_printf(out, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<opml version=\"1.0\">\n");
+       if (list_contains_key(elt,METAKEY)) {
+            title = metadata_for_key("title",elt);
+            if (title != NULL) {
+                g_string_append_printf(out,"<head><title>");
+                print_raw_element(out,title->children);
+                g_string_append_printf(out,"</title></head>");
+            }
+        }
         g_string_append_printf(out, "<body>\n");
         print_opml_element_list(out, elt);
         if (html_footer == TRUE) print_opml_metadata(out, elt);
@@ -2279,17 +2296,17 @@ void print_element_list(GString *out, element *elt, int format, int exts) {
  ***********************************************************************/
 
 
-void print_html_header(GString *out, element *elt, bool obfuscate) {
+void print_html_header(int ext, GString *out, element *elt, bool obfuscate) {
     g_string_append_printf(out,
 "<!DOCTYPE html>\n<html>\n<head>\n\t<meta charset=\"utf-8\"/>\n");
 
-    print_html_element_list(out, elt->children, obfuscate);
-    g_string_append_printf(out, "</head>\n<body>\n");    
+    print_html_element_list(ext, out, elt->children, obfuscate);
+    g_string_append_printf(out, "</head>\n<body>\n\n");    
 }
 
 
-void print_html_footer(GString *out, bool obfuscate) {
-    g_string_append_printf(out, "\n</body>\n</html>");
+void print_html_footer(int ext, GString *out, bool obfuscate) {
+    g_string_append_printf(out, "\n\n</body>\n</html>");
 }
 
 
@@ -2463,13 +2480,13 @@ static void print_beamer_element(GString *out, element *elt) {
 }
 
 
-element * print_html_headingsection(GString *out, element *list, bool obfuscate) {
+element * print_html_headingsection(int ext, GString *out, element *list, bool obfuscate) {
     element *base = list;
-    print_html_element_list(out, list->children, obfuscate);
+    print_html_element_list(ext, out, list->children, obfuscate);
     
     list = list->next;
     while ( (list != NULL) && (list->key == HEADINGSECTION) && (list->children->key > base->children->key) && (list->children->key <= H6)) {
-        list = print_html_headingsection(out, list, obfuscate);
+        list = print_html_headingsection(ext, out, list, obfuscate);
     }
 
     return list;
@@ -2498,7 +2515,7 @@ static int find_latex_mode(int format, element *list) {
 
 
 /* find specified metadata key, if present */
-element * metadata_for_key(const char *key, element *list) {
+element * metadata_for_key(char *key, element *list) {
     element *step = NULL;
     step = list;
     char *label;
@@ -2527,7 +2544,7 @@ element * metadata_for_key(const char *key, element *list) {
 
 
 /* find specified metadata key, if present */
-char * metavalue_for_key(const char *key, element *list) {
+char * metavalue_for_key(char *key, element *list) {
     element *step = NULL;
     step = list;
     char *label;
@@ -2804,13 +2821,4 @@ void print_odf_body_element_list(GString *out, element *list) {
         print_odf_body_element(out, list);
         list = list->next;
     }
-}
-
-/* bogus function just references a couple globals defined in utility_functions.c but not used in this source file */
-static void bogus_function()
-{
-	static char* bogus;
-	bogus = charbuf;
-	static element* bogus2;
-	bogus2 = parse_result;
 }

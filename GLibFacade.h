@@ -43,8 +43,8 @@ typedef struct
 
 	/* Where in the str buffer will we add new characters */
 	/* or append new strings? */
-	int currentStringBufferSize;
-	int currentStringLength;
+	size_t currentStringBufferSize;
+	size_t currentStringLength;
 } GString;
 
 GString* g_string_new(char *startingString);

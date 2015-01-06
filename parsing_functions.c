@@ -1,7 +1,17 @@
 /* parsing_functions.c - Functions for parsing markdown and
  * freeing element lists. */
 
-int yyparse(void);
+/* These yy_* functions come from markdown_parser.c which is
+ * generated from markdown_parser.leg
+ * */
+
+#include "utility_functions.h"
+#include "parsing_functions.h"
+#include "markdown_peg.h"
+
+#define YY_CTX_MEMBERS		markdown_parser_state *state;
+
+#include "markdown_parser.c"
 
 static void free_element_contents(element elt);
 
@@ -41,7 +51,15 @@ static void free_element_contents(element elt) {
       case GLOSSARY:
       case GLOSSARYTERM:
       case NOTELABEL:
-        free(elt.contents.str);
+      case CELLSPAN:
+      case EMDASH:
+      case ENDASH:
+      case GLOSSARYSORTKEY:
+      case MATHSPAN:
+	  case LISTITEM:
+		if (elt.contents.str)
+			free(elt.contents.str);
+		
         elt.contents.str = NULL;
         break;
       case LINK:
@@ -69,114 +87,132 @@ void free_element(element *elt) {
     free(elt);
 }
 
-element * parse_references(char *string, int extensions) {
+markdown_parser_state *create_markdown_parser_state(char *string, int extensions, element *references, element *notes, element *labels)
+{
+	markdown_parser_state *state = malloc(sizeof(markdown_parser_state));
+	
+	state->charbuf = string;
+	state->syntax_extensions = extensions;
+	state->references = references;
+	state->notes = notes;
+	state->labels = labels;
+	
+	state->start_time = 0;
+	state->parse_aborted = 0;
+	state->parse_result = NULL;
+	
+	return state;
+}
 
-    char *oldcharbuf;
-    syntax_extensions = extensions;
+yycontext* create_parsing_context(char *string, int extensions, element *references, element *notes, element *labels) {
+	yycontext *context = malloc(sizeof(yycontext));
+	memset(context, 0, sizeof(yycontext));
 
-    oldcharbuf = charbuf;
-    charbuf = string;
-    yyparsefrom(yy_References);    /* first pass, just to collect references */
-    charbuf = oldcharbuf;
+	context->state = create_markdown_parser_state(string, extensions, references, notes, labels);
+	
+	return context;
+}
 
+void free_parsing_context(yycontext *context)
+{
+	free(context->buf);
+	free(context->text);
+	free(context->thunks);
+	
+	free(context->state);
+	free(context);
+}
+
+element * parse_references(char *string, int extensions)
+{
+	yycontext *context = create_parsing_context(string, extensions, NULL, NULL, NULL);
+	
+    yyparsefrom(context, yy_References);    /* first pass, just to collect references */
+	element *references = context->state->references;
+	
+	free_parsing_context(context);
+	
     return references;
 }
 
 element * parse_notes(char *string, int extensions, element *reference_list) {
 
-    char *oldcharbuf;
-    notes = NULL;
-    syntax_extensions = extensions;
-
-    if (extension(EXT_NOTES)) {
-        references = reference_list;
-        oldcharbuf = charbuf;
-        charbuf = string;
-        yyparsefrom(yy_Notes);     /* second pass for notes */
-        charbuf = oldcharbuf;
+	yycontext *context = create_parsing_context(string, extensions, reference_list, NULL, NULL);
+	element *notes = NULL;
+	
+    if (extension(context->state, EXT_NOTES)) {
+        yyparsefrom(context, yy_Notes);     /* second pass for notes */
+		notes = context->state->notes;
     }
+	
+	free_parsing_context(context);
 
     return notes;
 }
 
 element * parse_labels(char *string, int extensions, element *reference_list, element *note_list) {
 
-    char *oldcharbuf;
-    syntax_extensions = extensions;
-    references = reference_list;
-    notes = note_list;
-    labels = NULL;
-
-    oldcharbuf = charbuf;
-    charbuf = string;
-    yyparsefrom(yy_AutoLabels);    /* third pass, to collect labels */
-    charbuf = oldcharbuf;
-
+	yycontext *context = create_parsing_context(string, extensions, reference_list, note_list, NULL);
+	
+    yyparsefrom(context, yy_AutoLabels);    /* third pass, to collect labels */
+	element *labels = context->state->labels;
+	
+	free_parsing_context(context);
+	
     return labels;
 }
 
 element * parse_markdown(char *string, int extensions, element *reference_list, element *note_list, element *label_list) {
 
-    char *oldcharbuf;
-    syntax_extensions = extensions;
-    references = reference_list;
-    notes = note_list;
-    labels = label_list;
+	yycontext *context = create_parsing_context(string, extensions, reference_list, note_list, label_list);
+	
+    yyparsefrom(context, yy_Doc);
+	element *parse_result = context->state->parse_result;
+	
+	free_parsing_context(context);
 
-    oldcharbuf = charbuf;
-    charbuf = string;
-
-    yyparsefrom(yy_Doc);
-
-    charbuf = oldcharbuf;          /* restore charbuf to original value */
     return parse_result;
-
 }
 
 element * parse_markdown_with_metadata(char *string, int extensions, element *reference_list, element *note_list, element *label_list) {
 
-    char *oldcharbuf;
-    syntax_extensions = extensions;
-    references = reference_list;
-    notes = note_list;
-    labels = label_list;
+    yycontext *context = create_parsing_context(string, extensions, reference_list, note_list, label_list);
+	context->state->start_time = clock();
+	
+	yyparsefrom(context, yy_DocWithMetaData);
+	
+	element *parse_result = context->state->parse_result;
+	int is_aborted = context->state->parse_aborted;
+	
+	free_parsing_context(context);
+	
+    if (is_aborted) {
+        free_element_list(parse_result);
+        return NULL;
+    }
 
-    oldcharbuf = charbuf;
-    charbuf = string;
-
-    yyparsefrom(yy_DocWithMetaData);
-
-    charbuf = oldcharbuf;          /* restore charbuf to original value */
     return parse_result;
 
 }
 
 element * parse_metadata_only(char *string, int extensions) {
 
-    char *oldcharbuf;
-    syntax_extensions = extensions;
+	yycontext *context = create_parsing_context(string, extensions, NULL, NULL, NULL);
 
-    oldcharbuf = charbuf;
-    charbuf = string;
-
-    yyparsefrom(yy_MetaDataOnly);
-
-    charbuf = oldcharbuf;          /* restore charbuf to original value */
+    yyparsefrom(context, yy_MetaDataOnly);
+	element *parse_result = context->state->parse_result;
+	free_parsing_context(context);
+	
     return parse_result;
-
 }
 
 element * parse_markdown_for_opml(char *string, int extensions) {
 
-    char *oldcharbuf;
-    syntax_extensions = extensions;
+	yycontext *context = create_parsing_context(string, extensions, NULL, NULL, NULL);
+    yyparsefrom(context, yy_DocForOPML);
+	element *parse_result = context->state->parse_result;
+	
+	free_parsing_context(context);
 
-    oldcharbuf = charbuf;
-    charbuf = string;
-
-    yyparsefrom(yy_DocForOPML);
-
-    charbuf = oldcharbuf;          /* restore charbuf to original value */
     return parse_result;
-
 }

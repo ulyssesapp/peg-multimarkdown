@@ -1,6 +1,4 @@
-ALL : multimarkdown
-
-VERSION=3.5.1
+VERSION=3.7
 PROGRAM=multimarkdown
 
 UNAME=$(shell uname)
@@ -18,7 +16,7 @@ else
 	FINALNOTES=Build complete.
 endif
 
-CFLAGS ?= -Wall -O3 -include GLibFacade.h -I ./ -D MD_USE_GET_OPT=1 
+CFLAGS ?= -Wall -O3 -include GLibFacade.h -I ./ -D MD_USE_GET_OPT=1 -D_GNU_SOURCE
 ifeq ($(UNAME), SunOS)
 	CC = gcc
 	# Use of <stdbool.h> is valid only in a c99 compilation environment
@@ -40,14 +38,13 @@ ifeq ($(ARCH), i386)
 	CFLAGS += -arch i386
 endif
 
-OBJS=markdown_parser.o markdown_output.o markdown_lib.o GLibFacade.o
-PEGDIR_ORIG=peg-0.1.4
-PEGDIR=peg
-LEG=$(PEGDIR)/leg
+CFLAGS ?= -Wall -O3 -ansi -D_GNU_SOURCE # -flto for newer GCC versions
+OBJS=markdown_parser.o markdown_output.o markdown_lib.o GLibFacade.o utility_functions.o parsing_functions.o odf.o
+PEGDIR=peg-0.1.9
+LEG=$(PEGDIR)/leg$(X)
+PKG_CONFIG = pkg-config
 
-$(PEGDIR):
-	cp -r $(PEGDIR_ORIG) $(PEGDIR) ; \
-	patch -p1 < peg-memory-fix.patch
+ALL : $(PROGRAM)
 
 $(LEG): $(PEGDIR)
 	CC=gcc $(MAKE) -C $(PEGDIR)
@@ -66,7 +63,6 @@ markdown_parser.c : markdown_parser.leg $(LEG) markdown_peg.h parsing_functions.
 
 clean:
 	rm -f markdown_parser.c $(PROGRAM) $(OBJS); \
-	$(MAKE) -C $(PEGDIR) clean; \
 	rm -rf mac_installer/Package_Root/usr/local/bin; \
 	rm -rf mac_installer/Support_Root; \
 	rm mac_installer/Resources/*.html; \
@@ -77,8 +73,7 @@ clean:
 	rm -rf mac_installer/*.pkg
 
 distclean: clean
-	rm -rf $(PEGDIR)
-	$(MAKE) -C $(PEGDIR) spotless
+	$(MAKE) -C $(PEGDIR) clean
 
 test: $(PROGRAM)
 	cd MarkdownTest; \
@@ -118,17 +113,22 @@ windows: $(PROGRAM)
 	/usr/bin/i586-mingw32msvc-cc -c -Wall -O3 -ansi markdown*.c GLibFacade.c
 	/usr/bin/i586-mingw32msvc-cc markdown*.o GLibFacade.o \
 	-Wl,--dy,--warn-unresolved-symbols,-lglib-2.0 -o multimarkdown.exe
-	mkdir -p windows_installer_
+
+# Get readme and other files ready
+# This has to be run before BitRock can create the installer
+win-prep:
+	mkdir -p windows_installer
 	cp multimarkdown.exe windows_installer/
 	cp README.markdown windows_installer/README.txt
 	./multimarkdown LICENSE > windows_installer/LICENSE.html
 
 # After building the installer with BitRock, this creates a properly named
 # zipfile
-
+# You have to move the .exe from BitRock to the windows_installer folder
+# Also - create a portable mmd zipfile
 win-installer:
 	zip -r windows_installer/MultiMarkdown-Windows-$(VERSION).zip windows_installer/MMD-windows-$(VERSION).exe -x windows_installer/MultiMarkdown*.zip
-
+	cd windows_installer; zip -r MultiMarkdown-Windows-Portable-$(VERSION).zip *.bat multimarkdown.exe README.txt LICENSE.html -x install_multimarkdown.bat
 
 # Build Mac installer - requires that you first build multimarkdown itself,
 # either with "make" or with Xcode
@@ -142,7 +142,7 @@ mac-installer:
 	./multimarkdown LICENSE > mac_installer/Resources/License.html
 	./multimarkdown mac_installer/Resources/Support_Welcome.txt > mac_installer/Resources/Support_Welcome.html
 	git clone Support mac_installer/Support_Root/Library/Application\ Support/MultiMarkdown
-	cd mac_installer; /Developer/usr/bin/packagemaker \
+	cd mac_installer; /Applications/PackageMaker.app/Contents/MacOS/PackageMaker \
 	--doc "Make Support Installer.pmdoc" \
 	--title "MultiMarkdown Support Files" \
 	--version $(VERSION) \
@@ -152,14 +152,16 @@ mac-installer:
 	--domain user \
 	--out "MultiMarkdown-Support-Mac-$(VERSION).pkg" \
 	--no-relocate; \
-	/Developer/usr/bin/packagemaker \
+	/Applications/PackageMaker.app/Contents/MacOS/PackageMaker \
 	--doc "Make OS X Installer.pmdoc" \
 	--title "MultiMarkdown" \
 	--version $(VERSION) \
 	--filter "\.DS_Store" \
 	--filter "\.git" \
 	--id net.fletcherpenney.multimarkdown.pkg \
-	--out "MultiMarkdown-Mac-$(VERSION).pkg";
+	--out "MultiMarkdown-Mac-$(VERSION).pkg"
+	cd mac_installer; zip -r MultiMarkdown-Mac-$(VERSION).zip MultiMarkdown-Mac-$(VERSION).pkg
+	cd mac_installer; zip -r MultiMarkdown-Support-Mac-$(VERSION).zip MultiMarkdown-Support-Mac-$(VERSION).pkg	
 
 # Requires installation of the platypus command line tool to create
 # a drag and drop application for Mac OS X
