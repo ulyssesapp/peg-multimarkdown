@@ -196,7 +196,7 @@
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0630;
 			};
 			buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "MultiMarkdown" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -288,6 +288,7 @@
 					arm64,
 				);
 				"ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
 				HEADER_SEARCH_PATHS = (
 					.,
