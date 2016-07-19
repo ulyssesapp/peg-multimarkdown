@@ -11,6 +11,7 @@
 /* utility_functions.h - List manipulation functions, element
  * constructors, and macro definitions for leg markdown parser. */
 
+#define MAX(__a, __b)		(((__a) > (__b)) ? (__a) : (__b)) 
 
 /* cons - cons an element onto a list, returning pointer to new head */
 element * cons(element *new, element *list);

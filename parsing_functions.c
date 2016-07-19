@@ -115,9 +115,9 @@ yycontext* create_parsing_context(char *string, int extensions, element *referen
 
 void free_parsing_context(yycontext *context)
 {
-	free(context->buf);
-	free(context->text);
-	free(context->thunks);
+	free(context->__buf);
+	free(context->__text);
+	free(context->__thunks);
 	
 	free(context->state);
 	free(context);
