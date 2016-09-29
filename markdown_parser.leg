@@ -564,15 +564,17 @@ MarkdownHtmlBlock = &MarkdownHtmlTagOpen < ( HtmlBlockInTags | HtmlComment | Htm
                     $$->key = RAW;
             }
 
-FencedCodeBlock = < FencedCodeBlockMarker @{ char *startMarker = &(yy->__buf[yy->__begin]); size_t startMarkerLength = yy->__pos - yy->__begin; }
+FencedCodeBlock = < @{ char *openingDelimiterStart = current_input_position(yy->state, yy->__pos, yy->__limit); }
+				    FencedCodeBlockMarker
+				    @{ size_t openingDelimiterLength = offset_to_current_position(openingDelimiterStart, yy->state, yy->__pos, yy->__limit); }
 				(
 					!( Newline
 
-					@{ int innerMarkerStart = yy->__pos; }
+					@{ char *closingDelimiterStart = current_input_position(yy->state, yy->__pos, yy->__limit); }
+					FencedCodeBlockMarker
+					@{ size_t closingDelimiterLength = offset_to_current_position(closingDelimiterStart, yy->state, yy->__pos, yy->__limit); }
 
-					   FencedCodeBlockMarker
-
-					   &{ !strncmp(startMarker, &(yy->__buf[innerMarkerStart]), MAX(startMarkerLength, yy->__pos - innerMarkerStart)) }
+					 &{ (openingDelimiterLength == closingDelimiterLength) && !strncmp(openingDelimiterStart, closingDelimiterStart, openingDelimiterLength) }
 					   Sp (Newline | Eof)
 					)
 				.)*

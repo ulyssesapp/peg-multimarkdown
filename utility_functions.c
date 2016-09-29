@@ -7,6 +7,15 @@
 #include <string.h>
 #include <assert.h>
 
+const char *current_input_position(markdown_parser_state *state, int bufPos, int bufLimit)
+{
+	return state->charbuf - bufLimit + bufPos;
+}
+
+const size_t offset_to_current_position(const char *offset, markdown_parser_state *state, int bufPos, int bufLimit)
+{
+	return current_input_position(state, bufPos, bufLimit) - offset;
+}
 
 /**********************************************************************
 

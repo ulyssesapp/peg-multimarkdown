@@ -47,6 +47,12 @@ typedef struct _markdown_parser_state{
 
  ***********************************************************************/
 
+/* Provides a persistent pointer to the input string at the current position */
+const char *current_input_position(markdown_parser_state *state, int bufPos, int bufLimit);
+
+/* Determines the offset from the current position to a previous position in the input string */
+const size_t offset_to_current_position(const char *offset, markdown_parser_state *state, int bufPos, int bufLimit);
+
 /* mk_element - generic constructor for element */
 element * mk_element(int key);
 
