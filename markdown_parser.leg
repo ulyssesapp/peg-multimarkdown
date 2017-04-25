@@ -564,13 +564,13 @@ MarkdownHtmlBlock = &MarkdownHtmlTagOpen < ( HtmlBlockInTags | HtmlComment | Htm
                     $$->key = RAW;
             }
 
-FencedCodeBlock = < @{ char *openingDelimiterStart = current_input_position(yy->state, yy->__pos, yy->__limit); }
+FencedCodeBlock = < @{ const char *openingDelimiterStart = current_input_position(yy->state, yy->__pos, yy->__limit); }
 				    FencedCodeBlockMarker
 				    @{ size_t openingDelimiterLength = offset_to_current_position(openingDelimiterStart, yy->state, yy->__pos, yy->__limit); }
 				(
 					!( Newline
 
-					@{ char *closingDelimiterStart = current_input_position(yy->state, yy->__pos, yy->__limit); }
+					@{ const char *closingDelimiterStart = current_input_position(yy->state, yy->__pos, yy->__limit); }
 					FencedCodeBlockMarker
 					@{ size_t closingDelimiterLength = offset_to_current_position(closingDelimiterStart, yy->state, yy->__pos, yy->__limit); }
 
