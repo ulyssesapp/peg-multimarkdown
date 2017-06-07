@@ -39,15 +39,25 @@ GString *preformat_text(char *text) {
     charstotab = TABSTOP;
     while ((next_char = *text++) != '\0') {
         switch (next_char) {
-        case '\t':
-            while (charstotab > 0)
-                g_string_append_c(buf, ' '), len++, charstotab--;
-            break;
-        case '\n':
-            g_string_append_c(buf, '\n'), len++, charstotab = TABSTOP;
-            break;
-        default:
-            g_string_append_c(buf, next_char), len++, charstotab--;
+			case '\t': {
+				while (charstotab > 0) {
+					g_string_append_c(buf, ' ');
+					len++;
+					charstotab--;
+				}
+				break;
+			}
+			case '\n': {
+				g_string_append_c(buf, '\n');
+				len++;
+				charstotab = TABSTOP;
+				break;
+			}
+			default: {
+				g_string_append_c(buf, next_char);
+				len++;
+				charstotab--;
+			}
         }
         if (charstotab == 0)
             charstotab = TABSTOP;
