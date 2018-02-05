@@ -12,10 +12,18 @@ struct Link {
     char            *identifier;
 };
 
+/* Information for a code block */
+struct CodeBlock {
+	char			*language;
+	char			*code;
+	size_t			preceedingIndentation;
+};
+
 /* Union for contents of an Element (string, list, or link). */
 union Contents {
-    char             *str;
-    struct Link      *link;
+    char            	*str;
+    struct Link  	    *link;
+	struct CodeBlock	*codeblock;
 };
 
 /* Types of semantic values returned by parsers. */
@@ -45,6 +53,7 @@ enum keys { LIST,   /* A generic list of values.  For ordered and bullet lists, 
 	H1, H2, H3, H4, H5, H6, H7, /* Code assumes that these are in order. */
 	BLOCKQUOTE,
 	VERBATIM,
+	CODEBLOCK,
 	HTMLBLOCK,
 	HRULE,
 	REFERENCE,

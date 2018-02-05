@@ -70,6 +70,10 @@ element * mk_list(int key, element *lst);
 
 /* mk_link - constructor for LINK element */
 element * mk_link(element *label, char *url, char *title, element *attr, char *id);
+
+/* mk_codeblock - constructor for CODEBLOCK element */
+element *mk_codeblock(char *code, char *language, size_t preceedingIndentation);
+
 /* extension = returns true if extension is selected */
 bool extension(markdown_parser_state *state,  int ext);
 

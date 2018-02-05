@@ -564,28 +564,37 @@ MarkdownHtmlBlock = &MarkdownHtmlTagOpen < ( HtmlBlockInTags | HtmlComment | Htm
                     $$->key = RAW;
             }
 
-FencedCodeBlock = < @{ const char *openingDelimiterStart = current_input_position(yy->state, yy->__pos, yy->__limit); }
+FencedCodeBlock =   indentation: FencedCodeBlockPreceedingIndentation
+
+					@{ const char *openingDelimiterStart = current_input_position(yy->state, yy->__pos, yy->__limit); }
 				    FencedCodeBlockMarker
 				    @{ size_t openingDelimiterLength = offset_to_current_position(openingDelimiterStart, yy->state, yy->__pos, yy->__limit); }
-				(
-					!( Newline
 
-					@{ const char *closingDelimiterStart = current_input_position(yy->state, yy->__pos, yy->__limit); }
-					FencedCodeBlockMarker
-					@{ size_t closingDelimiterLength = offset_to_current_position(closingDelimiterStart, yy->state, yy->__pos, yy->__limit); }
+					language:FencedCodeBlockLanguage Newline
 
-					 &{ (openingDelimiterLength == closingDelimiterLength) && !strncmp(openingDelimiterStart, closingDelimiterStart, openingDelimiterLength) }
-					   Sp (Newline | Eof)
-					)
-				.)*
-					Newline FencedCodeBlockMarker Sp >
-				  BlankLine+
+					<(
+						!( Newline?
+							FencedCodeBlockIndentation
+							@{ const char *closingDelimiterStart = current_input_position(yy->state, yy->__pos, yy->__limit); }
+							FencedCodeBlockMarker
+							@{ size_t closingDelimiterLength = offset_to_current_position(closingDelimiterStart, yy->state, yy->__pos, yy->__limit); }
+
+					 		&{ (openingDelimiterLength == closingDelimiterLength) && !strncmp(openingDelimiterStart, closingDelimiterStart, openingDelimiterLength) }
+					    	Sp (Newline | Eof)
+						)
+					.)*>
+
+					Newline? FencedCodeBlockIndentation FencedCodeBlockMarker Sp
+				  	BlankLine+
 				  {
-					$$ = mk_str(yytext);
-					$$->key = HTMLBLOCK;
+					$$ = mk_codeblock(yytext, language->contents.str, strlen(indentation->contents.str));
 				  }
 
-FencedCodeBlockMarker = Spacechar? Spacechar? Spacechar? (("```" "`"*) | ("~~~" "~"*))
+FencedCodeBlockPreceedingIndentation = <FencedCodeBlockIndentation> { $$ = mk_str(yytext); }
+FencedCodeBlockIndentation = Spacechar? Spacechar? Spacechar?
+FencedCodeBlockMarker = (("```" "`"*) | ("~~~" "~"*))
+
+FencedCodeBlockLanguage = < ([^\n])* > { $$ = mk_str(yytext); }
 
 HtmlBlockSelfClosing = '<' Spnl HtmlBlockType Spnl HtmlAttribute* '/' Spnl '>'
 

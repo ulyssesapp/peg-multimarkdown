@@ -380,7 +380,14 @@ static void print_html_element(int ext, GString *out, element *elt, bool obfusca
         g_string_append_printf(out, "%s", "</code></pre>");
         padded = 0;
         break;
-    case BULLETLIST:
+	case CODEBLOCK:
+		pad(out, 2);
+		g_string_append_printf(out, "%s", "<pre><code>");
+		print_html_string(ext, out, elt->contents.codeblock->code, obfuscate);
+		g_string_append_printf(out, "%s", "</code></pre>");
+		padded = 0;
+		break;
+	case BULLETLIST:
         pad(out, 2);
         g_string_append_printf(out, "%s", "<ul>");
         padded = 0;
@@ -1092,6 +1099,13 @@ static void print_latex_element(GString *out, element *elt) {
         g_string_append_printf(out, "\\end{verbatim}\n");
         padded = 0;
         break;
+	case CODEBLOCK:
+		pad(out, 1);
+		g_string_append_printf(out, "\n\\begin{verbatim}\n");
+		print_raw_element(out, elt);
+		g_string_append_printf(out, "\\end{verbatim}\n");
+		padded = 0;
+		break;
     case BULLETLIST:
         pad(out, 1);
         g_string_append_printf(out, "\n\\begin{itemize}");
@@ -1546,6 +1560,13 @@ static void print_groff_mm_element(GString *out, element *elt, int count) {
         g_string_append_printf(out, ".VERBOFF");
         padded = 0;
         break;
+	case CODEBLOCK:
+		pad(out, 1);
+		g_string_append_printf(out, ".VERBON 2\n");
+		print_groff_string(out, elt->contents.codeblock->code);
+		g_string_append_printf(out, ".VERBOFF");
+		padded = 0;
+		break;
     case BULLETLIST:
         pad(out, 1);
         g_string_append_printf(out, ".BL");
@@ -1891,6 +1912,9 @@ static void print_odf_element(GString *out, element *elt) {
             case VERBATIM:
                 g_string_append_printf(out," text:style-name=\"Preformatted Text\"");
                 break;
+			case CODEBLOCK:
+				g_string_append_printf(out," text:style-name=\"Preformatted Text\"");
+				break;
             case ORDEREDLIST:
             case BULLETLIST:
                 g_string_append_printf(out," text:style-name=\"P2\"");
@@ -1926,7 +1950,15 @@ static void print_odf_element(GString *out, element *elt) {
         g_string_append_printf(out, "</text:p>\n");
         odf_type = old_type;
         break;
-    case BULLETLIST:
+	case CODEBLOCK:
+		old_type = odf_type;
+		odf_type = VERBATIM;
+		g_string_append_printf(out, "<text:p text:style-name=\"Preformatted Text\">");
+		print_odf_code_string(out, elt->contents.codeblock->code);
+		g_string_append_printf(out, "</text:p>\n");
+		odf_type = old_type;
+		break;
+	case BULLETLIST:
         if ((odf_type == BULLETLIST) ||
             (odf_type == ORDEREDLIST)) {
             /* I think this was made unnecessary by another change.
@@ -2339,6 +2371,7 @@ void print_memoir_element_list(GString *out, element *list) {
 static void print_memoir_element(GString *out, element *elt) {
     switch (elt->key) {
     case VERBATIM:
+	case CODEBLOCK:
         pad(out, 1);
         g_string_append_printf(out, "\n\\begin{adjustwidth}{2.5em}{2.5em}\n\\begin{verbatim}\n\n");
         print_raw_element(out, elt);
@@ -2748,7 +2781,10 @@ static void print_opml_element(GString *out, element *elt) {
         case VERBATIM:
             print_opml_string(out, elt->contents.str);
             break;
-        case SPACE:
+		case CODEBLOCK:
+			print_opml_string(out, elt->contents.codeblock->code);
+			break;
+		case SPACE:
             print_opml_string(out, elt->contents.str);
             break;
         case STR:

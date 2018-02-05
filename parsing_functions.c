@@ -38,7 +38,7 @@ static void free_element_contents(element elt) {
       case RAW:
       case HTMLBLOCK:
       case HTML:
-      case VERBATIM:
+	  case VERBATIM:
       case CODE:
       case NOTE:
       case AUTOLABEL:
@@ -62,7 +62,21 @@ static void free_element_contents(element elt) {
 		
         elt.contents.str = NULL;
         break;
-      case LINK:
+      case CODEBLOCK:
+		if (elt.contents.codeblock) {
+			if (elt.contents.codeblock->language) {
+				free(elt.contents.codeblock->language);
+				elt.contents.codeblock->language = NULL;
+			 }
+			if (elt.contents.codeblock->code) {
+				 free(elt.contents.codeblock->code);
+				 elt.contents.codeblock->code = NULL;
+			}
+			elt.contents.codeblock = NULL;
+		}
+		break;
+			
+	  case LINK:
       case IMAGE:
       case REFERENCE:
         free(elt.contents.link->url);

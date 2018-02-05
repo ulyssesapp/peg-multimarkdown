@@ -135,6 +135,16 @@ element * mk_link(element *label, char *url, char *title, element *attr, char *i
     return result;
 }
 
+/* mk_codeblock - constructor for CODEBLOCK element */
+element *mk_codeblock(char *code, char *language, size_t preceedingIndentation) {
+	element *result = mk_element(CODEBLOCK);
+	result->contents.codeblock = malloc(sizeof(codeblock));
+	result->contents.codeblock->code = strdup(code);
+	result->contents.codeblock->language = strdup(language);
+	result->contents.codeblock->preceedingIndentation = preceedingIndentation;
+	return result;
+}
+
 /* extension = returns true if extension is selected */
 bool extension(markdown_parser_state *state, int ext) {
     return (state->syntax_extensions & ext);
