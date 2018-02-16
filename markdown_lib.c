@@ -22,48 +22,16 @@
 #include <string.h>
 #include "markdown_peg.h"
 
-#define TABSTOP 4
 #define VERSION "3.7"
 
 /* preformat_text - allocate and copy text buffer while
  * performing tab expansion. */
 GString *preformat_text(char *text) {
-    GString *buf;
-    char next_char;
-    int charstotab;
-
-    int len = 0;
-
-    buf = g_string_new("");
-
-    charstotab = TABSTOP;
-    while ((next_char = *text++) != '\0') {
-        switch (next_char) {
-			case '\t': {
-				while (charstotab > 0) {
-					g_string_append_c(buf, ' ');
-					len++;
-					charstotab--;
-				}
-				break;
-			}
-			case '\n': {
-				g_string_append_c(buf, '\n');
-				len++;
-				charstotab = TABSTOP;
-				break;
-			}
-			default: {
-				g_string_append_c(buf, next_char);
-				len++;
-				charstotab--;
-			}
-        }
-        if (charstotab == 0)
-            charstotab = TABSTOP;
-    }
+    GString *buf = g_string_new("");
+	g_string_append(buf, text);
     g_string_append(buf, "\n\n");
-    return(buf);
+
+	return(buf);
 }
 
 /* print_tree - print tree of elements, for debugging only. */
