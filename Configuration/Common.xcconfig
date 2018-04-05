@@ -7,11 +7,11 @@
 //
 
 SUPPORTED_PLATFORMS = macosx iphoneos iphonesimulator
-ARCHS[sdk=macosx*] = i386 x86_64
+ARCHS[sdk=macosx*] = x86_64
 ARCHS[sdk=iphoneos*] = armv7 armv7s arm64
-ARCHS[sdk=iphonesimulator*] = i386 x86_64
+ARCHS[sdk=iphonesimulator*] = x86_64
 VALID_ARCHS[sdk=iphoneos*] = armv7 armv7s arm64
-VALID_ARCHS[sdk=iphonesimulator*] = i386 x86_64
+VALID_ARCHS[sdk=iphonesimulator*] = x86_64
 DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
 GCC_VERSION = 
 GCC_VERSION[arch=x86_64] = com.apple.compilers.llvm.clang.1_0
