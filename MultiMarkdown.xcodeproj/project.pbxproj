@@ -349,8 +349,8 @@
 					"peg-0.1.9/",
 				);
 				INSTALL_PATH = "@rpath";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = MultiMarkdown;
 				VALID_ARCHS = x86_64;
@@ -379,8 +379,8 @@
 					.,
 					"peg-0.1.9/",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = MultiMarkdown;
 				VALID_ARCHS = x86_64;
 				"VALID_ARCHS[sdk=iphoneos*]" = "armv7 armv7s arm64";
@@ -408,7 +408,8 @@
 					.,
 					"peg-0.1.9/",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = MultiMarkdown;
 				VALID_ARCHS = x86_64;
 				"VALID_ARCHS[sdk=iphoneos*]" = "armv7 armv7s arm64";
