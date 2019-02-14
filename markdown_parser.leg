@@ -901,7 +901,7 @@ AttrValue = (QuotedValue | UnQuotedValue)
             $$->key = ATTRVALUE;
         }
 
-QuotedValue = '"' < (!'"' .)* > '"'
+QuotedValue = '"' < ("\\\"" | (!'"' .))* > '"'
 
 UnQuotedValue = < (AlphanumericAscii | '.' | '%')+ >
 
