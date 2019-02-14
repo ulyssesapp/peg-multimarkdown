@@ -819,9 +819,9 @@ ReferenceLinkSingle =  a:Label < (Spnl "[]")? >
                            }
                        }
 
-ExplicitLink =  l:Label '(' Sp s:Source Spnl t:Title Sp ')'
+ExplicitLink =  a:StartList l:Label '(' Sp s:Source Spnl t:Title ( &{ !extension(yy->state, EXT_COMPATIBILITY) || extension(yy->state, EXT_LINK_ATTRIBUTES) } (Attributes { a = cons($$,a);})? )? Sp ')'
                 {
-                    $$ = mk_link(l->children, s->contents.str, t->contents.str, NULL, "");
+					$$ = mk_link(l->children, s->contents.str, t->contents.str, a ? a->children : NULL, "");
                     free_element(s);
                     free_element(t);
                     free(l);
@@ -835,9 +835,10 @@ SourceContents = ( ( !'(' !')' !'>' Nonspacechar )+ | '(' SourceContents ')')*
 Title = ( TitleSingle | TitleDouble | < "" > )
         { $$ = mk_str(yytext); }
 
-TitleSingle = '\'' < ( !( '\'' Sp ( ')' | Newline ) ) . )* > '\''
+TitleSingle = '\'' < ( !( '\'' Sp ( ')' | Newline | (&{ !extension(yy->state, EXT_COMPATIBILITY) || extension(yy->state, EXT_LINK_ATTRIBUTES) } AlphanumericAscii+ '=' )) ) . )* > '\''
 
-TitleDouble = '"' < ( !( '"' Sp ( ')' | Newline ) ) . )* > '"'
+TitleDouble = '"' < ( !( '"' Sp ( ')' | Newline | (&{ !extension(yy->state, EXT_COMPATIBILITY) || extension(yy->state, EXT_LINK_ATTRIBUTES) } AlphanumericAscii+ '=' )) ) . )* > '"'
+
 
 AutoLink = AutoLinkUrl | AutoLinkEmail
 
