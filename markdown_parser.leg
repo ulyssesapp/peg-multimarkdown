@@ -902,7 +902,7 @@ AttrValue = (QuotedValue | UnQuotedValue)
 
 QuotedValue = '"' < (!'"' .)* > '"'
 
-UnQuotedValue = < (AlphanumericAscii | '.')+ >
+UnQuotedValue = < (AlphanumericAscii | '.' | '%')+ >
 
 Label = '[' !'[' ( !'^' !'#' &{ extension(yy->state, EXT_NOTES) } | &. &{ !extension(yy->state, EXT_NOTES) } )
         a:StartList
