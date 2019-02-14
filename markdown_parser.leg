@@ -19,9 +19,14 @@
 
 #include <stdbool.h>
 #include <assert.h>
+
 #include "markdown_peg.h"
 #include "utility_functions.h"
+#include "parsing_functions.h"
 
+#pragma clang diagnostic ignored "-Wunreachable-code"
+
+#define YY_CTX_MEMBERS		markdown_parser_state *state;
 
 
 /**********************************************************************
@@ -848,7 +853,7 @@ AutoLinkEmail = '<' ( "mailto:" )? < [-A-Za-z0-9+_./!%~$]+ '@' ( !Newline !'>' .
 
 Reference = a:StartList NonindentSpace !"[]" l:Label ':' Spnl s:RefSrc
         t:RefTitle
-        ( &{ !extension(yy->state, EXT_COMPATIBILITY) }
+        ( &{ !extension(yy->state, EXT_COMPATIBILITY) || extension(yy->state, EXT_LINK_ATTRIBUTES) }
             (Attributes { a = cons($$,a);})? )?
         MagicBlankLine+
         { 
@@ -916,13 +921,13 @@ RefTitle =  ( RefTitleSingle | RefTitleDouble | RefTitleParens | EmptyTitle )
 EmptyTitle = < "" >
 
 RefTitleSingle = Spnl '\'' < ( !( '\'' Sp Newline | Newline |
-    &{ !extension(yy->state, EXT_COMPATIBILITY) } '\'' Sp AlphanumericAscii+ '=' ) . )* > '\''
+    &{ !extension(yy->state, EXT_COMPATIBILITY) || extension(yy->state, EXT_LINK_ATTRIBUTES) } '\'' Sp AlphanumericAscii+ '=' ) . )* > '\''
 
 RefTitleDouble = Spnl '"' < ( !('"' Sp Newline | Newline |
-    &{ !extension(yy->state, EXT_COMPATIBILITY) } '"' Sp AlphanumericAscii+ '=' ) . )* > '"'
+    &{ !extension(yy->state, EXT_COMPATIBILITY) || extension(yy->state, EXT_LINK_ATTRIBUTES) } '"' Sp AlphanumericAscii+ '=' ) . )* > '"'
 
 RefTitleParens = Spnl '(' < ( !(')' Sp Newline | Newline |
-    &{ !extension(yy->state, EXT_COMPATIBILITY) } ')' Sp AlphanumericAscii+ '=' ) . )* > ')'
+    &{ !extension(yy->state, EXT_COMPATIBILITY) || extension(yy->state, EXT_LINK_ATTRIBUTES) } ')' Sp AlphanumericAscii+ '=' ) . )* > ')'
 
 References = a:StartList
              ( b:Reference { a = cons(b, a); } | SkipBlock )*
