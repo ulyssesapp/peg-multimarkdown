@@ -11,6 +11,8 @@
 		4AFA467513E362AC00CFA132 /* GLibFacade.c in Sources */ = {isa = PBXBuildFile; fileRef = 651A528213E1C30100BCB02A /* GLibFacade.c */; };
 		4AFA467A13E363FA00CFA132 /* markdown_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66113DF47CC00D0980C /* markdown_lib.c */; };
 		4AFA467D13E3640600CFA132 /* markdown_output.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66313DF47CC00D0980C /* markdown_output.c */; };
+		797E615222156F5600754541 /* markdown_parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 65F0B8B113DF6D4000D0980C /* markdown_parser.h */; };
+		797E615322157C0000754541 /* markdown_lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 65F0B66213DF47CC00D0980C /* markdown_lib.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		79C2C97F16E774B6002B79F3 /* markdown_parser_lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 79C2C97E16E774B6002B79F3 /* markdown_parser_lib.h */; };
 		79C2C98116E774BF002B79F3 /* markdown_parser_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 79C2C98016E774BF002B79F3 /* markdown_parser_lib.c */; };
 		79C2C98316E775D7002B79F3 /* parsing_functions.h in Headers */ = {isa = PBXBuildFile; fileRef = 79C2C98216E775D7002B79F3 /* parsing_functions.h */; };
@@ -41,7 +43,7 @@
 		65F0B69A13DF47CC00D0980C /* utility_functions.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = utility_functions.c; sourceTree = "<group>"; };
 		65F0B6D713DF4C6B00D0980C /* MarkdownMacPrefix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarkdownMacPrefix.h; sourceTree = "<group>"; };
 		65F0B6F313DF4D9800D0980C /* glib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glib.h; sourceTree = "<group>"; };
-		65F0B8B113DF6D4000D0980C /* markdown_parser.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = markdown_parser.c; sourceTree = "<group>"; };
+		65F0B8B113DF6D4000D0980C /* markdown_parser.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = markdown_parser.h; sourceTree = "<group>"; };
 		65F89E8113E379ED006A34B8 /* Release10.6+.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Release10.6+.xcconfig"; sourceTree = "<group>"; };
 		65F89EB813E37BEF006A34B8 /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		65F89EB913E37BEF006A34B8 /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
@@ -133,7 +135,7 @@
 		65F0B8B513DF6D4700D0980C /* Generated Sources */ = {
 			isa = PBXGroup;
 			children = (
-				65F0B8B113DF6D4000D0980C /* markdown_parser.c */,
+				65F0B8B113DF6D4000D0980C /* markdown_parser.h */,
 			);
 			name = "Generated Sources";
 			sourceTree = "<group>";
@@ -163,6 +165,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				797E615322157C0000754541 /* markdown_lib.h in Headers */,
+				797E615222156F5600754541 /* markdown_parser.h in Headers */,
 				79C2C97F16E774B6002B79F3 /* markdown_parser_lib.h in Headers */,
 				79C2C98316E775D7002B79F3 /* parsing_functions.h in Headers */,
 				79C2C98C16E78708002B79F3 /* utility_functions.h in Headers */,
@@ -228,11 +232,11 @@
 			);
 			name = "Generate Parser";
 			outputPaths = (
-				"$(SRCROOT)/markdown_parser.c",
+				"$(SRCROOT)/markdown_parser.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$SRCROOT/leg\" -o markdown_parser.c markdown_parser.leg";
+			shellScript = "\"$SRCROOT/leg\" -o markdown_parser.h markdown_parser.leg\ntouch parsing_functions.c\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -342,6 +346,7 @@
 				"ARCHS[sdk=macosx*]" = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				HEADER_SEARCH_PATHS = (
@@ -353,6 +358,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = MultiMarkdown;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				VALID_ARCHS = x86_64;
 				"VALID_ARCHS[sdk=iphoneos*]" = "armv7 armv7s arm64";
 				"VALID_ARCHS[sdk=iphonesimulator*]" = x86_64;
@@ -373,6 +379,7 @@
 				"ARCHS[sdk=macosx*]" = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				HEADER_SEARCH_PATHS = (
@@ -382,6 +389,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = MultiMarkdown;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				VALID_ARCHS = x86_64;
 				"VALID_ARCHS[sdk=iphoneos*]" = "armv7 armv7s arm64";
 				"VALID_ARCHS[sdk=iphonesimulator*]" = x86_64;
@@ -402,6 +410,7 @@
 				"ARCHS[sdk=macosx*]" = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				HEADER_SEARCH_PATHS = (
@@ -411,6 +420,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = MultiMarkdown;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				VALID_ARCHS = x86_64;
 				"VALID_ARCHS[sdk=iphoneos*]" = "armv7 armv7s arm64";
 				"VALID_ARCHS[sdk=iphonesimulator*]" = x86_64;

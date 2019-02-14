@@ -11,7 +11,7 @@
 
 #define YY_CTX_MEMBERS		markdown_parser_state *state;
 
-#include "markdown_parser.c"
+#include "markdown_parser.h"
 
 static void free_element_contents(element elt);
 

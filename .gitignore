@@ -9,7 +9,6 @@ test.*
 testing/*
 
 *.o
-markdown_parser.c
 /markdown
 /multimarkdown
 /multimarkdown.exe
