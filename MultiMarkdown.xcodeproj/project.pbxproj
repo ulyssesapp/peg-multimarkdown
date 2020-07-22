@@ -11,6 +11,19 @@
 		4AFA467513E362AC00CFA132 /* GLibFacade.c in Sources */ = {isa = PBXBuildFile; fileRef = 651A528213E1C30100BCB02A /* GLibFacade.c */; };
 		4AFA467A13E363FA00CFA132 /* markdown_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66113DF47CC00D0980C /* markdown_lib.c */; };
 		4AFA467D13E3640600CFA132 /* markdown_output.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66313DF47CC00D0980C /* markdown_output.c */; };
+		506FCEF024C8AB1000203B17 /* markdown_lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 65F0B66213DF47CC00D0980C /* markdown_lib.h */; };
+		506FCEF124C8AB1000203B17 /* markdown_parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 65F0B8B113DF6D4000D0980C /* markdown_parser.h */; };
+		506FCEF224C8AB1000203B17 /* markdown_parser_lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 79C2C97E16E774B6002B79F3 /* markdown_parser_lib.h */; };
+		506FCEF324C8AB1000203B17 /* parsing_functions.h in Headers */ = {isa = PBXBuildFile; fileRef = 79C2C98216E775D7002B79F3 /* parsing_functions.h */; };
+		506FCEF424C8AB1000203B17 /* utility_functions.h in Headers */ = {isa = PBXBuildFile; fileRef = 79C2C98B16E78708002B79F3 /* utility_functions.h */; };
+		506FCEF624C8AB1000203B17 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AFA466913E3624F00CFA132 /* Foundation.framework */; };
+		506FCEF824C8AB1000203B17 /* GLibFacade.c in Sources */ = {isa = PBXBuildFile; fileRef = 651A528213E1C30100BCB02A /* GLibFacade.c */; };
+		506FCEF924C8AB1000203B17 /* markdown_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66113DF47CC00D0980C /* markdown_lib.c */; };
+		506FCEFA24C8AB1000203B17 /* markdown_output.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66313DF47CC00D0980C /* markdown_output.c */; };
+		506FCEFB24C8AB1000203B17 /* markdown_parser_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 79C2C98016E774BF002B79F3 /* markdown_parser_lib.c */; };
+		506FCEFC24C8AB1000203B17 /* utility_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B69A13DF47CC00D0980C /* utility_functions.c */; };
+		506FCEFD24C8AB1000203B17 /* parsing_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66A13DF47CC00D0980C /* parsing_functions.c */; };
+		506FCEFE24C8AB1000203B17 /* odf.c in Sources */ = {isa = PBXBuildFile; fileRef = 65F0B66813DF47CC00D0980C /* odf.c */; };
 		797E615222156F5600754541 /* markdown_parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 65F0B8B113DF6D4000D0980C /* markdown_parser.h */; };
 		797E615322157C0000754541 /* markdown_lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 65F0B66213DF47CC00D0980C /* markdown_lib.h */; };
 		79C2C97F16E774B6002B79F3 /* markdown_parser_lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 79C2C97E16E774B6002B79F3 /* markdown_parser_lib.h */; };
@@ -28,6 +41,7 @@
 		4AFA466713E3624F00CFA132 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		4AFA466813E3624F00CFA132 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		4AFA466913E3624F00CFA132 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		506FCF0224C8AB1000203B17 /* liblibMultiMarkdown-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "liblibMultiMarkdown-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		651A525B13E1BEFE00BCB02A /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
 		651A528113E1C30100BCB02A /* GLibFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLibFacade.h; sourceTree = "<group>"; };
 		651A528213E1C30100BCB02A /* GLibFacade.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GLibFacade.c; sourceTree = "<group>"; };
@@ -44,10 +58,6 @@
 		65F0B6D713DF4C6B00D0980C /* MarkdownMacPrefix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarkdownMacPrefix.h; sourceTree = "<group>"; };
 		65F0B6F313DF4D9800D0980C /* glib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glib.h; sourceTree = "<group>"; };
 		65F0B8B113DF6D4000D0980C /* markdown_parser.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = markdown_parser.h; sourceTree = "<group>"; };
-		65F89E8113E379ED006A34B8 /* Release10.6+.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Release10.6+.xcconfig"; sourceTree = "<group>"; };
-		65F89EB813E37BEF006A34B8 /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
-		65F89EB913E37BEF006A34B8 /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
-		65F89EBA13E37C2A006A34B8 /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		79C2C97E16E774B6002B79F3 /* markdown_parser_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = markdown_parser_lib.h; sourceTree = "<group>"; };
 		79C2C98016E774BF002B79F3 /* markdown_parser_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = markdown_parser_lib.c; sourceTree = "<group>"; };
 		79C2C98216E775D7002B79F3 /* parsing_functions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parsing_functions.h; sourceTree = "<group>"; };
@@ -60,6 +70,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				4AFA467413E3625F00CFA132 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		506FCEF524C8AB1000203B17 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				506FCEF624C8AB1000203B17 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,7 +94,6 @@
 				651A528213E1C30100BCB02A /* GLibFacade.c */,
 				65F0B6D713DF4C6B00D0980C /* MarkdownMacPrefix.h */,
 				65F0B6F313DF4D9800D0980C /* glib.h */,
-				65F89E8013E379ED006A34B8 /* Configuration */,
 				65F0B8B513DF6D4700D0980C /* Generated Sources */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				C6A0FF2B0290797F04C91782 /* Documentation */,
@@ -109,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				4AFA466213E3624F00CFA132 /* libMultiMarkdown.a */,
+				506FCF0224C8AB1000203B17 /* liblibMultiMarkdown-iOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -140,17 +158,6 @@
 			name = "Generated Sources";
 			sourceTree = "<group>";
 		};
-		65F89E8013E379ED006A34B8 /* Configuration */ = {
-			isa = PBXGroup;
-			children = (
-				65F89EB813E37BEF006A34B8 /* Common.xcconfig */,
-				65F89EB913E37BEF006A34B8 /* Debug.xcconfig */,
-				65F89EBA13E37C2A006A34B8 /* Release.xcconfig */,
-				65F89E8113E379ED006A34B8 /* Release10.6+.xcconfig */,
-			);
-			path = Configuration;
-			sourceTree = "<group>";
-		};
 		C6A0FF2B0290797F04C91782 /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
@@ -173,6 +180,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		506FCEEF24C8AB1000203B17 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				506FCEF024C8AB1000203B17 /* markdown_lib.h in Headers */,
+				506FCEF124C8AB1000203B17 /* markdown_parser.h in Headers */,
+				506FCEF224C8AB1000203B17 /* markdown_parser_lib.h in Headers */,
+				506FCEF324C8AB1000203B17 /* parsing_functions.h in Headers */,
+				506FCEF424C8AB1000203B17 /* utility_functions.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -192,6 +211,23 @@
 			name = libMultiMarkdown;
 			productName = multimarkdown;
 			productReference = 4AFA466213E3624F00CFA132 /* libMultiMarkdown.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		506FCEED24C8AB1000203B17 /* libMultiMarkdown-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 506FCEFF24C8AB1000203B17 /* Build configuration list for PBXNativeTarget "libMultiMarkdown-iOS" */;
+			buildPhases = (
+				506FCEEF24C8AB1000203B17 /* Headers */,
+				506FCEF524C8AB1000203B17 /* Frameworks */,
+				506FCEF724C8AB1000203B17 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "libMultiMarkdown-iOS";
+			productName = multimarkdown;
+			productReference = 506FCF0224C8AB1000203B17 /* liblibMultiMarkdown-iOS.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -218,6 +254,7 @@
 			projectRoot = "";
 			targets = (
 				4AFA466113E3624F00CFA132 /* libMultiMarkdown */,
+				506FCEED24C8AB1000203B17 /* libMultiMarkdown-iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -253,6 +290,20 @@
 				79C2C98416E7766B002B79F3 /* utility_functions.c in Sources */,
 				79C2C98516E7766F002B79F3 /* parsing_functions.c in Sources */,
 				79C2C98616E7767F002B79F3 /* odf.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		506FCEF724C8AB1000203B17 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				506FCEF824C8AB1000203B17 /* GLibFacade.c in Sources */,
+				506FCEF924C8AB1000203B17 /* markdown_lib.c in Sources */,
+				506FCEFA24C8AB1000203B17 /* markdown_output.c in Sources */,
+				506FCEFB24C8AB1000203B17 /* markdown_parser_lib.c in Sources */,
+				506FCEFC24C8AB1000203B17 /* utility_functions.c in Sources */,
+				506FCEFD24C8AB1000203B17 /* parsing_functions.c in Sources */,
+				506FCEFE24C8AB1000203B17 /* odf.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,8 +344,7 @@
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx;
-				VALID_ARCHS = x86_64;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 			};
 			name = Debug;
 		};
@@ -330,26 +380,18 @@
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				SDKROOT = macosx;
-				VALID_ARCHS = x86_64;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 			};
 			name = Release;
 		};
 		4AFA467113E3624F00CFA132 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 65F89EB913E37BEF006A34B8 /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=iphoneos*]" = (
-					armv7,
-					armv7s,
-					arm64,
-				);
-				"ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD)";
-				"ARCHS[sdk=macosx*]" = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = MarkdownMacPrefix.h;
 				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				HEADER_SEARCH_PATHS = (
@@ -362,27 +404,18 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = MultiMarkdown;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
-				VALID_ARCHS = x86_64;
-				"VALID_ARCHS[sdk=iphoneos*]" = "armv7 armv7s arm64";
-				"VALID_ARCHS[sdk=iphonesimulator*]" = x86_64;
+				SUPPORTED_PLATFORMS = macosx;
 			};
 			name = Debug;
 		};
 		4AFA467213E3624F00CFA132 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 65F89EBA13E37C2A006A34B8 /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=iphoneos*]" = (
-					armv7,
-					armv7s,
-					arm64,
-				);
-				"ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD_32_64_BIT)";
-				"ARCHS[sdk=macosx*]" = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = MarkdownMacPrefix.h;
 				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				HEADER_SEARCH_PATHS = (
@@ -393,27 +426,41 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = MultiMarkdown;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
-				VALID_ARCHS = x86_64;
-				"VALID_ARCHS[sdk=iphoneos*]" = "armv7 armv7s arm64";
-				"VALID_ARCHS[sdk=iphonesimulator*]" = x86_64;
+				SUPPORTED_PLATFORMS = macosx;
 			};
 			name = Release;
 		};
-		4AFA467313E3624F00CFA132 /* Release10.6+ */ = {
+		506FCF0024C8AB1000203B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 65F89E8113E379ED006A34B8 /* Release10.6+.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=iphoneos*]" = (
-					armv7,
-					armv7s,
-					arm64,
-				);
-				"ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD_32_64_BIT)";
-				"ARCHS[sdk=macosx*]" = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = MarkdownMacPrefix.h;
+				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				HEADER_SEARCH_PATHS = (
+					.,
+					"peg-0.1.9/",
+				);
+				INSTALL_PATH = "@rpath";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
+			};
+			name = Debug;
+		};
+		506FCF0124C8AB1000203B17 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = MarkdownMacPrefix.h;
 				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				HEADER_SEARCH_PATHS = (
@@ -422,50 +469,10 @@
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_NAME = MultiMarkdown;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
-				VALID_ARCHS = x86_64;
-				"VALID_ARCHS[sdk=iphoneos*]" = "armv7 armv7s arm64";
-				"VALID_ARCHS[sdk=iphonesimulator*]" = x86_64;
 			};
-			name = "Release10.6+";
-		};
-		651A542813E20D2400BCB02A /* Release10.6+ */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = NO;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				SDKROOT = macosx;
-				VALID_ARCHS = x86_64;
-			};
-			name = "Release10.6+";
+			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
@@ -475,7 +482,6 @@
 			buildConfigurations = (
 				1DEB928A08733DD80010E9CD /* Debug */,
 				1DEB928B08733DD80010E9CD /* Release */,
-				651A542813E20D2400BCB02A /* Release10.6+ */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -485,7 +491,15 @@
 			buildConfigurations = (
 				4AFA467113E3624F00CFA132 /* Debug */,
 				4AFA467213E3624F00CFA132 /* Release */,
-				4AFA467313E3624F00CFA132 /* Release10.6+ */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		506FCEFF24C8AB1000203B17 /* Build configuration list for PBXNativeTarget "libMultiMarkdown-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				506FCF0024C8AB1000203B17 /* Debug */,
+				506FCF0124C8AB1000203B17 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
