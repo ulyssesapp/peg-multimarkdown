@@ -1333,13 +1333,19 @@ SeparatorLine = a:StartList
         $$->key = TABLESEPARATOR;
     }
 
-AlignmentCell = Sp (!CellDivider ( LeftAlignWrap | CenterAlignWrap | RightAlignWrap | LeftAlign | CenterAlign | RightAlign))
+AlignmentCell = Sp (!CellDivider ( NaturalAlignWrap | NaturalAlign | LeftAlignWrap | CenterAlignWrap | RightAlignWrap | LeftAlign | CenterAlign | RightAlign))
     Sp ( CellDivider )?
 
-LeftAlignWrap = ':'? '-'+ '+' &(!'-' !':')
+NaturalAlignWrap = '-'+ '+' &(!'-' !':')
+    { $$ = mk_str("N");}
+
+NaturalAlign = '-'+ &(!'-' !':')
+    { $$ = mk_str("n");}
+
+LeftAlignWrap = ':' '-'+ '+' &(!'-' !':')
     { $$ = mk_str("L");}
 
-LeftAlign = ':'? '-'+ &(!'-' !':')
+LeftAlign = ':' '-'+ &(!'-' !':')
     { $$ = mk_str("l");}
 
 CenterAlignWrap = ':' '-'* '+' ':' &(!'-' !':')
