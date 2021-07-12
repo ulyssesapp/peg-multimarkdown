@@ -550,3 +550,7 @@ bool check_timeout(markdown_parser_state *state) {
     }
     return 1;
 }
+
+void debug(void) {
+	__builtin_trap();
+}
