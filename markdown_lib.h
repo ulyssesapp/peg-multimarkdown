@@ -16,7 +16,8 @@ enum markdown_extensions {
 	EXT_NO_LABELS					= 1 << 7,
 	EXT_KEEP_WHITESPACES			= 1 << 8,
 	EXT_KEEP_ESCAPES				= 1 << 9,
-	EXT_KEEP_MAGIC_BLANK_LINES		= 1 << 10
+	EXT_KEEP_MAGIC_BLANK_LINES		= 1 << 10,
+	EXT_TABLES						= 1 << 11
 };
 
 enum markdown_formats {
