@@ -1283,7 +1283,7 @@ Table = a:StartList b:StartList (TableCaption { b = cons($$, b);})?
     TableBody { $$->key = TABLEHEAD; a = cons($$, a); }
     (SeparatorLine { append_list($$,a); } )
     (TableBody { a = cons($$, a);} )
-    (MagicBlankLine Newline !TableCaption TableBody { a = cons($$, a); }
+    (MagicBlankLine ULNewline !TableCaption TableBody { a = cons($$, a); }
         &(TableCaption | MagicBlankLine) )*
     ( (TableCaption { b = cons($$, b);} &(MagicBlankLine ULNewline)) | &(MagicBlankLine ULNewline))
     # Requires blank line to end table "block"

@@ -11685,7 +11685,7 @@ YY_RULE(int) yy_Table(yycontext *yy)
   }
   l2039:;	  if (!yy_TableBody(yy)) goto l2037;  yyDo(yy, yy_2_Table, yy->__begin, yy->__end);  if (!yy_SeparatorLine(yy)) goto l2037;  yyDo(yy, yy_3_Table, yy->__begin, yy->__end);  if (!yy_TableBody(yy)) goto l2037;  yyDo(yy, yy_4_Table, yy->__begin, yy->__end);
   l2040:;	
-  {  int yypos2041= yy->__pos, yythunkpos2041= yy->__thunkpos;  if (!yy_MagicBlankLine(yy)) goto l2041;  if (!yy_Newline(yy)) goto l2041;
+  {  int yypos2041= yy->__pos, yythunkpos2041= yy->__thunkpos;  if (!yy_MagicBlankLine(yy)) goto l2041;  if (!yy_ULNewline(yy)) goto l2041;
   {  int yypos2042= yy->__pos, yythunkpos2042= yy->__thunkpos;  if (!yy_TableCaption(yy)) goto l2042;  goto l2041;
   l2042:;	  yy->__pos= yypos2042; yy->__thunkpos= yythunkpos2042;
   }  if (!yy_TableBody(yy)) goto l2041;  yyDo(yy, yy_5_Table, yy->__begin, yy->__end);
