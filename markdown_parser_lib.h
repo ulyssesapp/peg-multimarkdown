@@ -119,7 +119,7 @@ enum language {
 
 /* Semantic value of a parsing action. */
 struct Element {
-    int               key;
+    enum keys         key;
     union Contents    contents;
     struct Element    *children;
     struct Element    *next;

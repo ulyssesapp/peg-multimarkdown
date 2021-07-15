@@ -140,7 +140,7 @@ Block =     BlankLine*
             | MarkdownHtmlBlock
 			| FencedCodeBlock
 			| StyleBlock
-            | &{ !extension(yy->state, EXT_COMPATIBILITY) } Table
+            | &{ extension(yy->state, EXT_TABLES) } Table
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } ImageBlock
             | !(Sp? HtmlBlockOpenDiv) Para
             | Plain )
@@ -161,7 +161,7 @@ HeadingSectionBlock =
             | MarkdownHtmlBlock
 			| FencedCodeBlock
             | StyleBlock
-            | &{ !extension(yy->state, EXT_COMPATIBILITY) } Table
+            | &{ extension(yy->state, EXT_TABLES) } Table
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } ImageBlock
             | !(Sp? HtmlBlockOpenDiv) Para
             | Plain )
@@ -169,7 +169,7 @@ HeadingSectionBlock =
 Para =      s:CapturingNonindentSpace			{ }
 			a:Inlines
 			BlankLine+
-            { 
+            {
 				if (s)
 					a->children = cons(s, a->children);
 
@@ -1276,14 +1276,16 @@ Definition = (a:StartList b:StartList
                 raw->key = RAW;
                 $$ = mk_list(DEFINITION,raw);
             }
+            
+ULNewline = (&{ extension(yy->state, EXT_KEEP_MAGIC_BLANK_LINES) } BlankLine)?
 
 Table = a:StartList b:StartList (TableCaption { b = cons($$, b);})?
     TableBody { $$->key = TABLEHEAD; a = cons($$, a); }
     (SeparatorLine { append_list($$,a); } )
     (TableBody { a = cons($$, a);} )
-    (BlankLine !TableCaption TableBody { a = cons($$, a); }
-        &(TableCaption | BlankLine) )*
-    ( (TableCaption { b = cons($$, b);} &BlankLine) | &BlankLine)
+    (MagicBlankLine ULNewline !TableCaption TableBody { a = cons($$, a); }
+        &(TableCaption | MagicBlankLine) )*
+    ( (TableCaption { b = cons($$, b);} &(MagicBlankLine ULNewline)) | &(MagicBlankLine ULNewline))
     # Requires blank line to end table "block"
     {
         if (b != NULL) { append_list(b,a); };
@@ -1296,7 +1298,7 @@ TableBody = a:StartList (TableRow {a = cons($$, a);})+
 TableRow = a:StartList
     (!SeparatorLine &(TableLine)
     CellDivider?
-    (TableCell { a = cons($$, a); })+ ) Sp Newline
+    (TableCell { a = cons($$, a); })+ ) Sp Newline ULNewline
     { $$ = mk_list(TABLEROW, a); }
 
 TableLine = (!Newline !CellDivider .)* CellDivider
@@ -1327,19 +1329,25 @@ EmptyCell = Sp CellDivider
 SeparatorLine = a:StartList 
     &(TableLine)
     CellDivider?
-    ( AlignmentCell { a = cons($$, a);})+ Sp Newline
+    ( AlignmentCell { a = cons($$, a);})+ Sp Newline ULNewline
     {
         $$ = mk_str_from_list(a,false);
         $$->key = TABLESEPARATOR;
     }
 
-AlignmentCell = Sp (!CellDivider ( LeftAlignWrap | CenterAlignWrap | RightAlignWrap | LeftAlign | CenterAlign | RightAlign))
+AlignmentCell = Sp (!CellDivider ( NaturalAlignWrap | NaturalAlign | LeftAlignWrap | CenterAlignWrap | RightAlignWrap | LeftAlign | CenterAlign | RightAlign))
     Sp ( CellDivider )?
 
-LeftAlignWrap = ':'? '-'+ '+' &(!'-' !':')
+NaturalAlignWrap = '-'+ '+' &(!'-' !':')
+    { $$ = mk_str("N");}
+
+NaturalAlign = '-'+ &(!'-' !':')
+    { $$ = mk_str("n");}
+
+LeftAlignWrap = ':' '-'+ '+' &(!'-' !':')
     { $$ = mk_str("L");}
 
-LeftAlign = ':'? '-'+ &(!'-' !':')
+LeftAlign = ':' '-'+ &(!'-' !':')
     { $$ = mk_str("l");}
 
 CenterAlignWrap = ':' '-'* '+' ':' &(!'-' !':')
@@ -1357,7 +1365,7 @@ RightAlign = '-'+ ':' &(!'-' !':')
 CellDivider = '|'
 
 TableCaption = b:StartList a:Label
-( c:Label { b = c; b->key = TABLELABEL;})? Sp Newline
+( c:Label { b = c; b->key = TABLELABEL;})? Sp Newline ULNewline
 {
     $$ = a;
     $$->key = TABLECAPTION;

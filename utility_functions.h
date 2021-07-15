@@ -102,5 +102,8 @@ char *label_from_element_list(element *list, bool obfuscate);
 void print_raw_element_list(GString *out, element *list);
 void print_raw_element(GString *out, element *elt);
 
+/* Can be used in peg/leg grammar to force parsing to halt on a breakpoint  */
+void debug(void);
+
 #endif
 
