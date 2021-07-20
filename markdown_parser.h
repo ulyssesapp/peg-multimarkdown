@@ -353,14 +353,14 @@ YY_RULE(int) yy_OPMLPlain(yycontext *yy); /* 337 */
 YY_RULE(int) yy_OPMLHeadingSection(yycontext *yy); /* 336 */
 YY_RULE(int) yy_OPMLBlock(yycontext *yy); /* 335 */
 YY_RULE(int) yy_DocForOPML(yycontext *yy); /* 334 */
-YY_RULE(int) yy_RightAlign(yycontext *yy); /* 333 */
-YY_RULE(int) yy_CenterAlign(yycontext *yy); /* 332 */
-YY_RULE(int) yy_LeftAlign(yycontext *yy); /* 331 */
-YY_RULE(int) yy_RightAlignWrap(yycontext *yy); /* 330 */
-YY_RULE(int) yy_CenterAlignWrap(yycontext *yy); /* 329 */
-YY_RULE(int) yy_LeftAlignWrap(yycontext *yy); /* 328 */
-YY_RULE(int) yy_NaturalAlign(yycontext *yy); /* 327 */
-YY_RULE(int) yy_NaturalAlignWrap(yycontext *yy); /* 326 */
+YY_RULE(int) yy_NaturalAlign(yycontext *yy); /* 333 */
+YY_RULE(int) yy_RightAlign(yycontext *yy); /* 332 */
+YY_RULE(int) yy_CenterAlign(yycontext *yy); /* 331 */
+YY_RULE(int) yy_LeftAlign(yycontext *yy); /* 330 */
+YY_RULE(int) yy_NaturalAlignWrap(yycontext *yy); /* 329 */
+YY_RULE(int) yy_RightAlignWrap(yycontext *yy); /* 328 */
+YY_RULE(int) yy_CenterAlignWrap(yycontext *yy); /* 327 */
+YY_RULE(int) yy_LeftAlignWrap(yycontext *yy); /* 326 */
 YY_RULE(int) yy_AlignmentCell(yycontext *yy); /* 325 */
 YY_RULE(int) yy_CellStr(yycontext *yy); /* 324 */
 YY_RULE(int) yy_FullCell(yycontext *yy); /* 323 */
@@ -4785,13 +4785,13 @@ if (!( !extension(yy->state, EXT_COMPATIBILITY) )) goto l66;
   yyprintf((stderr, "  fail %s @ %s\n", "DocForOPML", yy->__buf+yy->__pos));
   return 0;
 }
-YY_RULE(int) yy_RightAlign(yycontext *yy)
+YY_RULE(int) yy_NaturalAlign(yycontext *yy)
 {  int yypos0= yy->__pos, yythunkpos0= yy->__thunkpos;
-  yyprintf((stderr, "%s\n", "RightAlign"));  if (!yymatchChar(yy, '-')) goto l72;
+  yyprintf((stderr, "%s\n", "NaturalAlign"));  if (!yymatchChar(yy, '-')) goto l72;
   l73:;	
   {  int yypos74= yy->__pos, yythunkpos74= yy->__thunkpos;  if (!yymatchChar(yy, '-')) goto l74;  goto l73;
   l74:;	  yy->__pos= yypos74; yy->__thunkpos= yythunkpos74;
-  }  if (!yymatchChar(yy, ':')) goto l72;
+  }
   {  int yypos75= yy->__pos, yythunkpos75= yy->__thunkpos;
   {  int yypos76= yy->__pos, yythunkpos76= yy->__thunkpos;  if (!yymatchChar(yy, '-')) goto l76;  goto l72;
   l76:;	  yy->__pos= yypos76; yy->__thunkpos= yythunkpos76;
@@ -4799,16 +4799,16 @@ YY_RULE(int) yy_RightAlign(yycontext *yy)
   {  int yypos77= yy->__pos, yythunkpos77= yy->__thunkpos;  if (!yymatchChar(yy, ':')) goto l77;  goto l72;
   l77:;	  yy->__pos= yypos77; yy->__thunkpos= yythunkpos77;
   }  yy->__pos= yypos75; yy->__thunkpos= yythunkpos75;
-  }  yyDo(yy, yy_1_RightAlign, yy->__begin, yy->__end);
-  yyprintf((stderr, "  ok   %s @ %s\n", "RightAlign", yy->__buf+yy->__pos));
+  }  yyDo(yy, yy_1_NaturalAlign, yy->__begin, yy->__end);
+  yyprintf((stderr, "  ok   %s @ %s\n", "NaturalAlign", yy->__buf+yy->__pos));
   return 1;
   l72:;	  yy->__pos= yypos0; yy->__thunkpos= yythunkpos0;
-  yyprintf((stderr, "  fail %s @ %s\n", "RightAlign", yy->__buf+yy->__pos));
+  yyprintf((stderr, "  fail %s @ %s\n", "NaturalAlign", yy->__buf+yy->__pos));
   return 0;
 }
-YY_RULE(int) yy_CenterAlign(yycontext *yy)
+YY_RULE(int) yy_RightAlign(yycontext *yy)
 {  int yypos0= yy->__pos, yythunkpos0= yy->__thunkpos;
-  yyprintf((stderr, "%s\n", "CenterAlign"));  if (!yymatchChar(yy, ':')) goto l78;
+  yyprintf((stderr, "%s\n", "RightAlign"));  if (!yymatchChar(yy, '-')) goto l78;
   l79:;	
   {  int yypos80= yy->__pos, yythunkpos80= yy->__thunkpos;  if (!yymatchChar(yy, '-')) goto l80;  goto l79;
   l80:;	  yy->__pos= yypos80; yy->__thunkpos= yythunkpos80;
@@ -4820,20 +4820,20 @@ YY_RULE(int) yy_CenterAlign(yycontext *yy)
   {  int yypos83= yy->__pos, yythunkpos83= yy->__thunkpos;  if (!yymatchChar(yy, ':')) goto l83;  goto l78;
   l83:;	  yy->__pos= yypos83; yy->__thunkpos= yythunkpos83;
   }  yy->__pos= yypos81; yy->__thunkpos= yythunkpos81;
-  }  yyDo(yy, yy_1_CenterAlign, yy->__begin, yy->__end);
-  yyprintf((stderr, "  ok   %s @ %s\n", "CenterAlign", yy->__buf+yy->__pos));
+  }  yyDo(yy, yy_1_RightAlign, yy->__begin, yy->__end);
+  yyprintf((stderr, "  ok   %s @ %s\n", "RightAlign", yy->__buf+yy->__pos));
   return 1;
   l78:;	  yy->__pos= yypos0; yy->__thunkpos= yythunkpos0;
-  yyprintf((stderr, "  fail %s @ %s\n", "CenterAlign", yy->__buf+yy->__pos));
+  yyprintf((stderr, "  fail %s @ %s\n", "RightAlign", yy->__buf+yy->__pos));
   return 0;
 }
-YY_RULE(int) yy_LeftAlign(yycontext *yy)
+YY_RULE(int) yy_CenterAlign(yycontext *yy)
 {  int yypos0= yy->__pos, yythunkpos0= yy->__thunkpos;
-  yyprintf((stderr, "%s\n", "LeftAlign"));  if (!yymatchChar(yy, ':')) goto l84;  if (!yymatchChar(yy, '-')) goto l84;
+  yyprintf((stderr, "%s\n", "CenterAlign"));  if (!yymatchChar(yy, ':')) goto l84;
   l85:;	
   {  int yypos86= yy->__pos, yythunkpos86= yy->__thunkpos;  if (!yymatchChar(yy, '-')) goto l86;  goto l85;
   l86:;	  yy->__pos= yypos86; yy->__thunkpos= yythunkpos86;
-  }
+  }  if (!yymatchChar(yy, ':')) goto l84;
   {  int yypos87= yy->__pos, yythunkpos87= yy->__thunkpos;
   {  int yypos88= yy->__pos, yythunkpos88= yy->__thunkpos;  if (!yymatchChar(yy, '-')) goto l88;  goto l84;
   l88:;	  yy->__pos= yypos88; yy->__thunkpos= yythunkpos88;
@@ -4841,20 +4841,20 @@ YY_RULE(int) yy_LeftAlign(yycontext *yy)
   {  int yypos89= yy->__pos, yythunkpos89= yy->__thunkpos;  if (!yymatchChar(yy, ':')) goto l89;  goto l84;
   l89:;	  yy->__pos= yypos89; yy->__thunkpos= yythunkpos89;
   }  yy->__pos= yypos87; yy->__thunkpos= yythunkpos87;
-  }  yyDo(yy, yy_1_LeftAlign, yy->__begin, yy->__end);
-  yyprintf((stderr, "  ok   %s @ %s\n", "LeftAlign", yy->__buf+yy->__pos));
+  }  yyDo(yy, yy_1_CenterAlign, yy->__begin, yy->__end);
+  yyprintf((stderr, "  ok   %s @ %s\n", "CenterAlign", yy->__buf+yy->__pos));
   return 1;
   l84:;	  yy->__pos= yypos0; yy->__thunkpos= yythunkpos0;
-  yyprintf((stderr, "  fail %s @ %s\n", "LeftAlign", yy->__buf+yy->__pos));
+  yyprintf((stderr, "  fail %s @ %s\n", "CenterAlign", yy->__buf+yy->__pos));
   return 0;
 }
-YY_RULE(int) yy_RightAlignWrap(yycontext *yy)
+YY_RULE(int) yy_LeftAlign(yycontext *yy)
 {  int yypos0= yy->__pos, yythunkpos0= yy->__thunkpos;
-  yyprintf((stderr, "%s\n", "RightAlignWrap"));  if (!yymatchChar(yy, '-')) goto l90;
+  yyprintf((stderr, "%s\n", "LeftAlign"));  if (!yymatchChar(yy, ':')) goto l90;  if (!yymatchChar(yy, '-')) goto l90;
   l91:;	
   {  int yypos92= yy->__pos, yythunkpos92= yy->__thunkpos;  if (!yymatchChar(yy, '-')) goto l92;  goto l91;
   l92:;	  yy->__pos= yypos92; yy->__thunkpos= yythunkpos92;
-  }  if (!yymatchChar(yy, ':')) goto l90;  if (!yymatchChar(yy, '+')) goto l90;
+  }
   {  int yypos93= yy->__pos, yythunkpos93= yy->__thunkpos;
   {  int yypos94= yy->__pos, yythunkpos94= yy->__thunkpos;  if (!yymatchChar(yy, '-')) goto l94;  goto l90;
   l94:;	  yy->__pos= yypos94; yy->__thunkpos= yythunkpos94;
@@ -4862,20 +4862,20 @@ YY_RULE(int) yy_RightAlignWrap(yycontext *yy)
   {  int yypos95= yy->__pos, yythunkpos95= yy->__thunkpos;  if (!yymatchChar(yy, ':')) goto l95;  goto l90;
   l95:;	  yy->__pos= yypos95; yy->__thunkpos= yythunkpos95;
   }  yy->__pos= yypos93; yy->__thunkpos= yythunkpos93;
-  }  yyDo(yy, yy_1_RightAlignWrap, yy->__begin, yy->__end);
-  yyprintf((stderr, "  ok   %s @ %s\n", "RightAlignWrap", yy->__buf+yy->__pos));
+  }  yyDo(yy, yy_1_LeftAlign, yy->__begin, yy->__end);
+  yyprintf((stderr, "  ok   %s @ %s\n", "LeftAlign", yy->__buf+yy->__pos));
   return 1;
   l90:;	  yy->__pos= yypos0; yy->__thunkpos= yythunkpos0;
-  yyprintf((stderr, "  fail %s @ %s\n", "RightAlignWrap", yy->__buf+yy->__pos));
+  yyprintf((stderr, "  fail %s @ %s\n", "LeftAlign", yy->__buf+yy->__pos));
   return 0;
 }
-YY_RULE(int) yy_CenterAlignWrap(yycontext *yy)
+YY_RULE(int) yy_NaturalAlignWrap(yycontext *yy)
 {  int yypos0= yy->__pos, yythunkpos0= yy->__thunkpos;
-  yyprintf((stderr, "%s\n", "CenterAlignWrap"));  if (!yymatchChar(yy, ':')) goto l96;
+  yyprintf((stderr, "%s\n", "NaturalAlignWrap"));  if (!yymatchChar(yy, '-')) goto l96;
   l97:;	
   {  int yypos98= yy->__pos, yythunkpos98= yy->__thunkpos;  if (!yymatchChar(yy, '-')) goto l98;  goto l97;
   l98:;	  yy->__pos= yypos98; yy->__thunkpos= yythunkpos98;
-  }  if (!yymatchChar(yy, '+')) goto l96;  if (!yymatchChar(yy, ':')) goto l96;
+  }  if (!yymatchChar(yy, '+')) goto l96;
   {  int yypos99= yy->__pos, yythunkpos99= yy->__thunkpos;
   {  int yypos100= yy->__pos, yythunkpos100= yy->__thunkpos;  if (!yymatchChar(yy, '-')) goto l100;  goto l96;
   l100:;	  yy->__pos= yypos100; yy->__thunkpos= yythunkpos100;
@@ -4883,20 +4883,20 @@ YY_RULE(int) yy_CenterAlignWrap(yycontext *yy)
   {  int yypos101= yy->__pos, yythunkpos101= yy->__thunkpos;  if (!yymatchChar(yy, ':')) goto l101;  goto l96;
   l101:;	  yy->__pos= yypos101; yy->__thunkpos= yythunkpos101;
   }  yy->__pos= yypos99; yy->__thunkpos= yythunkpos99;
-  }  yyDo(yy, yy_1_CenterAlignWrap, yy->__begin, yy->__end);
-  yyprintf((stderr, "  ok   %s @ %s\n", "CenterAlignWrap", yy->__buf+yy->__pos));
+  }  yyDo(yy, yy_1_NaturalAlignWrap, yy->__begin, yy->__end);
+  yyprintf((stderr, "  ok   %s @ %s\n", "NaturalAlignWrap", yy->__buf+yy->__pos));
   return 1;
   l96:;	  yy->__pos= yypos0; yy->__thunkpos= yythunkpos0;
-  yyprintf((stderr, "  fail %s @ %s\n", "CenterAlignWrap", yy->__buf+yy->__pos));
+  yyprintf((stderr, "  fail %s @ %s\n", "NaturalAlignWrap", yy->__buf+yy->__pos));
   return 0;
 }
-YY_RULE(int) yy_LeftAlignWrap(yycontext *yy)
+YY_RULE(int) yy_RightAlignWrap(yycontext *yy)
 {  int yypos0= yy->__pos, yythunkpos0= yy->__thunkpos;
-  yyprintf((stderr, "%s\n", "LeftAlignWrap"));  if (!yymatchChar(yy, ':')) goto l102;  if (!yymatchChar(yy, '-')) goto l102;
+  yyprintf((stderr, "%s\n", "RightAlignWrap"));  if (!yymatchChar(yy, '-')) goto l102;
   l103:;	
   {  int yypos104= yy->__pos, yythunkpos104= yy->__thunkpos;  if (!yymatchChar(yy, '-')) goto l104;  goto l103;
   l104:;	  yy->__pos= yypos104; yy->__thunkpos= yythunkpos104;
-  }  if (!yymatchChar(yy, '+')) goto l102;
+  }  if (!yymatchChar(yy, ':')) goto l102;  if (!yymatchChar(yy, '+')) goto l102;
   {  int yypos105= yy->__pos, yythunkpos105= yy->__thunkpos;
   {  int yypos106= yy->__pos, yythunkpos106= yy->__thunkpos;  if (!yymatchChar(yy, '-')) goto l106;  goto l102;
   l106:;	  yy->__pos= yypos106; yy->__thunkpos= yythunkpos106;
@@ -4904,20 +4904,20 @@ YY_RULE(int) yy_LeftAlignWrap(yycontext *yy)
   {  int yypos107= yy->__pos, yythunkpos107= yy->__thunkpos;  if (!yymatchChar(yy, ':')) goto l107;  goto l102;
   l107:;	  yy->__pos= yypos107; yy->__thunkpos= yythunkpos107;
   }  yy->__pos= yypos105; yy->__thunkpos= yythunkpos105;
-  }  yyDo(yy, yy_1_LeftAlignWrap, yy->__begin, yy->__end);
-  yyprintf((stderr, "  ok   %s @ %s\n", "LeftAlignWrap", yy->__buf+yy->__pos));
+  }  yyDo(yy, yy_1_RightAlignWrap, yy->__begin, yy->__end);
+  yyprintf((stderr, "  ok   %s @ %s\n", "RightAlignWrap", yy->__buf+yy->__pos));
   return 1;
   l102:;	  yy->__pos= yypos0; yy->__thunkpos= yythunkpos0;
-  yyprintf((stderr, "  fail %s @ %s\n", "LeftAlignWrap", yy->__buf+yy->__pos));
+  yyprintf((stderr, "  fail %s @ %s\n", "RightAlignWrap", yy->__buf+yy->__pos));
   return 0;
 }
-YY_RULE(int) yy_NaturalAlign(yycontext *yy)
+YY_RULE(int) yy_CenterAlignWrap(yycontext *yy)
 {  int yypos0= yy->__pos, yythunkpos0= yy->__thunkpos;
-  yyprintf((stderr, "%s\n", "NaturalAlign"));  if (!yymatchChar(yy, '-')) goto l108;
+  yyprintf((stderr, "%s\n", "CenterAlignWrap"));  if (!yymatchChar(yy, ':')) goto l108;
   l109:;	
   {  int yypos110= yy->__pos, yythunkpos110= yy->__thunkpos;  if (!yymatchChar(yy, '-')) goto l110;  goto l109;
   l110:;	  yy->__pos= yypos110; yy->__thunkpos= yythunkpos110;
-  }
+  }  if (!yymatchChar(yy, '+')) goto l108;  if (!yymatchChar(yy, ':')) goto l108;
   {  int yypos111= yy->__pos, yythunkpos111= yy->__thunkpos;
   {  int yypos112= yy->__pos, yythunkpos112= yy->__thunkpos;  if (!yymatchChar(yy, '-')) goto l112;  goto l108;
   l112:;	  yy->__pos= yypos112; yy->__thunkpos= yythunkpos112;
@@ -4925,16 +4925,16 @@ YY_RULE(int) yy_NaturalAlign(yycontext *yy)
   {  int yypos113= yy->__pos, yythunkpos113= yy->__thunkpos;  if (!yymatchChar(yy, ':')) goto l113;  goto l108;
   l113:;	  yy->__pos= yypos113; yy->__thunkpos= yythunkpos113;
   }  yy->__pos= yypos111; yy->__thunkpos= yythunkpos111;
-  }  yyDo(yy, yy_1_NaturalAlign, yy->__begin, yy->__end);
-  yyprintf((stderr, "  ok   %s @ %s\n", "NaturalAlign", yy->__buf+yy->__pos));
+  }  yyDo(yy, yy_1_CenterAlignWrap, yy->__begin, yy->__end);
+  yyprintf((stderr, "  ok   %s @ %s\n", "CenterAlignWrap", yy->__buf+yy->__pos));
   return 1;
   l108:;	  yy->__pos= yypos0; yy->__thunkpos= yythunkpos0;
-  yyprintf((stderr, "  fail %s @ %s\n", "NaturalAlign", yy->__buf+yy->__pos));
+  yyprintf((stderr, "  fail %s @ %s\n", "CenterAlignWrap", yy->__buf+yy->__pos));
   return 0;
 }
-YY_RULE(int) yy_NaturalAlignWrap(yycontext *yy)
+YY_RULE(int) yy_LeftAlignWrap(yycontext *yy)
 {  int yypos0= yy->__pos, yythunkpos0= yy->__thunkpos;
-  yyprintf((stderr, "%s\n", "NaturalAlignWrap"));  if (!yymatchChar(yy, '-')) goto l114;
+  yyprintf((stderr, "%s\n", "LeftAlignWrap"));  if (!yymatchChar(yy, ':')) goto l114;  if (!yymatchChar(yy, '-')) goto l114;
   l115:;	
   {  int yypos116= yy->__pos, yythunkpos116= yy->__thunkpos;  if (!yymatchChar(yy, '-')) goto l116;  goto l115;
   l116:;	  yy->__pos= yypos116; yy->__thunkpos= yythunkpos116;
@@ -4946,11 +4946,11 @@ YY_RULE(int) yy_NaturalAlignWrap(yycontext *yy)
   {  int yypos119= yy->__pos, yythunkpos119= yy->__thunkpos;  if (!yymatchChar(yy, ':')) goto l119;  goto l114;
   l119:;	  yy->__pos= yypos119; yy->__thunkpos= yythunkpos119;
   }  yy->__pos= yypos117; yy->__thunkpos= yythunkpos117;
-  }  yyDo(yy, yy_1_NaturalAlignWrap, yy->__begin, yy->__end);
-  yyprintf((stderr, "  ok   %s @ %s\n", "NaturalAlignWrap", yy->__buf+yy->__pos));
+  }  yyDo(yy, yy_1_LeftAlignWrap, yy->__begin, yy->__end);
+  yyprintf((stderr, "  ok   %s @ %s\n", "LeftAlignWrap", yy->__buf+yy->__pos));
   return 1;
   l114:;	  yy->__pos= yypos0; yy->__thunkpos= yythunkpos0;
-  yyprintf((stderr, "  fail %s @ %s\n", "NaturalAlignWrap", yy->__buf+yy->__pos));
+  yyprintf((stderr, "  fail %s @ %s\n", "LeftAlignWrap", yy->__buf+yy->__pos));
   return 0;
 }
 YY_RULE(int) yy_AlignmentCell(yycontext *yy)
@@ -4959,14 +4959,14 @@ YY_RULE(int) yy_AlignmentCell(yycontext *yy)
   {  int yypos121= yy->__pos, yythunkpos121= yy->__thunkpos;  if (!yy_CellDivider(yy)) goto l121;  goto l120;
   l121:;	  yy->__pos= yypos121; yy->__thunkpos= yythunkpos121;
   }
-  {  int yypos122= yy->__pos, yythunkpos122= yy->__thunkpos;  if (!yy_NaturalAlignWrap(yy)) goto l123;  goto l122;
-  l123:;	  yy->__pos= yypos122; yy->__thunkpos= yythunkpos122;  if (!yy_NaturalAlign(yy)) goto l124;  goto l122;
-  l124:;	  yy->__pos= yypos122; yy->__thunkpos= yythunkpos122;  if (!yy_LeftAlignWrap(yy)) goto l125;  goto l122;
-  l125:;	  yy->__pos= yypos122; yy->__thunkpos= yythunkpos122;  if (!yy_CenterAlignWrap(yy)) goto l126;  goto l122;
-  l126:;	  yy->__pos= yypos122; yy->__thunkpos= yythunkpos122;  if (!yy_RightAlignWrap(yy)) goto l127;  goto l122;
-  l127:;	  yy->__pos= yypos122; yy->__thunkpos= yythunkpos122;  if (!yy_LeftAlign(yy)) goto l128;  goto l122;
-  l128:;	  yy->__pos= yypos122; yy->__thunkpos= yythunkpos122;  if (!yy_CenterAlign(yy)) goto l129;  goto l122;
-  l129:;	  yy->__pos= yypos122; yy->__thunkpos= yythunkpos122;  if (!yy_RightAlign(yy)) goto l120;
+  {  int yypos122= yy->__pos, yythunkpos122= yy->__thunkpos;  if (!yy_LeftAlignWrap(yy)) goto l123;  goto l122;
+  l123:;	  yy->__pos= yypos122; yy->__thunkpos= yythunkpos122;  if (!yy_CenterAlignWrap(yy)) goto l124;  goto l122;
+  l124:;	  yy->__pos= yypos122; yy->__thunkpos= yythunkpos122;  if (!yy_RightAlignWrap(yy)) goto l125;  goto l122;
+  l125:;	  yy->__pos= yypos122; yy->__thunkpos= yythunkpos122;  if (!yy_NaturalAlignWrap(yy)) goto l126;  goto l122;
+  l126:;	  yy->__pos= yypos122; yy->__thunkpos= yythunkpos122;  if (!yy_LeftAlign(yy)) goto l127;  goto l122;
+  l127:;	  yy->__pos= yypos122; yy->__thunkpos= yythunkpos122;  if (!yy_CenterAlign(yy)) goto l128;  goto l122;
+  l128:;	  yy->__pos= yypos122; yy->__thunkpos= yythunkpos122;  if (!yy_RightAlign(yy)) goto l129;  goto l122;
+  l129:;	  yy->__pos= yypos122; yy->__thunkpos= yythunkpos122;  if (!yy_NaturalAlign(yy)) goto l120;
   }
   l122:;	  if (!yy_Sp(yy)) goto l120;
   {  int yypos130= yy->__pos, yythunkpos130= yy->__thunkpos;  if (!yy_CellDivider(yy)) goto l130;  goto l131;
