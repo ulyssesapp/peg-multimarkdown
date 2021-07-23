@@ -644,11 +644,15 @@ static void print_html_element(int ext, GString *out, element *elt, bool obfusca
                 g_string_append_printf(out, "<col style=\"text-align:center;\"/>\n");
             } else if ( strncmp(&table_alignment[table_column],"C",1) == 0) {
                 g_string_append_printf(out, "<col style=\"text-align:center;\" class=\"extended\"/>\n");
-            } else if ( strncmp(&table_alignment[table_column],"L",1) == 0) {
+            } else if ( strncmp(&table_alignment[table_column],"l",1) == 0) {
+				g_string_append_printf(out, "<col style=\"text-align:left;\"/>\n");
+			} else if ( strncmp(&table_alignment[table_column],"L",1) == 0) {
                 g_string_append_printf(out, "<col style=\"text-align:left;\" class=\"extended\"/>\n");
-            } else {
-                g_string_append_printf(out, "<col style=\"text-align:left;\"/>\n");
-            }
+			} else if ( strncmp(&table_alignment[table_column],"n",1) == 0) {
+				g_string_append_printf(out, "<col />\n");
+            } else if ( strncmp(&table_alignment[table_column],"N",1) == 0) {
+				g_string_append_printf(out, "<col class=\"extended\"/>\n");
+			}
         }
         g_string_append_printf(out, "</colgroup>\n");
         cell_type = 'h';
@@ -677,9 +681,13 @@ static void print_html_element(int ext, GString *out, element *elt, bool obfusca
             g_string_append_printf(out, "\t<t%c style=\"text-align:center;\"", cell_type);
         } else if ( strncmp(&table_alignment[table_column],"C",1) == 0) {
             g_string_append_printf(out, "\t<t%c style=\"text-align:center;\"", cell_type);
-        } else {
+        } else if ( strncmp(&table_alignment[table_column],"l",1) == 0) {
             g_string_append_printf(out, "\t<t%c style=\"text-align:left;\"", cell_type);
-        }
+        } else if ( strncmp(&table_alignment[table_column],"L",1) == 0) {
+			g_string_append_printf(out, "\t<t%c style=\"text-align:left;\"", cell_type);
+		} else {
+			g_string_append_printf(out, "\t<t%c", cell_type);
+		}
         if ((elt->children != NULL) && (elt->children->key == CELLSPAN)) {
             g_string_append_printf(out, " colspan=\"%d\"",(int)strlen(elt->children->contents.str)+1);
         }

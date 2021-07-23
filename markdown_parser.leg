@@ -1335,7 +1335,7 @@ SeparatorLine = a:StartList
         $$->key = TABLESEPARATOR;
     }
 
-AlignmentCell = Sp (!CellDivider ( NaturalAlignWrap | NaturalAlign | LeftAlignWrap | CenterAlignWrap | RightAlignWrap | LeftAlign | CenterAlign | RightAlign))
+AlignmentCell = Sp (!CellDivider ( LeftAlignWrap | CenterAlignWrap | RightAlignWrap | NaturalAlignWrap | LeftAlign | CenterAlign | RightAlign | NaturalAlign))
     Sp ( CellDivider )?
 
 NaturalAlignWrap = '-'+ '+' &(!'-' !':')
