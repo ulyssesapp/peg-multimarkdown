@@ -239,7 +239,7 @@ gboolean has_metadata(char *text, int extensions) {
 }
 
 /* version - return the MultiMarkdown library version */
-char * mmd_version() {
+char * mmd_version(void) {
     char* result = (char*)malloc(8);
     sprintf(result, "%s",VERSION);
     return result;
