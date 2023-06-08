@@ -1386,7 +1386,9 @@ AutoLabel = '[' < (!Newline !'^' !'#' . )( !Newline !']' . )+ > ']' &(!(Sp? ('('
 
 MathSpan = ULMathSpan | MMDMathSpan
 
-ULMathSpan = '$' < (!'$' .)* > '$'
+ULMathSpan = '$' (
+ ('$' < (!'$$' .)* > '$$') |
+ (< (!'$' .)* > '$') )
 {
     /* Basically, these delimiters indicate math in LaTeX syntax, and the
        delimiters are compatible with MathJax and LaTeX
@@ -1395,9 +1397,9 @@ ULMathSpan = '$' < (!'$' .)* > '$'
     $$->key = MATHSPAN;
 }
 
-MMDMathSpan = (
-    ('\\[' < (!'\\]' .)* > '\\]') |
-    ('\\(' < (!'\\)' .)* > '\\)') )
+MMDMathSpan = '\\' (
+    ('\\[' < (!'\\\\]' .)* > '\\\\]') |
+    ('\\(' < (!'\\\\)' .)* > '\\\\)') )
 {
     /* Basically, these delimiters indicate math in LaTeX syntax, and the
        delimiters are compatible with MathJax and LaTeX
