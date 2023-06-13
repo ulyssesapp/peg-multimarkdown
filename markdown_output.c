@@ -708,13 +708,7 @@ static void print_html_element(int ext, GString *out, element *elt, bool obfusca
         }
         break;
     case MATHSPAN:
-        if ( elt->contents.str[strlen(elt->contents.str)-1] == ']') {
-            elt->contents.str[strlen(elt->contents.str)-3] = '\0';
-            g_string_append_printf(out, "<span class=\"math\">%s\\]</span>", elt->contents.str);
-        } else {
-            elt->contents.str[strlen(elt->contents.str)-3] = '\0';
-            g_string_append_printf(out, "<span class=\"math\">%s\\)</span>", elt->contents.str);
-        }
+		g_string_append_printf(out, "<span class=\"math\">%s</span>", elt->contents.str);
         break;
     default: 
         fprintf(stderr, "print_html_element encountered unknown element key = %d\n", elt->key); 
