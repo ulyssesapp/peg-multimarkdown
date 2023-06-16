@@ -17,7 +17,8 @@ enum markdown_extensions {
 	EXT_KEEP_WHITESPACES			= 1 << 8,
 	EXT_KEEP_ESCAPES				= 1 << 9,
 	EXT_KEEP_MAGIC_BLANK_LINES		= 1 << 10,
-	EXT_TABLES						= 1 << 11
+	EXT_TABLES						= 1 << 11,
+	EXT_MATH						= 1 << 12
 };
 
 enum markdown_formats {

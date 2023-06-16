@@ -629,7 +629,7 @@ Inlines  =  a:StartList ( !Endline Inline { a = cons($$, a); }
 
 Inline  = &{ check_timeout(yy->state) }
         Str
-        | &{ !extension(yy->state, EXT_COMPATIBILITY) } MathSpan
+        | &{ extension(yy->state, EXT_MATH) } MathSpan
         | Endline
         | UlOrStarLine
         | Space
@@ -677,10 +677,10 @@ StrChunk = < (NormalChar | '_'+ &Alphanumeric)+ > { $$ = mk_str(yytext); } |
 AposChunk = &{ extension(yy->state, EXT_SMART) } '\'' &Alphanumeric
       { $$ = mk_element(APOSTROPHE); }
 
-EscapedChar =   '\\' !Newline < [-\\`|*_{}[\]()#+.!><] >
+EscapedChar =   '\\' !Newline < [-\\`|*_{}[\]()#+.!><$] >
                 { $$ = mk_str(yytext); }
 
-KeptEscapedChar =   < '\\' !Newline [-\\`|*_{}[\]()#+.!><] >
+KeptEscapedChar =   < '\\' !Newline [-\\`|*_{}[\]()#+.!><$] >
 					{ $$ = mk_str(yytext); }
 
 Entity =    ( HexEntity | DecEntity | CharEntity )
@@ -1017,6 +1017,7 @@ SkipBlock = HtmlBlock
 
 ExtendedSpecialChar = &{ extension(yy->state, EXT_SMART) } ('.' | '-' | '\'' | '"')
                     | &{ extension(yy->state, EXT_NOTES) } ( '^' )
+                    | &{ extension(yy->state, EXT_MATH) } ( '$' )
 
 Smart = &{ extension(yy->state, EXT_SMART) }
         ( Ellipsis | Dash | SingleQuoted | DoubleQuoted | Apostrophe )
@@ -1383,9 +1384,22 @@ AutoLabel = '[' < (!Newline !'^' !'#' . )( !Newline !']' . )+ > ']' &(!(Sp? ('('
     free(label);
 }
 
-MathSpan = '\\' < (
-    ('\\[' (!'\\\\]' .)* '\\\\]') |
-    ('\\(' (!'\\\\)' .)* '\\\\)') ) >
+MathSpan = ULMathSpan | MMDMathSpan
+
+ULMathSpan = '$' (
+ ('$' < (!'$$' .)* > '$$') |
+ (< (!'$' .)* > '$') )
+{
+    /* Basically, these delimiters indicate math in LaTeX syntax, and the
+       delimiters are compatible with MathJax and LaTeX
+       ASCIIMathML is *not* supported */
+    $$ = mk_str(yytext);
+    $$->key = MATHSPAN;
+}
+
+MMDMathSpan = '\\' (
+    ('\\[' < (!'\\\\]' .)* > '\\\\]') |
+    ('\\(' < (!'\\\\)' .)* > '\\\\)') )
 {
     /* Basically, these delimiters indicate math in LaTeX syntax, and the
        delimiters are compatible with MathJax and LaTeX
