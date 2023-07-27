@@ -1386,9 +1386,9 @@ AutoLabel = '[' < (!Newline !'^' !'#' . )( !Newline !']' . )+ > ']' &(!(Sp? ('('
 
 MathSpan = ULMathSpan | MMDMathSpan
 
-ULMathSpan = '$' (
- ('$' < (!'$$' .)* > '$$') |
- (< (!'$' .)* > '$') )
+ULMathSpan = (
+ ('$$' < !Spacechar ('\\$' | (!(Spacechar? '$') .))* > '$$') |
+ ('$' < !Spacechar ('\\$' | (!(Spacechar? '$') !Newline .))* > '$') )
 {
     /* Basically, these delimiters indicate math in LaTeX syntax, and the
        delimiters are compatible with MathJax and LaTeX
