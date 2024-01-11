@@ -180,7 +180,7 @@ Para =      s:CapturingNonindentSpace			{ }
 Plain =     a:Inlines
             { $$ = a; $$->key = PLAIN; }
 
-AtxInline = !Newline !( &{ !extension(yy->state, EXT_COMPATIBILITY) } Sp AutoLabel Sp? '#'* Sp Newline) !(Sp? '#'* Sp Newline) Inline
+AtxInline = !Newline !( &{ extension(yy->state, EXT_LABELS) || !extension(yy->state, EXT_COMPATIBILITY) } Sp AutoLabel Sp? '#'* Sp Newline) !(Sp? '#'* Sp Newline) Inline
 
 AtxStart =  < ( "######" | "#####" | "####" | "###" | "##" | "#" ) >
             { $$ = mk_element(H1 + (int)(strlen(yytext) - 1)); }
@@ -196,11 +196,11 @@ SetextBottom1 = '='+ Newline
 SetextBottom2 = '-'+ Newline
 
 SetextHeading1 =  &(RawLine SetextBottom1)
-                  a:StartList ( !Endline !( &{ !extension(yy->state, EXT_COMPATIBILITY) } Sp AutoLabel ) Inline { a = cons($$, a); } )+ ( Sp b:AutoLabel { append_list(b,a);} Sp? )? Sp? Newline
+                  a:StartList ( !Endline !( &{ extension(yy->state, EXT_LABELS) || !extension(yy->state, EXT_COMPATIBILITY) } Sp AutoLabel ) Inline { a = cons($$, a); } )+ ( Sp b:AutoLabel { append_list(b,a);} Sp? )? Sp? Newline
                   SetextBottom1 { $$ = mk_list(H1, a); }
 
 SetextHeading2 =  &(RawLine SetextBottom2)
-a:StartList ( !Endline !( &{ !extension(yy->state, EXT_COMPATIBILITY) } Sp AutoLabel ) Inline { a = cons($$, a); } )+ ( Sp b:AutoLabel { append_list(b,a)} Sp? )? Sp? Newline
+a:StartList ( !Endline !( &{ extension(yy->state, EXT_LABELS) || !extension(yy->state, EXT_COMPATIBILITY) } Sp AutoLabel ) Inline { a = cons($$, a); } )+ ( Sp b:AutoLabel { append_list(b,a)} Sp? )? Sp? Newline
                   SetextBottom2 { $$ = mk_list(H2, a); }
 
 Heading = SetextHeading | AtxHeading
@@ -773,7 +773,7 @@ ReferenceLinkDouble =  a:Label s:OptionalSpace !"[]" b:Label
                                $$ = mk_link(a->children, match.url, match.title, match.attr, match.identifier);
                                free(a);
                                free_element_list(b);
-                           } else if ( !extension(yy->state, EXT_COMPATIBILITY) &&
+                           } else if ( (extension(yy->state, EXT_LABELS) || !extension(yy->state, EXT_COMPATIBILITY)) &&
                             find_label(yy->state, &match, b->children)) {
                                 GString *text = g_string_new("");
                                 print_raw_element_list(text, b->children);
@@ -799,7 +799,7 @@ ReferenceLinkSingle =  a:Label < (Spnl "[]")? >
                            if (find_reference(yy->state, &match, a->children)) {
                                $$ = mk_link(a->children, match.url, match.title, match.attr, match.identifier);
                                free(a);
-                           } else if ( !extension(yy->state, EXT_COMPATIBILITY) &&
+                           } else if ( (extension(yy->state, EXT_LABELS) || !extension(yy->state, EXT_COMPATIBILITY)) &&
                             find_label(yy->state, &match, a->children)) {
                                 GString *text = g_string_new("");
                                 print_raw_element_list(text, a->children);
@@ -1198,7 +1198,7 @@ RawCitationReference = "[#" < ( !Newline !']' . )+ > ']'
                    { $$ = mk_str(yytext); }
 
 
-AutoLabels = ( &{ !extension(yy->state, EXT_COMPATIBILITY) && !extension(yy->state, EXT_NO_LABELS)}
+AutoLabels = ( &{ extension(yy->state, EXT_LABELS) || (!extension(yy->state, EXT_COMPATIBILITY) && !extension(yy->state, EXT_NO_LABELS))}
     a:StartList ( b:Heading
             { 
                 GString *label = g_string_new("");

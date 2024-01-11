@@ -2767,7 +2767,7 @@ YY_ACTION(void) yy_1_ReferenceLinkSingle(yycontext *yy, char *yytext, int yyleng
                            if (find_reference(yy->state, &match, a->children)) {
                                __ = mk_link(a->children, match.url, match.title, match.attr, match.identifier);
                                free(a);
-                           } else if ( !extension(yy->state, EXT_COMPATIBILITY) &&
+                           } else if ( (extension(yy->state, EXT_LABELS) || !extension(yy->state, EXT_COMPATIBILITY)) &&
                             find_label(yy->state, &match, a->children)) {
                                 GString *text = g_string_new("");
                                 print_raw_element_list(text, a->children);
@@ -2807,7 +2807,7 @@ YY_ACTION(void) yy_1_ReferenceLinkDouble(yycontext *yy, char *yytext, int yyleng
                                __ = mk_link(a->children, match.url, match.title, match.attr, match.identifier);
                                free(a);
                                free_element_list(b);
-                           } else if ( !extension(yy->state, EXT_COMPATIBILITY) &&
+                           } else if ( (extension(yy->state, EXT_LABELS) || !extension(yy->state, EXT_COMPATIBILITY)) &&
                             find_label(yy->state, &match, b->children)) {
                                 GString *text = g_string_new("");
                                 print_raw_element_list(text, b->children);
@@ -5485,7 +5485,7 @@ YY_RULE(int) yy_AutoLabels(yycontext *yy)
   yyprintf((stderr, "%s\n", "AutoLabels"));  yyText(yy, yy->__begin, yy->__end);  {
 #define yytext yy->__text
 #define yyleng yy->__textlen
-if (!( !extension(yy->state, EXT_COMPATIBILITY) && !extension(yy->state, EXT_NO_LABELS))) goto l258;
+if (!( extension(yy->state, EXT_LABELS) || (!extension(yy->state, EXT_COMPATIBILITY) && !extension(yy->state, EXT_NO_LABELS)))) goto l258;
 #undef yytext
 #undef yyleng
   }  if (!yy_StartList(yy)) goto l258;  yyDo(yy, yySet, -3, 0);
@@ -11273,7 +11273,7 @@ YY_RULE(int) yy_SetextHeading2(yycontext *yy)
   {  int yypos1907= yy->__pos, yythunkpos1907= yy->__thunkpos;  yyText(yy, yy->__begin, yy->__end);  {
 #define yytext yy->__text
 #define yyleng yy->__textlen
-if (!( !extension(yy->state, EXT_COMPATIBILITY) )) goto l1907;
+if (!( extension(yy->state, EXT_LABELS) || !extension(yy->state, EXT_COMPATIBILITY) )) goto l1907;
 #undef yytext
 #undef yyleng
   }  if (!yy_Sp(yy)) goto l1907;  if (!yy_AutoLabel(yy)) goto l1907;  goto l1902;
@@ -11287,7 +11287,7 @@ if (!( !extension(yy->state, EXT_COMPATIBILITY) )) goto l1907;
   {  int yypos1909= yy->__pos, yythunkpos1909= yy->__thunkpos;  yyText(yy, yy->__begin, yy->__end);  {
 #define yytext yy->__text
 #define yyleng yy->__textlen
-if (!( !extension(yy->state, EXT_COMPATIBILITY) )) goto l1909;
+if (!( extension(yy->state, EXT_LABELS) || !extension(yy->state, EXT_COMPATIBILITY) )) goto l1909;
 #undef yytext
 #undef yyleng
   }  if (!yy_Sp(yy)) goto l1909;  if (!yy_AutoLabel(yy)) goto l1909;  goto l1905;
@@ -11324,7 +11324,7 @@ YY_RULE(int) yy_SetextHeading1(yycontext *yy)
   {  int yypos1921= yy->__pos, yythunkpos1921= yy->__thunkpos;  yyText(yy, yy->__begin, yy->__end);  {
 #define yytext yy->__text
 #define yyleng yy->__textlen
-if (!( !extension(yy->state, EXT_COMPATIBILITY) )) goto l1921;
+if (!( extension(yy->state, EXT_LABELS) || !extension(yy->state, EXT_COMPATIBILITY) )) goto l1921;
 #undef yytext
 #undef yyleng
   }  if (!yy_Sp(yy)) goto l1921;  if (!yy_AutoLabel(yy)) goto l1921;  goto l1916;
@@ -11338,7 +11338,7 @@ if (!( !extension(yy->state, EXT_COMPATIBILITY) )) goto l1921;
   {  int yypos1923= yy->__pos, yythunkpos1923= yy->__thunkpos;  yyText(yy, yy->__begin, yy->__end);  {
 #define yytext yy->__text
 #define yyleng yy->__textlen
-if (!( !extension(yy->state, EXT_COMPATIBILITY) )) goto l1923;
+if (!( extension(yy->state, EXT_LABELS) || !extension(yy->state, EXT_COMPATIBILITY) )) goto l1923;
 #undef yytext
 #undef yyleng
   }  if (!yy_Sp(yy)) goto l1923;  if (!yy_AutoLabel(yy)) goto l1923;  goto l1919;
@@ -11588,7 +11588,7 @@ YY_RULE(int) yy_AtxInline(yycontext *yy)
   {  int yypos1998= yy->__pos, yythunkpos1998= yy->__thunkpos;  yyText(yy, yy->__begin, yy->__end);  {
 #define yytext yy->__text
 #define yyleng yy->__textlen
-if (!( !extension(yy->state, EXT_COMPATIBILITY) )) goto l1998;
+if (!( extension(yy->state, EXT_LABELS) || !extension(yy->state, EXT_COMPATIBILITY) )) goto l1998;
 #undef yytext
 #undef yyleng
   }  if (!yy_Sp(yy)) goto l1998;  if (!yy_AutoLabel(yy)) goto l1998;
