@@ -635,6 +635,7 @@ Inline  = &{ check_timeout(yy->state) }
         | Space
         | Strong
         | Emph
+        | &{ extension(yy->state, EXT_DELETE) } Delete
         | &{ !extension(yy->state, EXT_COMPATIBILITY) } CitationReference
         | Image
         | Link
@@ -750,6 +751,11 @@ StrongUl   =    "__" !Whitespace
 				  $$->contents.str = "__";
 				}
 
+Delete     =    '~~' !Whitespace
+                a:StartList
+                ( !'~~' b:Inline { a = cons(b, a); })+
+                '~~'
+                { $$ = mk_list(DELETE, a); }
 
 ImageBlock = Image Sp Newline BlankLine+
     { if ($$->key == IMAGE) $$->key = IMAGEBLOCK; }
@@ -1018,6 +1024,7 @@ SkipBlock = HtmlBlock
 ExtendedSpecialChar = &{ extension(yy->state, EXT_SMART) } ('.' | '-' | '\'' | '"')
                     | &{ extension(yy->state, EXT_NOTES) } ( '^' )
                     | &{ extension(yy->state, EXT_MATH) } ( '$' )
+                    | &{ extension(yy->state, EXT_DELETE) } ( '~' )
 
 Smart = &{ extension(yy->state, EXT_SMART) }
         ( Ellipsis | Dash | SingleQuoted | DoubleQuoted | Apostrophe )

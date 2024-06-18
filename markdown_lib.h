@@ -19,7 +19,8 @@ enum markdown_extensions {
 	EXT_KEEP_MAGIC_BLANK_LINES		= 1 << 10,
 	EXT_TABLES						= 1 << 11,
 	EXT_MATH						= 1 << 12,
-	EXT_LABELS						= 1 << 13
+	EXT_LABELS						= 1 << 13,
+	EXT_DELETE						= 1 << 14,
 };
 
 enum markdown_formats {

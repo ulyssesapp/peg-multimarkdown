@@ -311,6 +311,11 @@ static void print_html_element(int ext, GString *out, element *elt, bool obfusca
         print_html_element_list(ext, out, elt->children, obfuscate);
         g_string_append_printf(out, "</strong>");
         break;
+    case DELETE:
+        g_string_append_printf(out, "<del>");
+        print_html_element_list(ext, out, elt->children, obfuscate);
+        g_string_append_printf(out, "</del>");
+        break;
     case LIST:
         print_html_element_list(ext, out, elt->children, obfuscate);
         break;
@@ -1015,6 +1020,11 @@ static void print_latex_element(GString *out, element *elt) {
         print_latex_element_list(out, elt->children);
         g_string_append_printf(out, "}");
         break;
+    case DELETE:
+        g_string_append_printf(out, "\\sout{");
+        print_latex_element_list(out, elt->children);
+        g_string_append_printf(out, "}");
+        break;
     case LIST:
         print_latex_element_list(out, elt->children);
         break;
@@ -1535,6 +1545,8 @@ static void print_groff_mm_element(GString *out, element *elt, int count) {
         g_string_append_printf(out, "\"");
         padded = 0;
         break;
+    case DELETE:
+        // Not supported
     case PLAIN:
         pad(out, 1);
         print_groff_mm_element_list(out, elt->children);
@@ -1869,6 +1881,12 @@ static void print_odf_element(GString *out, element *elt) {
     case STRONG:
         g_string_append_printf(out,
             "<text:span text:style-name=\"MMD-Bold\">");
+        print_odf_element_list(out, elt->children);
+        g_string_append_printf(out, "</text:span>");
+        break;
+    case DELETE:
+        g_string_append_printf(out,
+        	"<text:span text:style-name=\"MMD-Strikethrough\">");
         print_odf_element_list(out, elt->children);
         g_string_append_printf(out, "</text:span>");
         break;

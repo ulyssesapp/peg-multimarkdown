@@ -59,6 +59,7 @@ void print_tree(element * elt, int indent) {
             case HTML:               key = "HTML"; break;
             case EMPH:               key = "EMPH"; break;
             case STRONG:             key = "STRONG"; break;
+            case DELETE:             key = "DELETE"; break;
             case PLAIN:              key = "PLAIN"; break;
             case PARA:               key = "PARA"; break;
             case LISTITEM:           key = "LISTITEM"; break;
