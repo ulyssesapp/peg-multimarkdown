@@ -127,6 +127,7 @@ MetaDataValue = a:StartList
 
 Block =     BlankLine*
             ( BlockQuote
+            | &{ extension(yy->state, EXT_COMMENT) } CommentBlock
             | Verbatim
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } DefinitionList
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } Glossary
@@ -149,6 +150,7 @@ HeadingSectionBlock =
             BlankLine*
             !Heading
             ( BlockQuote
+            | &{ extension(yy->state, EXT_COMMENT) } CommentBlock
             | Verbatim
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } DefinitionList
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } Glossary
@@ -223,6 +225,23 @@ BlockQuoteRaw =  a:StartList
                      $$->key = RAW;
                  }
 
+CommentBlock = a:CommentBlockRaw
+             {  $$ = mk_element(COMMENTBLOCK);
+                $$->children = a;
+             }
+
+CommentBlockRaw = a:StartList
+                ('<!--'
+				 (!'-->' CommentBlockLine { a = cons($$, a); } )*
+				'-->')+
+                 {   a = cons(mk_str("\033"), a); // add some non-whitespace character that will be stripped later. Required to keep the paragraph even for empty comments.
+                     $$ = mk_str_from_list(a, true);
+                     $$->key = RAW;
+                 }
+
+CommentBlockLine = ( < (!'-->' .)* > )
+				   { $$ = mk_str(yytext); }
+ 
 NonblankIndentedLine = !BlankLine IndentedLine
 
 FirstVerbatimChunk = a:StartList
@@ -641,6 +660,7 @@ Inline  = &{ check_timeout(yy->state) }
         | Link
         | NoteReference
  #      | InlineNote           # Not used in Markdown/MultiMarkdown
+        | &{ extension(yy->state, EXT_COMMENT) } Comment
         | Code
         | MarkdownHtmlTagOpen
         | RawHtml
@@ -832,6 +852,12 @@ ExplicitLink =  a:StartList l:Label '(' Sp s:Source Spnl t:Title ( &{ !extension
                     free_element(t);
                     free(l);
                 }
+                
+Comment     =    '<!--' !Whitespace
+                a:StartList
+                ( !'-->' b:Inline { a = cons(b, a); })+
+                '-->'
+                { $$ = mk_list(COMMENT, a); }
 
 Source  = ( '<' < SourceContents > '>' | < SourceContents > )
           { $$ = mk_str(yytext); }
@@ -1025,6 +1051,7 @@ ExtendedSpecialChar = &{ extension(yy->state, EXT_SMART) } ('.' | '-' | '\'' | '
                     | &{ extension(yy->state, EXT_NOTES) } ( '^' )
                     | &{ extension(yy->state, EXT_MATH) } ( '$' )
                     | &{ extension(yy->state, EXT_DELETE) } ( '~' )
+                    | &{ extension(yy->state, EXT_COMMENT) } ( '<!--' | '-->' )
 
 Smart = &{ extension(yy->state, EXT_SMART) }
         ( Ellipsis | Dash | SingleQuoted | DoubleQuoted | Apostrophe )

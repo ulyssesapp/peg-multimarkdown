@@ -173,6 +173,7 @@ bool match_inlines(element *l1, element *l2) {
         case EMPH:
         case STRONG:
         case DELETE:
+        case COMMENT:
         case LIST:
         case SINGLEQUOTED:
         case DOUBLEQUOTED:

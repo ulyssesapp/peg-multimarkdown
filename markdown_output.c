@@ -316,6 +316,11 @@ static void print_html_element(int ext, GString *out, element *elt, bool obfusca
         print_html_element_list(ext, out, elt->children, obfuscate);
         g_string_append_printf(out, "</del>");
         break;
+	case COMMENT:
+		g_string_append_printf(out, "<!--");
+		print_html_element_list(ext, out, elt->children, obfuscate);
+		g_string_append_printf(out, "-->");
+		break;
     case LIST:
         print_html_element_list(ext, out, elt->children, obfuscate);
         break;
@@ -427,6 +432,13 @@ static void print_html_element(int ext, GString *out, element *elt, bool obfusca
         g_string_append_printf(out, "</blockquote>");
         padded = 0;
         break;
+	case COMMENTBLOCK:
+		pad(out, 2);
+		g_string_append_printf(out, "<!--");
+		print_html_element_list(ext, out, elt->children, obfuscate);
+		g_string_append_printf(out, "-->");
+		padded = 0;
+		break;
     case REFERENCE:
         /* Nonprinting */
         break;

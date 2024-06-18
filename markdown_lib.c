@@ -60,6 +60,7 @@ void print_tree(element * elt, int indent) {
             case EMPH:               key = "EMPH"; break;
             case STRONG:             key = "STRONG"; break;
             case DELETE:             key = "DELETE"; break;
+            case COMMENT:            key = "COMMENT"; break;
             case PLAIN:              key = "PLAIN"; break;
             case PARA:               key = "PARA"; break;
             case LISTITEM:           key = "LISTITEM"; break;
@@ -72,8 +73,9 @@ void print_tree(element * elt, int indent) {
             case H5:                 key = "H5"; break;
             case H6:                 key = "H6"; break;
             case BLOCKQUOTE:         key = "BLOCKQUOTE"; break;
+            case COMMENTBLOCK:       key = "COMMENTBLOCK"; break;
             case VERBATIM:           key = "VERBATIM"; break;
-			case CODEBLOCK:			 key = "CODEBLOCK"; break;
+            case CODEBLOCK:			 key = "CODEBLOCK"; break;
             case HTMLBLOCK:          key = "HTMLBLOCK"; break;
             case HRULE:              key = "HRULE"; break;
             case REFERENCE:          key = "REFERENCE"; break;
