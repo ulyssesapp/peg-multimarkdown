@@ -224,6 +224,7 @@
 			name = "Generate Parser";
 			outputPaths = (
 				"$(SRCROOT)/markdown_parser.h",
+				"$(SRCROOT)/parsing_functions.c",
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
@@ -335,6 +336,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = MarkdownMacPrefix.h;
 				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
@@ -368,6 +370,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = MarkdownMacPrefix.h;
 				GCC_PREPROCESSOR_DEFINITIONS = YY_CTX_LOCAL;
