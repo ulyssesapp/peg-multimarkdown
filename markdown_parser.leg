@@ -127,7 +127,7 @@ MetaDataValue = a:StartList
 
 Block =     BlankLine*
             ( BlockQuote
-            | &{ extension(yy->state, EXT_COMMENT) } CommentBlock
+            | &{ extension(yy->state, EXT_COMMENT) } BlockComment
             | Verbatim
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } DefinitionList
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } Glossary
@@ -150,7 +150,7 @@ HeadingSectionBlock =
             BlankLine*
             !Heading
             ( BlockQuote
-            | &{ extension(yy->state, EXT_COMMENT) } CommentBlock
+            | &{ extension(yy->state, EXT_COMMENT) } BlockComment
             | Verbatim
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } DefinitionList
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } Glossary
@@ -225,21 +225,20 @@ BlockQuoteRaw =  a:StartList
                      $$->key = RAW;
                  }
 
-CommentBlock = a:CommentBlockRaw
+BlockComment = a:BlockCommentRaw
              {  $$ = mk_element(COMMENTBLOCK);
                 $$->children = a;
              }
 
-CommentBlockRaw = a:StartList
+BlockCommentRaw = a:StartList
                 ('<!--'
-				 (!'-->' CommentBlockLine { a = cons($$, a); } )*
+				 (!'-->' BlockCommentLine { a = cons($$, a); } )*
 				'-->')+
-                 {   a = cons(mk_str("\033"), a); // add some non-whitespace character that will be stripped later. Required to keep the paragraph even for empty comments.
-                     $$ = mk_str_from_list(a, true);
+                 {   $$ = mk_str_from_list(a, true);
                      $$->key = RAW;
                  }
 
-CommentBlockLine = ( < (!'-->' .)* > )
+BlockCommentLine = ( < (!'-->' .)+ > )
 				   { $$ = mk_str(yytext); }
  
 NonblankIndentedLine = !BlankLine IndentedLine
