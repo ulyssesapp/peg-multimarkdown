@@ -127,6 +127,7 @@ MetaDataValue = a:StartList
 
 Block =     BlankLine*
             ( BlockQuote
+            | &{ extension(yy->state, EXT_COMMENT) } BlockComment
             | Verbatim
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } DefinitionList
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } Glossary
@@ -149,6 +150,7 @@ HeadingSectionBlock =
             BlankLine*
             !Heading
             ( BlockQuote
+            | &{ extension(yy->state, EXT_COMMENT) } BlockComment
             | Verbatim
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } DefinitionList
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } Glossary
@@ -223,6 +225,22 @@ BlockQuoteRaw =  a:StartList
                      $$->key = RAW;
                  }
 
+BlockComment = a:BlockCommentRaw
+             {  $$ = mk_element(COMMENTBLOCK);
+                $$->children = a;
+             }
+
+BlockCommentRaw = a:StartList
+                ('<!--'
+				 (!'-->' BlockCommentLine { a = cons($$, a); } )*
+				'-->')+
+                 {   $$ = mk_str_from_list(a, true);
+                     $$->key = RAW;
+                 }
+
+BlockCommentLine = ( < (!'-->' .)+ > )
+				   { $$ = mk_str(yytext); }
+ 
 NonblankIndentedLine = !BlankLine IndentedLine
 
 FirstVerbatimChunk = a:StartList
@@ -635,11 +653,13 @@ Inline  = &{ check_timeout(yy->state) }
         | Space
         | Strong
         | Emph
+        | &{ extension(yy->state, EXT_DELETE) } Delete
         | &{ !extension(yy->state, EXT_COMPATIBILITY) } CitationReference
         | Image
         | Link
         | NoteReference
  #      | InlineNote           # Not used in Markdown/MultiMarkdown
+        | &{ extension(yy->state, EXT_COMMENT) } Comment
         | Code
         | MarkdownHtmlTagOpen
         | RawHtml
@@ -750,6 +770,11 @@ StrongUl   =    "__" !Whitespace
 				  $$->contents.str = "__";
 				}
 
+Delete     =    '~~' !Whitespace
+                a:StartList
+                ( !'~~' b:Inline { a = cons(b, a); })+
+                '~~'
+                { $$ = mk_list(DELETE, a); }
 
 ImageBlock = Image Sp Newline BlankLine+
     { if ($$->key == IMAGE) $$->key = IMAGEBLOCK; }
@@ -826,6 +851,12 @@ ExplicitLink =  a:StartList l:Label '(' Sp s:Source Spnl t:Title ( &{ !extension
                     free_element(t);
                     free(l);
                 }
+                
+Comment     =    '<!--' !Whitespace
+                a:StartList
+                ( !'-->' b:Inline { a = cons(b, a); })+
+                '-->'
+                { $$ = mk_list(COMMENT, a); }
 
 Source  = ( '<' < SourceContents > '>' | < SourceContents > )
           { $$ = mk_str(yytext); }
@@ -1018,6 +1049,8 @@ SkipBlock = HtmlBlock
 ExtendedSpecialChar = &{ extension(yy->state, EXT_SMART) } ('.' | '-' | '\'' | '"')
                     | &{ extension(yy->state, EXT_NOTES) } ( '^' )
                     | &{ extension(yy->state, EXT_MATH) } ( '$' )
+                    | &{ extension(yy->state, EXT_DELETE) } ( '~' )
+                    | &{ extension(yy->state, EXT_COMMENT) } ( '<!--' | '-->' )
 
 Smart = &{ extension(yy->state, EXT_SMART) }
         ( Ellipsis | Dash | SingleQuoted | DoubleQuoted | Apostrophe )
