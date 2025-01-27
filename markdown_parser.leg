@@ -793,7 +793,7 @@ Link =  ExplicitLink | ReferenceLink | AutoLink
 ReferenceLink = ReferenceLinkDouble | ReferenceLinkSingle
 
 ReferenceLinkDouble =  a:Label s:OptionalSpace !"[]" b:Label
-                       {   link match;
+                       {   mm_link match;
                            if (find_reference(yy->state, &match, b->children)) {
                                $$ = mk_link(a->children, match.url, match.title, match.attr, match.identifier);
                                free(a);
@@ -820,7 +820,7 @@ ReferenceLinkDouble =  a:Label s:OptionalSpace !"[]" b:Label
                        }
 
 ReferenceLinkSingle =  a:Label < (Spnl "[]")? >
-                       {   link match;
+                       {   mm_link match;
                            if (find_reference(yy->state, &match, a->children)) {
                                $$ = mk_link(a->children, match.url, match.title, match.attr, match.identifier);
                                free(a);

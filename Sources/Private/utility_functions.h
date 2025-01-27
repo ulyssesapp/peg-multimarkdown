@@ -2,8 +2,7 @@
 #define UTILITY_FUNCTIONS_H
 
 #include <stdbool.h>
-#include <glib.h>
-
+#include "glib.h"
 #include "markdown_peg.h"
 
 #include <time.h>
@@ -82,7 +81,7 @@ bool match_inlines(element *l1, element *l2);
 
 /* find_reference - return true if link found in references matching label.
  * 'link' is modified with the matching url and title. */
-bool find_reference(markdown_parser_state *state, link *result, element *label);
+bool find_reference(markdown_parser_state *state, mm_link *result, element *label);
 
 /* find_note - return true if note found in notes matching label.
 if found, 'result' is set to point to matched note. */
@@ -93,9 +92,9 @@ char *string_from_element_list(element *list, bool freeList);
 
 char *label_from_string(char *str, bool obfuscate);
 void localize_typography(GString *out, int character, int language, int output);
-void print_raw_element_list(GString *out, element *list);   
+void print_raw_element_list(GString *out, element *list);
 void append_list(element *new, element *list);
-bool find_label(markdown_parser_state *state, link *result, element *label);
+bool find_label(markdown_parser_state *state, mm_link *result, element *label);
 bool check_timeout(markdown_parser_state *state);
 void trim_trailing_whitespace(char *str);
 char *label_from_element_list(element *list, bool obfuscate);

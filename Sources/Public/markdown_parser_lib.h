@@ -1,7 +1,7 @@
 #ifndef MARKDOWN_PARSER_LIB_H
 #define MARKDOWN_PARSER_LIB_H
 
-#include <markdown_lib.h>
+#include "markdown_lib.h"
 
 /* Information (label, URL and title) for a link. */
 struct Link {

@@ -126,7 +126,7 @@ element * mk_list(int key, element *lst) {
 element * mk_link(element *label, char *url, char *title, element *attr, char *id) {
     element *result;
     result = mk_element(LINK);
-    result->contents.link = malloc(sizeof(link));
+    result->contents.link = malloc(sizeof(mm_link));
     result->contents.link->label = label;
     result->contents.link->url = strdup(url);
     result->contents.link->title = strdup(title);
@@ -197,9 +197,9 @@ bool match_inlines(element *l1, element *l2) {
 
 /* find_reference - return true if link found in references matching label.
  * 'link' is modified with the matching url and title. */
-bool find_reference(markdown_parser_state *state, link *result, element *label) {
+bool find_reference(markdown_parser_state *state, mm_link *result, element *label) {
     element *cur = state->references;  /* pointer to walk up list of references */
-    link *curitem;
+    mm_link *curitem;
     while (cur != NULL) {
         curitem = cur->contents.link;
         if (match_inlines(label, curitem->label)) {
@@ -314,7 +314,7 @@ char *label_from_string(char *str, bool obfuscate) {
 
 /* find_label - return true if header, table, etc is found matching label.
  * 'link' is modified with the matching url and title. */
-bool find_label(markdown_parser_state *state, link *result, element *label) {
+bool find_label(markdown_parser_state *state, mm_link *result, element *label) {
     char *lab;
     element *cur = state->labels;  /* pointer to walk up list of references */
     GString *text = g_string_new("");
