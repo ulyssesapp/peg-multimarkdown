@@ -263,7 +263,7 @@ int main(int argc, char * argv[]) {
                 /* remove file extension, if present */
                 fake = argv[i+1];
                 if (strrchr(fake, '.') != NULL) {
-                    int count = strrchr(fake,'.') - fake;
+                    long count = strrchr(fake,'.') - fake;
                     if (count != 0) {
                         fake[count] = '\0';
                     }

@@ -7,6 +7,7 @@
 //
 
 #include "markdown_parser_lib.h"
+#include "markdown_peg.h"
 
 GString *preformat_text(char *text);
 element * process_raw_blocks(element *input, int extensions, element *references, element *notes, element *labels);

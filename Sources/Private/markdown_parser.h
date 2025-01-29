@@ -2802,7 +2802,7 @@ YY_ACTION(void) yy_1_ReferenceLinkSingle(yycontext *yy, char *yytext, int yyleng
 #define yythunkpos yy->__thunkpos
   yyprintf((stderr, "do yy_1_ReferenceLinkSingle\n"));
   {
-     link match;
+     mm_link match;
                            if (find_reference(yy->state, &match, a->children)) {
                                __ = mk_link(a->children, match.url, match.title, match.attr, match.identifier);
                                free(a);
@@ -2841,7 +2841,7 @@ YY_ACTION(void) yy_1_ReferenceLinkDouble(yycontext *yy, char *yytext, int yyleng
 #define yythunkpos yy->__thunkpos
   yyprintf((stderr, "do yy_1_ReferenceLinkDouble\n"));
   {
-     link match;
+     mm_link match;
                            if (find_reference(yy->state, &match, b->children)) {
                                __ = mk_link(a->children, match.url, match.title, match.attr, match.identifier);
                                free(a);

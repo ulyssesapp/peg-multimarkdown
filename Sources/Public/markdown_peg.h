@@ -7,7 +7,7 @@
 
 #include "markdown_parser_lib.h"
 
-typedef struct Link link;
+typedef struct Link mm_link;
 typedef struct CodeBlock codeblock;
 typedef struct Element element;
 

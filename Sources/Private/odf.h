@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <glib.h>
+#include "glib.h"
 
 void print_odf_header(GString *out);
 void print_odf_footer(GString *out);
