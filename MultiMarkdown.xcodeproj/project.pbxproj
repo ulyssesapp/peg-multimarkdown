@@ -244,16 +244,16 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/markdown_parser.leg",
+				"$(SRCROOT)/Sources/Private/markdown_parser.leg",
 			);
 			name = "Generate Parser";
 			outputPaths = (
-				"$(SRCROOT)/markdown_parser.h",
-				"$(SRCROOT)/parsing_functions.c",
+				"$(SRCROOT)/Sources/Private/markdown_parser.h",
+				"$(SRCROOT)/Sources/Private/parsing_functions.c",
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "\"$SRCROOT/leg\" -o markdown_parser.h markdown_parser.leg\ntouch parsing_functions.c\n";
+			shellScript = "\"$SRCROOT/leg\" -o Sources/Private/markdown_parser.h Sources/Private/markdown_parser.leg\ntouch Sources/Private/parsing_functions.c\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
