@@ -6151,7 +6151,7 @@ if (!( extension(yy->state, EXT_DELETE) )) goto l366;
   l366:;	  yy->__pos= yypos358; yy->__thunkpos= yythunkpos358;  yyText(yy, yy->__begin, yy->__end);  {
 #define yytext yy->__text
 #define yyleng yy->__textlen
-if (!( extension(yy->state, EXT_COMMENT) )) goto l357;
+if (!( extension(yy->state, EXT_BLOCK_COMMENT) || extension(yy->state, EXT_INLINE_COMMENT) )) goto l357;
 #undef yytext
 #undef yyleng
   }
@@ -11757,7 +11757,7 @@ if (!( !extension(yy->state, EXT_COMPATIBILITY) )) goto l2000;
   l2003:;	  yy->__pos= yypos1991; yy->__thunkpos= yythunkpos1991;  yyText(yy, yy->__begin, yy->__end);  {
 #define yytext yy->__text
 #define yyleng yy->__textlen
-if (!( extension(yy->state, EXT_COMMENT) )) goto l2004;
+if (!( extension(yy->state, EXT_INLINE_COMMENT) )) goto l2004;
 #undef yytext
 #undef yyleng
   }  if (!yy_Comment(yy)) goto l2004;  goto l1991;
@@ -11971,7 +11971,7 @@ YY_RULE(int) yy_HeadingSectionBlock(yycontext *yy)
   l2062:;	  yy->__pos= yypos2061; yy->__thunkpos= yythunkpos2061;  yyText(yy, yy->__begin, yy->__end);  {
 #define yytext yy->__text
 #define yyleng yy->__textlen
-if (!( extension(yy->state, EXT_COMMENT) )) goto l2063;
+if (!( extension(yy->state, EXT_BLOCK_COMMENT) )) goto l2063;
 #undef yytext
 #undef yyleng
   }  if (!yy_BlockComment(yy)) goto l2063;  goto l2061;
@@ -12843,7 +12843,7 @@ YY_RULE(int) yy_Block(yycontext *yy)
   l2294:;	  yy->__pos= yypos2293; yy->__thunkpos= yythunkpos2293;  yyText(yy, yy->__begin, yy->__end);  {
 #define yytext yy->__text
 #define yyleng yy->__textlen
-if (!( extension(yy->state, EXT_COMMENT) )) goto l2295;
+if (!( extension(yy->state, EXT_BLOCK_COMMENT) )) goto l2295;
 #undef yytext
 #undef yyleng
   }  if (!yy_BlockComment(yy)) goto l2295;  goto l2293;

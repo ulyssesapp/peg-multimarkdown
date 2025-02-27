@@ -127,7 +127,7 @@ MetaDataValue = a:StartList
 
 Block =     BlankLine*
             ( BlockQuote
-            | &{ extension(yy->state, EXT_COMMENT) } BlockComment
+            | &{ extension(yy->state, EXT_BLOCK_COMMENT) } BlockComment
             | Verbatim
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } DefinitionList
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } Glossary
@@ -150,7 +150,7 @@ HeadingSectionBlock =
             BlankLine*
             !Heading
             ( BlockQuote
-            | &{ extension(yy->state, EXT_COMMENT) } BlockComment
+            | &{ extension(yy->state, EXT_BLOCK_COMMENT) } BlockComment
             | Verbatim
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } DefinitionList
             | &{ !extension(yy->state, EXT_COMPATIBILITY) } Glossary
@@ -659,7 +659,7 @@ Inline  = &{ check_timeout(yy->state) }
         | Link
         | NoteReference
  #      | InlineNote           # Not used in Markdown/MultiMarkdown
-        | &{ extension(yy->state, EXT_COMMENT) } Comment
+        | &{ extension(yy->state, EXT_INLINE_COMMENT) } Comment
         | Code
         | MarkdownHtmlTagOpen
         | RawHtml
@@ -1050,7 +1050,7 @@ ExtendedSpecialChar = &{ extension(yy->state, EXT_SMART) } ('.' | '-' | '\'' | '
                     | &{ extension(yy->state, EXT_NOTES) } ( '^' )
                     | &{ extension(yy->state, EXT_MATH) } ( '$' )
                     | &{ extension(yy->state, EXT_DELETE) } ( '~' )
-                    | &{ extension(yy->state, EXT_COMMENT) } ( '<!--' | '-->' )
+                    | &{ extension(yy->state, EXT_BLOCK_COMMENT) || extension(yy->state, EXT_INLINE_COMMENT) } ( '<!--' | '-->' )
 
 Smart = &{ extension(yy->state, EXT_SMART) }
         ( Ellipsis | Dash | SingleQuoted | DoubleQuoted | Apostrophe )

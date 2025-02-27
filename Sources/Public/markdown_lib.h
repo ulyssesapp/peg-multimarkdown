@@ -21,7 +21,8 @@ enum markdown_extensions {
 	EXT_MATH						= 1 << 12,
 	EXT_LABELS						= 1 << 13,
 	EXT_DELETE						= 1 << 14,
-	EXT_COMMENT						= 1 << 15,
+	EXT_BLOCK_COMMENT				= 1 << 15,
+	EXT_INLINE_COMMENT				= 1 << 16,
 };
 
 enum markdown_formats {
